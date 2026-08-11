@@ -1,0 +1,63 @@
+<view class="page">
+  <view class="notice-card">
+    <view class="notice-title">重置会员密码</view>
+    <view class="notice-text">
+      当前版本仅允许在注册时绑定的监护人微信中，使用完整会员编号和登记手机号重置密码。系统不会显示原密码。
+    </view>
+  </view>
+
+  <view class="form-card">
+    <view class="field">
+      <view class="field-label">完整会员编号</view>
+      <input
+        class="control"
+        maxlength="40"
+        value="{{memberId}}"
+        placeholder="请输入个人信息中的会员编号"
+        bindinput="onMemberIdInput"
+      />
+    </view>
+    <view class="field">
+      <view class="field-label">登记的监护人手机号</view>
+      <input
+        class="control"
+        type="number"
+        maxlength="11"
+        value="{{phone}}"
+        placeholder="请输入完整手机号"
+        bindinput="onPhoneInput"
+      />
+    </view>
+    <view class="field">
+      <view class="field-label">新密码</view>
+      <input
+        class="control"
+        type="number"
+        password="true"
+        maxlength="6"
+        value="{{newPassword}}"
+        placeholder="设置新的6位数字密码"
+        bindinput="onNewPasswordInput"
+      />
+    </view>
+    <view class="field last-field">
+      <view class="field-label">确认新密码</view>
+      <input
+        class="control"
+        type="number"
+        password="true"
+        maxlength="6"
+        value="{{confirmPassword}}"
+        placeholder="再次输入新密码"
+        bindinput="onConfirmPasswordInput"
+      />
+    </view>
+  </view>
+
+  <button
+    class="submit-button"
+    loading="{{submitting}}"
+    disabled="{{submitting}}"
+    bindtap="submitReset"
+  >重置密码</button>
+</view>

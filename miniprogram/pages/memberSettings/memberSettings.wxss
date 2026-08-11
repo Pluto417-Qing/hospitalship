@@ -1,0 +1,69 @@
+page {
+  background: #f5f6f6;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 18rpx 28rpx 48rpx;
+}
+
+.menu-list {
+  background: #ffffff;
+}
+
+.menu-item {
+  height: 86rpx;
+  padding: 0 16rpx;
+  border-bottom: 1rpx solid #e3e8e6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-label {
+  color: #3b4441;
+  font-size: 24rpx;
+}
+
+.menu-arrow {
+  color: #8d9794;
+  font-size: 36rpx;
+  line-height: 1;
+}
+
+.phone {
+  color: #69736f;
+  font-size: 22rpx;
+}
+
+.admin-menu-item {
+  min-height: 104rpx;
+  height: auto;
+}
+
+.admin-menu-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 7rpx;
+}
+
+.admin-menu-label {
+  color: #b73531;
+  font-weight: 600;
+}
+
+.admin-menu-hint {
+  color: #8d9794;
+  font-size: 18rpx;
+}
+
+.logout-button {
+  height: 76rpx;
+  margin: 30rpx 0 0;
+  padding: 0;
+  color: #ffffff;
+  font-size: 25rpx;
+  line-height: 76rpx;
+  background: #2b9a7c;
+  border-radius: 4rpx;
+}

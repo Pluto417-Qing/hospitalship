@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "seedType": "audioTrack",
+  "source": {
+    "asset": "testarticle/食管癌的故事(谢林彤配音).mp3",
+    "sha256": "29ce8b14e5a40f7c74627943caf3462031da06dbdd170f60510cfd918545726a",
+    "bytes": 7103703
+  },
+  "document": {
+    "_id": "esophageal-cancer-story-track-001",
+    "contentId": "esophageal-cancer-story",
+    "contentRevision": "testarticle-2026-07-12",
+    "title": "食管癌的故事（谢林彤配音）",
+    "narrator": "谢林彤",
+    "language": "zh-CN",
+    "mimeType": "audio/mpeg",
+    "durationSeconds": 443.925,
+    "bitrate": 128000,
+    "trackNo": 1,
+    "fileIDEnvironmentVariable": "ESOPHAGEAL_CANCER_AUDIO_FILE_ID",
+    "status": "draft",
+    "reviewStatus": "pending"
+  }
+}

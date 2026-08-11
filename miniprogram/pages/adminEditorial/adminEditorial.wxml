@@ -1,0 +1,133 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="state-card">
+    <view class="state-spinner"></view>
+    <view class="state-title">正在检查管理权限</view>
+    <view class="state-copy">马上就好，请稍候。</view>
+  </view>
+
+  <view wx:elif="{{!authorized}}" class="state-card">
+    <view class="state-mark">!</view>
+    <view class="state-title">暂时不能录入内容</view>
+    <view class="state-copy">{{pageError}}</view>
+    <button class="outline-button" bindtap="retryLoad">重新检查</button>
+  </view>
+
+  <block wx:else>
+    <view class="hero-card">
+      <view class="hero-kicker">管理员内容中心</view>
+      <view class="hero-title">新建内容</view>
+      <view class="hero-copy">选择要录入的内容，填写完成后先生成草稿，不会直接发布。</view>
+    </view>
+
+    <view class="type-grid">
+      <view
+        wx:for="{{contentTypes}}"
+        wx:key="value"
+        class="type-card {{selectedType === item.value ? 'is-active' : ''}}"
+        data-type="{{item.value}}"
+        bindtap="selectType"
+      >
+        <view class="type-check">{{selectedType === item.value ? "✓" : ""}}</view>
+        <view class="type-title">{{item.label}}</view>
+        <view class="type-copy">{{item.description}}</view>
+      </view>
+    </view>
+
+    <view wx:if="{{pageError}}" class="result-message">{{pageError}}</view>
+
+    <view wx:if="{{selectedType === 'zhi-entry'}}" class="form-card">
+      <view class="section-title">少年志消息</view>
+      <view class="section-copy">适合录入活动消息、人物动态和医院船相关消息。</view>
+
+      <view class="field-block">
+        <text class="field-label">消息日期</text>
+        <picker mode="date" value="{{zhiForm.eventAt}}" start="2000-01-01" end="2100-12-31" bindchange="onZhiDateChange">
+          <view class="picker-value">{{zhiForm.eventAt || "请选择日期"}}<text>⌄</text></view>
+        </picker>
+      </view>
+      <view class="field-block">
+        <text class="field-label">消息来源</text>
+        <input class="text-input" maxlength="120" placeholder="例如：中国医院船编辑部" value="{{zhiForm.source}}" data-field="source" bindinput="onZhiInput" />
+      </view>
+      <view class="field-block">
+        <text class="field-label">消息标签</text>
+        <input class="text-input" maxlength="80" placeholder="例如：志愿活动" value="{{zhiForm.label}}" data-field="label" bindinput="onZhiInput" />
+      </view>
+      <view class="field-block">
+        <text class="field-label">消息正文</text>
+        <textarea class="text-area message-area" maxlength="2000" placeholder="请填写要展示给少年会员的完整消息" value="{{zhiForm.content}}" data-field="content" bindinput="onZhiInput"></textarea>
+        <view class="count-tip">{{zhiForm.content.length || 0}} / 2000</view>
+      </view>
+    </view>
+
+    <view wx:if="{{selectedType === 'quiz-question'}}" class="form-card">
+      <view class="section-title">少年爱题目</view>
+      <view class="section-copy">每道题为单选题，至少填写两个选项。选项字母由系统自动安排。</view>
+
+      <view class="field-block">
+        <text class="field-label">所属主题</text>
+        <input class="text-input" maxlength="120" placeholder="例如：食管癌的故事" value="{{quizForm.topic}}" data-field="topic" bindinput="onQuizInput" />
+      </view>
+      <view class="field-row">
+        <view class="field-half">
+          <text class="field-label">科室</text>
+          <input class="text-input" maxlength="160" placeholder="例如：胸外科" value="{{quizForm.department}}" data-field="department" bindinput="onQuizInput" />
+        </view>
+        <view class="field-half">
+          <text class="field-label">来源说明</text>
+          <input class="text-input" maxlength="300" placeholder="例如：书稿第一章" value="{{quizForm.source}}" data-field="source" bindinput="onQuizInput" />
+        </view>
+      </view>
+      <view class="field-block">
+        <text class="field-label">题目</text>
+        <textarea class="text-area question-area" maxlength="3000" placeholder="请输入完整题目" value="{{quizForm.question}}" data-field="question" bindinput="onQuizInput"></textarea>
+      </view>
+
+      <view class="options-heading">
+        <view>
+          <view class="subsection-title">选项与正确答案</view>
+          <view class="section-copy">点击“设为正确答案”选择正确项。</view>
+        </view>
+        <button class="text-button" disabled="{{quizForm.options.length >= 8}}" bindtap="addOption">添加选项</button>
+      </view>
+      <view wx:for="{{quizForm.options}}" wx:key="key" wx:for-item="option" wx:for-index="optionIndex" class="option-card {{quizForm.correctKey === option.key ? 'is-correct' : ''}}">
+        <view class="option-topline">
+          <view class="option-letter">{{option.key}}</view>
+          <view class="option-actions">
+            <text
+              class="correct-choice"
+              data-key="{{option.key}}"
+              bindtap="chooseCorrectOption"
+            >{{quizForm.correctKey === option.key ? "✓ 正确答案" : "设为正确答案"}}</text>
+            <text
+              wx:if="{{quizForm.options.length > 2}}"
+              class="delete-link"
+              data-index="{{optionIndex}}"
+              bindtap="removeOption"
+            >删除</text>
+          </view>
+        </view>
+        <input class="text-input option-input" maxlength="1000" placeholder="填写选项内容" value="{{option.text}}" data-index="{{optionIndex}}" bindinput="onOptionInput" />
+      </view>
+
+      <view class="field-block">
+        <text class="field-label">答对提示（选填）</text>
+        <input class="text-input" maxlength="500" placeholder="例如：答对了，抓住了重点！" value="{{quizForm.correctFeedback}}" data-field="correctFeedback" bindinput="onQuizInput" />
+      </view>
+      <view class="field-block">
+        <text class="field-label">答错提示（选填）</text>
+        <input class="text-input" maxlength="500" placeholder="例如：再想一想，回到原文找找线索。" value="{{quizForm.wrongFeedback}}" data-field="wrongFeedback" bindinput="onQuizInput" />
+      </view>
+      <view class="field-block">
+        <text class="field-label">答案解析（选填）</text>
+        <textarea class="text-area explanation-area" maxlength="5000" placeholder="填写查看答案时展示的解析" value="{{quizForm.explanation}}" data-field="explanation" bindinput="onQuizInput"></textarea>
+      </view>
+      <view class="section-copy">题目会按发布时间展示，无需填写排序数字。</view>
+    </view>
+
+    <view class="action-card">
+      <view class="action-copy">提交后进入草稿校对页，确认无误后再送审和发布。</view>
+      <button class="primary-button" loading="{{submitting}}" disabled="{{submitting}}" bindtap="createDraft">生成草稿并继续</button>
+    </view>
+  </block>
+</view>

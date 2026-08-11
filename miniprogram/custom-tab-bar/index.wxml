@@ -1,0 +1,21 @@
+<view class="tabbar-shell">
+  <view class="tabbar">
+    <view
+      class="tab-item {{selected === index ? 'is-selected' : ''}}"
+      wx:for="{{list}}"
+      wx:key="pagePath"
+      data-index="{{index}}"
+      data-path="{{item.pagePath}}"
+      bindtap="switchTab"
+    >
+      <image class="tab-icon" src="{{item.iconPath}}" mode="aspectFit" />
+      <text class="tab-text" style="color: {{item.color}};">{{item.text}}</text>
+      <view
+        wx:if="{{selected === index}}"
+        class="tab-line"
+        style="background: {{item.color}};"
+      ></view>
+    </view>
+  </view>
+  <view class="safe-area"></view>
+</view>

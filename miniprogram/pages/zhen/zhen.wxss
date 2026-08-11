@@ -1,0 +1,147 @@
+page {
+  background: #f7f4f1;
+}
+
+.topic-page {
+  min-height: 100vh;
+  padding: 28rpx 24rpx 150rpx;
+  box-sizing: border-box;
+}
+
+.topic-intro,
+.state-card,
+.topic-card {
+  background: #ffffff;
+  border-radius: 24rpx;
+  box-shadow: 0 10rpx 28rpx rgba(88, 47, 34, 0.08);
+}
+
+.topic-intro {
+  padding: 30rpx;
+  margin-bottom: 24rpx;
+  border-top: 8rpx solid #d94432;
+}
+
+.topic-intro-title {
+  color: #8f251c;
+  font-size: 38rpx;
+  font-weight: 700;
+}
+
+.topic-intro-copy {
+  margin-top: 14rpx;
+  color: #6f625d;
+  font-size: 27rpx;
+  line-height: 1.7;
+}
+
+.state-card {
+  padding: 60rpx 30rpx;
+  color: #756a66;
+  font-size: 29rpx;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.state-card.error {
+  color: #a5372d;
+}
+
+.retry-btn {
+  width: 220rpx;
+  margin-top: 24rpx;
+  color: #ffffff;
+  background: #d94432;
+  border-radius: 999rpx;
+  font-size: 27rpx;
+}
+
+.retry-btn::after {
+  border: 0;
+}
+
+.topic-card {
+  position: relative;
+  display: flex;
+  gap: 22rpx;
+  min-height: 188rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-sizing: border-box;
+}
+
+.topic-cover {
+  flex: 0 0 144rpx;
+  width: 144rpx;
+  height: 144rpx;
+  border-radius: 18rpx;
+  background: #f3ddd8;
+}
+
+.topic-cover.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background: linear-gradient(145deg, #e97a69, #b92f25);
+  font-family: STKaiti, KaiTi, serif;
+  font-size: 64rpx;
+}
+
+.topic-copy {
+  flex: 1;
+  min-width: 0;
+  padding: 4rpx 0 46rpx;
+}
+
+.topic-title {
+  color: #392d29;
+  font-size: 32rpx;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.topic-number {
+  margin-bottom: 6rpx;
+  color: #b34136;
+  font-size: 21rpx;
+  letter-spacing: 2rpx;
+}
+
+.topic-producer,
+.topic-summary {
+  margin-top: 10rpx;
+  color: #83736d;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.topic-summary {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.topic-status {
+  position: absolute;
+  right: 24rpx;
+  bottom: 20rpx;
+  padding: 7rpx 16rpx;
+  color: #ae392f;
+  background: #fde9e6;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+}
+
+.topic-status.unlocked {
+  color: #16735c;
+  background: #e4f5ef;
+}
+
+.loading-more {
+  padding: 20rpx;
+  color: #887a75;
+  font-size: 25rpx;
+  text-align: center;
+}

@@ -1,0 +1,39 @@
+<view class="page">
+  <view class="notes-card">
+    <view class="card-heading">
+      <view class="card-title">我的读后感</view>
+      <view class="card-count" wx:if="{{hasNotes}}">共 {{notesTotal}} 篇</view>
+    </view>
+
+    <view class="note-list" wx:if="{{hasNotes}}">
+      <view class="note-row" wx:for="{{notes}}" wx:key="id">
+        <view class="note-title">《{{item.bookTitle}}》</view>
+        <view class="note-content">{{item.content}}</view>
+        <view class="note-meta">
+          <text>第 {{item.displayIndex}} 篇</text>
+          <text>{{item.completedAtText}}</text>
+        </view>
+      </view>
+      <view wx:if="{{notesLoading}}" class="notes-page-status">正在加载更多...</view>
+      <view
+        wx:elif="{{notesLoadError}}"
+        class="notes-page-status {{notesHasMore ? 'retry' : ''}}"
+        bindtap="retryLoadMore"
+      >
+        {{notesHasMore ? '加载失败，点击重试' : notesLoadError}}
+      </view>
+      <view wx:elif="{{notesHasMore}}" class="notes-page-status">继续上滑加载</view>
+      <view wx:else class="notes-page-status">已显示全部读后感</view>
+    </view>
+
+    <view class="empty-state" wx:else>
+      <view class="empty-lines">
+        <view class="empty-line"></view>
+        <view class="empty-line short"></view>
+        <view class="empty-line"></view>
+      </view>
+      <view class="empty-title">还没有读后感</view>
+      <view class="empty-desc">完成阅读并提交感想后，内容会展示在这里。</view>
+    </view>
+  </view>
+</view>

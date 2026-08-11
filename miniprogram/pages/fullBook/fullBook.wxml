@@ -1,0 +1,43 @@
+<view class="full-book-page">
+  <view class="state-card" wx:if="{{loading && !book}}">
+    <view class="state-mark">书</view>
+    <view class="state-title">正在读取完整书稿</view>
+    <view class="state-copy">请稍候，正在核对阅读权限…</view>
+  </view>
+
+  <view class="state-card error" wx:elif="{{errorMessage && !book}}">
+    <view class="state-mark">{{errorCode === 'BOOK_ACCESS_LOCKED' ? '锁' : '!'}}</view>
+    <view class="state-title">{{errorCode === 'BOOK_ACCESS_LOCKED' ? '全本尚未解锁' : '暂时无法阅读'}}</view>
+    <view class="state-copy">{{errorMessage}}</view>
+    <button class="state-btn" wx:if="{{errorCode === 'BOOK_ACCESS_LOCKED'}}" bindtap="returnCatalog">返回书目</button>
+    <button class="state-btn" wx:else bindtap="retryLoad">重新读取</button>
+  </view>
+
+  <block wx:elif="{{book}}">
+    <view class="book-heading">
+      <view class="unlock-label">全本已解锁</view>
+      <view class="book-title">《{{book.title}}》</view>
+      <view class="book-subtitle" wx:if="{{book.subtitle}}">{{book.subtitle}}</view>
+      <button class="pdf-btn {{book.pdf.downloadReady ? '' : 'is-disabled'}}" loading="{{downloading}}" disabled="{{downloading}}" bindtap="downloadPdf">
+        {{book.pdf.downloadReady ? '打开 / 保存 PDF' : (book.pdf.available ? 'PDF暂不可下载' : 'PDF尚未发布')}}
+      </button>
+      <view class="pdf-tip">PDF采用临时安全链接，打开后可使用右上角菜单保存。</view>
+    </view>
+
+    <view class="chapter-card" wx:for="{{chapters}}" wx:for-item="chapter" wx:key="id">
+      <view class="chapter-index">CHAPTER {{chapter.displayNo}}</view>
+      <view class="chapter-title">{{chapter.title}}</view>
+      <view class="chapter-divider"></view>
+
+      <view class="chapter-section" wx:for="{{chapter.sections}}" wx:for-item="section" wx:key="key">
+        <view class="section-title" wx:if="{{section.heading}}">{{section.heading}}</view>
+        <view class="chapter-paragraph" wx:for="{{section.paragraphs}}" wx:for-item="paragraph" wx:key="key">{{paragraph.text}}</view>
+      </view>
+    </view>
+
+    <button class="more-btn" wx:if="{{hasMore}}" loading="{{loadingMore}}" disabled="{{loadingMore}}" bindtap="loadMore">
+      {{loadingMore ? '正在读取' : '继续阅读下一章'}}
+    </button>
+    <view class="book-end" wx:else>— 已展示全部章节 —</view>
+  </block>
+</view>

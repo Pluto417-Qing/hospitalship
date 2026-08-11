@@ -1,0 +1,74 @@
+<view class="page">
+  <view class="intro-card">
+    <view class="intro-kicker">人工复审</view>
+    <view class="intro-title">待复审读后感</view>
+    <view class="intro-copy">这里仅显示敏感词命中的读后感。请结合文章语境判断，通过后发放奖励；不合适时退回读者修改。</view>
+    <view class="intro-actions">
+      <text wx:if="{{authorized}}" class="record-count">当前 {{records.length}} 条</text>
+      <text class="refresh-link" bindtap="refreshPending">{{loading ? "刷新中" : "刷新"}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{!accessChecked && loading}}" class="state-card">
+    <view class="state-spinner"></view>
+    <view class="state-title">正在验证复审权限</view>
+    <view class="state-copy">请稍候，系统正在读取待复审列表。</view>
+  </view>
+
+  <view wx:elif="{{accessChecked && !authorized}}" class="state-card denied-card">
+    <view class="state-mark">!</view>
+    <view class="state-title">没有复审权限</view>
+    <view class="state-copy">{{accessMessage || "请联系管理员为当前微信配置复审权限。"}}</view>
+    <button class="outline-button" bindtap="retryAccess">重新验证</button>
+  </view>
+
+  <block wx:elif="{{authorized}}">
+    <view wx:if="{{loadError}}" class="error-card">
+      <text>{{loadError}}</text>
+      <text class="retry-link" bindtap="refreshPending">重试</text>
+    </view>
+
+    <view wx:if="{{records.length}}" class="review-list">
+      <view wx:for="{{records}}" wx:key="id" class="review-card">
+        <view class="review-heading">
+          <view class="review-title">{{item.title}}</view>
+          <view class="review-category">{{item.reviewCategory}}</view>
+        </view>
+        <view class="review-time">{{item.submittedAtText}}</view>
+        <view class="comment-box">{{item.comment}}</view>
+        <view class="review-actions">
+          <button
+            class="review-button reject-button"
+            data-record-id="{{item.id}}"
+            data-decision="reject"
+            disabled="{{actionRecordId}}"
+            loading="{{actionRecordId === item.id}}"
+            bindtap="confirmReview"
+          >退回修改</button>
+          <button
+            class="review-button approve-button"
+            data-record-id="{{item.id}}"
+            data-decision="approve"
+            disabled="{{actionRecordId}}"
+            loading="{{actionRecordId === item.id}}"
+            bindtap="confirmReview"
+          >批准并发奖励</button>
+        </view>
+      </view>
+    </view>
+
+    <view wx:elif="{{!loading && !loadError}}" class="state-card empty-card">
+      <view class="empty-mark">✓</view>
+      <view class="state-title">当前没有待复审读后感</view>
+      <view class="state-copy">新提交且命中敏感词的读后感会自动出现在这里。</view>
+    </view>
+
+    <button
+      wx:if="{{hasMore}}"
+      class="load-more-button"
+      disabled="{{loading || actionRecordId}}"
+      loading="{{loading}}"
+      bindtap="loadMore"
+    >加载更多</button>
+  </block>
+</view>

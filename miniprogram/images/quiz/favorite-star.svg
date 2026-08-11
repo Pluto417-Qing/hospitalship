@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="star" x1="18" y1="10" x2="47" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ef4a43"/>
+      <stop offset="0.52" stop-color="#cf2f2b"/>
+      <stop offset="1" stop-color="#a91619"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="23" y1="14" x2="30" y2="34" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="2" stdDeviation="1.4" flood-color="#761317" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+  <path
+    d="M32 5.5 38.9 23l18.6 1.1-14.4 11.8 4.7 18-15.8-10-15.8 10 4.7-18L6.5 24.1 25.1 23 32 5.5Z"
+    fill="url(#star)"
+    filter="url(#shadow)"
+  />
+  <path d="M31.8 10.8 35.7 24 22.8 28.8 27 22.4l4.8-11.6Z" fill="url(#shine)"/>
+</svg>

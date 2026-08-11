@@ -1,0 +1,52 @@
+<view class="text-page" wx:if="{{content}}">
+  <scroll-view
+    class="text-card"
+    scroll-y
+    enhanced
+    show-scrollbar="true"
+  >
+    <view class="text-title">{{content.title}}</view>
+
+    <view
+      class="text-section"
+      wx:for="{{content.sections}}"
+      wx:for-item="section"
+      wx:key="heading"
+    >
+      <view class="section-title">{{section.heading}}</view>
+      <block wx:if="{{section.blocks && section.blocks.length}}">
+        <block wx:for="{{section.blocks}}" wx:for-item="block" wx:for-index="blockIndex" wx:key="blockIndex">
+          <view
+            wx:if="{{block.type === 'text'}}"
+            class="text-paragraph {{section.kind === 'authors' ? 'is-authors' : ''}}"
+          >
+            {{block.text}}
+          </view>
+          <view wx:elif="{{block.type === 'image'}}" class="inline-image-card">
+            <image
+              class="inline-image"
+              src="{{block.src}}"
+              mode="widthFix"
+              lazy-load
+            />
+            <view wx:if="{{block.caption}}" class="inline-image-caption">{{block.caption}}</view>
+          </view>
+        </block>
+      </block>
+      <block wx:else>
+        <view
+          class="text-paragraph {{section.kind === 'authors' ? 'is-authors' : ''}}"
+          wx:for="{{section.paragraphs}}"
+          wx:for-item="paragraph"
+          wx:key="*this"
+        >
+          {{paragraph}}
+        </view>
+      </block>
+    </view>
+
+    <view class="health-note" wx:if="{{content.disclaimer}}">
+      {{content.disclaimer}}
+    </view>
+  </scroll-view>
+</view>

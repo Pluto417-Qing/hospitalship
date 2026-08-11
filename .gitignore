@@ -1,0 +1,6 @@
+**/node_modules/
+services/admin-upload-broker/.env
+services/admin-upload-broker/.env.*
+!services/admin-upload-broker/.env.example
+services/admin-upload-broker/.tmp/
+npm-debug.log*

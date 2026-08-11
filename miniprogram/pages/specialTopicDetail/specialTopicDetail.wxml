@@ -1,0 +1,66 @@
+<view class="detail-page">
+  <view class="state-card" wx:if="{{loading}}">正在核对解锁状态并读取专题…</view>
+
+  <view class="state-card error" wx:elif="{{errorMessage}}">
+    <view>{{errorMessage}}</view>
+    <button
+      class="retry-btn"
+      wx:if="{{errorCode !== 'MEMBER_LOGIN_REQUIRED'}}"
+      bindtap="retryOpen"
+    >
+      重试
+    </button>
+  </view>
+
+  <block wx:elif="{{topic}}">
+    <view class="topic-heading">
+      <view class="topic-title">{{topic.title}}</view>
+      <view class="topic-producer" wx:if="{{topic.producer}}">{{topic.producer}}</view>
+      <view class="topic-summary" wx:if="{{topic.summary}}">{{topic.summary}}</view>
+      <view class="unlock-notice">{{unlockNotice}}</view>
+    </view>
+
+    <view
+      class="entry-card"
+      wx:for="{{entries}}"
+      wx:for-item="entry"
+      wx:key="id"
+    >
+      <block
+        wx:for="{{entry.blocks}}"
+        wx:for-item="block"
+        wx:for-index="blockIndex"
+        wx:key="key"
+      >
+        <view class="content-heading" wx:if="{{block.type === 'heading'}}">{{block.text}}</view>
+        <view class="content-text" wx:elif="{{block.type === 'text'}}">{{block.text}}</view>
+        <view class="content-image-wrap" wx:elif="{{block.type === 'image'}}">
+          <image class="content-image" src="{{block.src}}" mode="widthFix" />
+          <view class="image-caption" wx:if="{{block.caption}}">{{block.caption}}</view>
+        </view>
+      </block>
+    </view>
+
+    <view class="content-state error" wx:if="{{contentErrorMessage}}">
+      <view>{{contentErrorMessage}}</view>
+      <button class="content-retry-btn" bindtap="retryContent">
+        {{contentErrorCode === 'TOPIC_CHANGED_RELOAD' ? '重新打开专题' : '重试当前页'}}
+      </button>
+    </view>
+
+    <view class="content-state" wx:elif="{{contentLoading}}">
+      正在继续加载专题正文…
+    </view>
+
+    <view class="content-state" wx:elif="{{hasMore}}">
+      <view>上拉可继续阅读</view>
+      <button class="load-more-btn" bindtap="loadMore">继续加载</button>
+    </view>
+
+    <view class="content-state" wx:elif="{{entries.length === 0}}">
+      暂无可阅读的正文内容
+    </view>
+
+    <view class="content-state complete" wx:else>已加载全部内容</view>
+  </block>
+</view>

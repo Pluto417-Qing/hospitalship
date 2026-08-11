@@ -1,0 +1,164 @@
+page {
+  background: #f4f4f4;
+}
+
+.catalog-page {
+  min-height: 100vh;
+  padding: 30rpx 34rpx 54rpx;
+  box-sizing: border-box;
+}
+
+.content-card {
+  min-height: 142rpx;
+  margin-bottom: 22rpx;
+  padding: 18rpx 26rpx 12rpx;
+  color: #ffffff;
+  border-radius: 14rpx;
+  box-shadow: 0 8rpx 15rpx rgba(0, 0, 0, 0.14);
+  box-sizing: border-box;
+}
+
+.content-title {
+  font-size: 31rpx;
+  font-weight: 600;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.card-actions {
+  margin-top: 10rpx;
+  display: flex;
+  justify-content: space-between;
+}
+
+.action-btn {
+  min-width: 120rpx;
+  height: 54rpx;
+  margin: 0;
+  padding: 0 22rpx;
+  color: #ffffff;
+  background: transparent;
+  border: 2rpx solid rgba(255, 255, 255, 0.95);
+  border-radius: 999rpx;
+  font-size: 23rpx;
+  line-height: 50rpx;
+}
+
+.comment-card {
+  position: relative;
+  height: 330rpx;
+  margin-top: 30rpx;
+  padding: 22rpx;
+  background: #ffffff;
+  border: 2rpx solid #cc411a;
+  border-radius: 12rpx;
+  box-sizing: border-box;
+}
+
+.comment-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.comment-label {
+  padding: 7rpx 12rpx;
+  color: #3b3b3b;
+  border: 2rpx solid #cc411a;
+  border-radius: 8rpx;
+  font-size: 25rpx;
+  font-weight: 600;
+}
+
+.comment-guidance {
+  min-width: 0;
+  margin-left: 16rpx;
+  color: #aaaaaa;
+  font-size: 21rpx;
+  flex: 1;
+}
+
+.comment-input {
+  width: 100%;
+  height: 145rpx;
+  margin-top: 10rpx;
+  padding: 8rpx;
+  color: #333333;
+  font-size: 25rpx;
+  line-height: 1.65;
+  box-sizing: border-box;
+}
+
+.comment-target {
+  min-width: 0;
+  margin-top: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+  color: #666666;
+  font-size: 21rpx;
+  line-height: 1.45;
+}
+
+.target-title {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.target-state {
+  flex: none;
+  color: #a9442d;
+}
+
+.target-state.is-read {
+  color: #278768;
+}
+
+.submit-btn {
+  position: absolute;
+  right: 18rpx;
+  bottom: 16rpx;
+  height: 56rpx;
+  margin: 0;
+  padding: 0 18rpx;
+  color: #222222;
+  background: #ffffff;
+  border: 2rpx solid #cc411a;
+  border-radius: 10rpx;
+  font-size: 24rpx;
+  line-height: 52rpx;
+}
+
+.full-book-card {
+  margin-top: 24rpx;
+  text-align: center;
+}
+
+.full-book-title {
+  height: 190rpx;
+  padding: 0 20rpx;
+  background: #cc411a;
+  border-radius: 14rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.full-book-logo {
+  width: 560rpx;
+  height: 110rpx;
+}
+
+.full-book-status {
+  display: inline-block;
+  margin-top: 15rpx;
+  padding-bottom: 6rpx;
+  color: #555555;
+  border-bottom: 3rpx solid #cc411a;
+  font-size: 26rpx;
+  font-weight: 600;
+}

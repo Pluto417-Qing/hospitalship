@@ -1,0 +1,204 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="state-card">
+    <view class="state-title">正在读取会员信息</view>
+    <view class="state-desc">请稍候...</view>
+  </view>
+
+  <view wx:elif="{{loadError}}" class="state-card">
+    <view class="state-title">会员信息暂时无法读取</view>
+    <view class="state-desc">{{loadError}}</view>
+    <button class="state-button" bindtap="retryLoad">重新加载</button>
+    <button
+      wx:if="{{canManageUploads}}"
+      class="state-button state-button-secondary"
+      bindtap="goAdminUploads"
+    >
+      管理员内容中心
+    </button>
+  </view>
+
+  <view wx:elif="{{!registered}}" class="state-card register-state">
+    <view class="state-avatar">船</view>
+    <view class="state-title">欢迎来到少年我</view>
+    <view class="state-desc">注册少年会员后，可查看纪念章、红五星、家人状态和自己的读后感。</view>
+    <button class="state-button" bindtap="goRegister">注册少年会员</button>
+    <button
+      wx:if="{{canManageUploads}}"
+      class="state-button state-button-secondary"
+      bindtap="goAdminUploads"
+    >
+      管理员内容中心
+    </button>
+  </view>
+
+  <view wx:elif="{{!loggedIn}}" class="state-card register-state">
+    <view class="state-avatar">船</view>
+    <view class="state-title">登录少年会员</view>
+    <view class="state-desc">
+      当前微信已管理{{profiles.length}}位少年会员。请选择会员并输入对应的6位会员密码。
+    </view>
+    <button class="state-button" bindtap="goLogin">选择会员登录</button>
+    <button
+      wx:if="{{canAddMember}}"
+      class="state-button state-button-secondary"
+      bindtap="goAddMember"
+    >
+      新增少年会员
+    </button>
+    <button
+      wx:if="{{canManageUploads}}"
+      class="state-button state-button-secondary"
+      bindtap="goAdminUploads"
+    >
+      管理员内容中心
+    </button>
+  </view>
+
+  <block wx:else>
+    <view class="member-header" bindtap="goProfile">
+      <view class="member-identity">
+        <view class="member-avatar">船</view>
+        <view class="member-copy">
+          <view class="member-name">{{user.nickname}}</view>
+        </view>
+      </view>
+      <text class="header-arrow">›</text>
+    </view>
+
+    <view class="search-box" bindtap="showSearchPending">
+      <text></text>
+      <text class="search-icon">⌕</text>
+    </view>
+
+    <view class="panel badge-panel">
+      <view class="panel-title">我的纪念章</view>
+      <view class="badge-grid">
+        <view
+          class="badge-item {{item.title ? 'earned' : ''}}"
+          wx:for="{{badgeSlots}}"
+          wx:key="id"
+        >
+          <view class="badge-circle">
+            <text wx:if="{{item.title}}" class="badge-star">★</text>
+          </view>
+          <text class="badge-name">{{item.title || "待获得"}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="panel star-panel">
+      <view class="panel-title">我的红五星</view>
+      <view class="star-grid">
+        <view class="star-card">
+          <text class="red-star">★</text>
+          <text class="star-text">总数：{{user.starTotal}}</text>
+        </view>
+        <view class="star-card">
+          <text class="red-star">★</text>
+          <text class="star-text">已用：{{user.starUsed}}</text>
+        </view>
+        <view class="star-card">
+          <text class="red-star">★</text>
+          <text class="star-text">剩余：{{user.starRemain}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="panel family-panel">
+      <view class="panel-title">我的家人们</view>
+      <view class="family-actions">
+        <button
+          class="small-button"
+          open-type="share"
+          disabled="{{!familyInviteToken}}"
+        >
+          邀请亲友加入
+        </button>
+        <button class="small-button" bindtap="showFamilyStatus">查看亲友状态</button>
+      </view>
+    </view>
+
+    <view class="panel notes-panel">
+      <view class="notes-title-row">
+        <view class="panel-title">我的读后感</view>
+      </view>
+
+      <view wx:if="{{user.pendingReviewCount}}" class="review-notice">
+        {{user.pendingReviewCount}}篇需要人工复审，复审前不发星、不开放全本
+      </view>
+
+      <view wx:if="{{user.revisionRequiredCount}}" class="review-notice revision-required-notice">
+        {{user.revisionRequiredCount}}篇复审未通过，请修改后重新提交
+      </view>
+
+      <view wx:if="{{!notesUnlocked}}" class="password-row">
+        <text class="password-label">请输入密码：</text>
+        <input
+          class="password-input"
+          type="number"
+          password
+          maxlength="8"
+          placeholder="6位会员密码"
+          value="{{notePassword}}"
+          bindinput="onNotePasswordInput"
+        />
+        <button
+          class="confirm-button"
+          loading="{{notesLoading}}"
+          disabled="{{notesLoading}}"
+          bindtap="openReaderNotes"
+        >
+          确认
+        </button>
+      </view>
+
+      <block wx:else>
+        <view wx:if="{{readerNotes.length}}" class="inline-notes">
+          <view class="inline-note" wx:for="{{visibleReaderNotes}}" wx:key="id">
+            <view class="inline-note-title">《{{item.bookTitle}}》</view>
+            <view class="inline-note-content">{{item.content}}</view>
+          </view>
+          <view
+            wx:if="{{!notesExpanded && readerNotes.length > visibleReaderNotes.length}}"
+            class="expand-notes"
+            bindtap="openAllReaderNotes"
+          >
+            展开全部读后感
+          </view>
+        </view>
+        <view wx:else class="empty-notes">还没有读后感，完成阅读后会显示在这里。</view>
+      </block>
+    </view>
+  </block>
+
+  <view
+    wx:if="{{familyDialogVisible}}"
+    class="dialog-mask"
+    bindtap="hideFamilyStatus"
+  >
+    <view class="family-dialog" catchtap="stopPropagation">
+      <view class="dialog-title">亲友状态</view>
+      <view class="dialog-divider"></view>
+      <view wx:if="{{familyLoading}}" class="dialog-empty-tip">正在读取亲友状态...</view>
+      <block wx:elif="{{familyMembers.length}}">
+        <scroll-view class="family-list" scroll-y enhanced show-scrollbar="true">
+          <view
+            class="family-empty-row"
+            wx:for="{{familyMembers}}"
+            wx:key="id"
+          >
+            <text class="family-empty-name">{{item.displayName}}</text>
+            <text class="family-empty-status">{{item.statusText}}</text>
+          </view>
+        </scroll-view>
+      </block>
+      <block wx:else>
+        <view class="family-empty-row">
+          <text class="family-empty-name">暂无亲友</text>
+          <text class="family-empty-status">等待邀请</text>
+        </view>
+        <view class="dialog-empty-tip">暂未建立亲友关系，可返回后点击“邀请亲友加入”。</view>
+      </block>
+    </view>
+  </view>
+</view>

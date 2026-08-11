@@ -1,0 +1,39 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="state-card">正在读取个人信息...</view>
+  <view wx:elif="{{loadError}}" class="state-card">
+    <view>{{loadError}}</view>
+    <button class="action-button" bindtap="retryLoad">重新加载</button>
+  </view>
+  <block wx:elif="{{user}}">
+    <view class="profile-header">
+      <view class="avatar">船</view>
+      <view class="nickname">{{user.nickname}}</view>
+      <view class="member-label">少年会员</view>
+    </view>
+
+    <view class="info-card">
+      <view class="info-row">
+        <text class="info-label">会员编号</text>
+        <text class="info-value member-id">{{user.memberId}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">会员代号</text>
+        <text class="info-value">{{user.nickname}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">出生年份</text>
+        <text class="info-value">{{user.birthYear}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">注册县域</text>
+        <text class="info-value">{{user.city}}</text>
+      </view>
+      <view class="info-row last-row">
+        <text class="info-label">监护人手机号</text>
+        <text class="info-value">{{user.phoneMasked || "暂未获取"}}</text>
+      </view>
+    </view>
+
+    <button class="action-button" bindtap="goSettings">账号设置</button>
+  </block>
+</view>

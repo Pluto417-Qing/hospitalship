@@ -1,0 +1,33 @@
+<view class="page">
+  <view class="page-heading">会员注册提示</view>
+
+  <view class="step-bar" aria-label="注册进度：第一步，共三步">
+    <view class="step active"></view>
+    <view class="step"></view>
+    <view class="step"></view>
+  </view>
+
+  <view class="document-card">
+    <scroll-view class="document-scroll" scroll-y enhanced show-scrollbar="false">
+      <view class="document-title">《中国医院船》少年会员注册提示</view>
+      <view class="document-lead">
+        请少年读者与监护人共同阅读以下内容，确认理解后继续注册。
+      </view>
+
+      <view class="document-section last-section">
+        <view class="paragraph">{{registrationNotice}}</view>
+      </view>
+    </scroll-view>
+
+    <view class="agree-row" bindtap="toggleAgree">
+      <view class="checkbox {{agreed ? 'checked' : ''}}">
+        <text wx:if="{{agreed}}" class="check-symbol">✓</text>
+      </view>
+      <text class="agree-text">我和监护人已认真阅读并知晓上述会员注册提示</text>
+    </view>
+  </view>
+
+  <view class="footer">
+    <button class="next-btn" bindtap="goNext">下一步</button>
+  </view>
+</view>

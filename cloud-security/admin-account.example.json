@@ -1,0 +1,11 @@
+{
+  "_id": "replace-with-stable-admin-id",
+  "openid": "replace-with-wechat-openid",
+  "displayName": "内容管理员",
+  "role": "admin",
+  "roles": [
+    "admin"
+  ],
+  "status": "active",
+  "schemaVersion": 1
+}

@@ -1,0 +1,316 @@
+{
+  "version": 1,
+  "deploymentMode": "manual-console-checklist",
+  "autoDeployable": false,
+  "notice": "本文件是与当前云函数查询对应的人工建索引清单，不是微信云开发可直接导入或自动部署的配置。请在目标环境控制台逐条创建并以控制台实际字段类型、索引状态和查询结果为准。数组值字段在控制台仍填写升序或降序；本清单通过 valueType 单独标注数组值。",
+  "indexes": [
+    {
+      "collection": "adminContentDrafts",
+      "purpose": "上传管理员按更新时间稳定分页查看自己的内容草稿",
+      "fields": [
+        { "field": "ownerAdminId", "mode": "asc" },
+        { "field": "updateTime", "mode": "desc" },
+        { "field": "_id", "mode": "desc" }
+      ]
+    },
+    {
+      "collection": "adminContentDrafts",
+      "purpose": "内容审核员按状态和更新时间稳定读取全局审核队列",
+      "fields": [
+        { "field": "state", "mode": "asc" },
+        { "field": "updateTime", "mode": "desc" },
+        { "field": "_id", "mode": "desc" }
+      ]
+    },
+    {
+      "collection": "adminUploads",
+      "purpose": "管理员按创建时间稳定分页查看自己的上传任务",
+      "fields": [
+        { "field": "ownerAdminId", "mode": "asc" },
+        { "field": "createdAt", "mode": "desc" },
+        { "field": "_id", "mode": "desc" }
+      ]
+    },
+    {
+      "collection": "adminAccounts",
+      "purpose": "按微信身份和启用状态校验复审管理员",
+      "fields": [
+        { "field": "openid", "mode": "asc" },
+        { "field": "status", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "records",
+      "purpose": "管理员稳定分页读取待人工复审的读后感",
+      "fields": [
+        { "field": "status", "mode": "asc" },
+        { "field": "submittedAt", "mode": "desc" },
+        { "field": "_id", "mode": "desc" }
+      ]
+    },
+    {
+      "collection": "users",
+      "purpose": "按当前微信与完整会员编号找回密码",
+      "fields": [
+        { "field": "openid", "mode": "asc" },
+        { "field": "memberId", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "records",
+      "purpose": "当前少年会员的已通过读后感分页",
+      "fields": [
+        { "field": "userId", "mode": "asc" },
+        { "field": "status", "mode": "asc" },
+        { "field": "completedAt", "mode": "desc" },
+        { "field": "_id", "mode": "desc" }
+      ]
+    },
+    {
+      "collection": "records",
+      "purpose": "读取当前少年会员的记录并按文档编号稳定分页",
+      "fields": [
+        { "field": "userId", "mode": "asc" },
+        { "field": "_id", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "records",
+      "purpose": "首位少年会员兼容旧 openid 记录",
+      "fields": [
+        { "field": "openid", "mode": "asc" },
+        { "field": "_id", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "records",
+      "purpose": "首位少年会员合并旧的已通过读后感",
+      "fields": [
+        { "field": "openid", "mode": "asc" },
+        { "field": "status", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "records",
+      "purpose": "提交时检查同一内容的旧 openid 完成记录",
+      "fields": [
+        { "field": "openid", "mode": "asc" },
+        { "field": "contentId", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "rewardLedger",
+      "purpose": "当前少年会员的内容完成奖励读取与计数",
+      "fields": [
+        { "field": "userId", "mode": "asc" },
+        { "field": "rewardType", "mode": "asc" },
+        { "field": "status", "mode": "asc" },
+        { "field": "_id", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "rewardLedger",
+      "purpose": "首位少年会员兼容旧 openid 奖励读取",
+      "fields": [
+        { "field": "openid", "mode": "asc" },
+        { "field": "rewardType", "mode": "asc" },
+        { "field": "status", "mode": "asc" },
+        { "field": "_id", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "rewardLedger",
+      "purpose": "专题消费前汇总当前少年会员全部已发放奖励",
+      "fields": [
+        { "field": "userId", "mode": "asc" },
+        { "field": "status", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "rewardLedger",
+      "purpose": "专题消费兼容首位少年会员旧 openid 奖励",
+      "fields": [
+        { "field": "openid", "mode": "asc" },
+        { "field": "status", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "rewardLedger",
+      "purpose": "提交时检查同一内容的旧 openid 奖励并避免重复发放",
+      "fields": [
+        { "field": "openid", "mode": "asc" },
+        { "field": "contentId", "mode": "asc" },
+        { "field": "rewardType", "mode": "asc" },
+        { "field": "status", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "contents",
+      "purpose": "按栏目读取已发布内容目录",
+      "fields": [
+        { "field": "status", "mode": "asc" },
+        { "field": "catalogViews", "mode": "asc", "valueType": "array" },
+        { "field": "sortOrder", "mode": "asc" },
+        { "field": "_id", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "contents",
+      "purpose": "首次发布整书 PDF 时按书籍归属和正文顺序生成已发布章节",
+      "fields": [
+        { "field": "bookId", "mode": "asc" },
+        { "field": "status", "mode": "asc" },
+        { "field": "sortOrder", "mode": "asc" },
+        { "field": "_id", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "books",
+      "purpose": "管理员选择整书 PDF 上传目标时读取已发布书目",
+      "fields": [
+        { "field": "status", "mode": "asc" },
+        { "field": "publishedAt", "mode": "desc" },
+        { "field": "_id", "mode": "desc" }
+      ]
+    },
+    {
+      "collection": "readingStates",
+      "purpose": "批量读取当前少年会员的正文打开状态",
+      "fields": [
+        { "field": "userId", "mode": "asc" },
+        { "field": "contentId", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "zhiEntries",
+      "purpose": "少年志按时间范围倒序分页",
+      "fields": [
+        { "field": "status", "mode": "asc" },
+        { "field": "eventAt", "mode": "desc" },
+        { "field": "_id", "mode": "desc" }
+      ]
+    },
+    {
+      "collection": "audioTracks",
+      "purpose": "按独立配音版本读取当前唯一已发布音轨",
+      "fields": [
+        { "field": "contentId", "mode": "asc" },
+        { "field": "contentRevision", "mode": "asc" },
+        { "field": "audioRevision", "mode": "asc" },
+        { "field": "status", "mode": "asc" },
+        { "field": "trackNo", "mode": "asc" },
+        { "field": "_id", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "audioTracks",
+      "purpose": "按内容版本读取已发布音轨",
+      "fields": [
+        { "field": "contentId", "mode": "asc" },
+        { "field": "contentRevision", "mode": "asc" },
+        { "field": "status", "mode": "asc" },
+        { "field": "trackNo", "mode": "asc" },
+        { "field": "_id", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "familyInvites",
+      "purpose": "限制少年会员在时间窗口内创建邀请的频率",
+      "fields": [
+        { "field": "inviterUserId", "mode": "asc" },
+        { "field": "createdAt", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "familyRelations",
+      "purpose": "以关系发起方列出有效亲友",
+      "fields": [
+        { "field": "memberUserId", "mode": "asc" },
+        { "field": "status", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "familyRelations",
+      "purpose": "以关系接收方列出有效亲友",
+      "fields": [
+        { "field": "relativeUserId", "mode": "asc" },
+        { "field": "status", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "memberMessages",
+      "purpose": "当前少年会员的已发布消息倒序分页",
+      "fields": [
+        { "field": "userId", "mode": "asc" },
+        { "field": "status", "mode": "asc" },
+        { "field": "publishedAt", "mode": "desc" },
+        { "field": "_id", "mode": "desc" }
+      ]
+    },
+    {
+      "collection": "memberMessages",
+      "purpose": "仅把属于当前少年会员的指定消息标为已读",
+      "fields": [
+        { "field": "_id", "mode": "asc" },
+        { "field": "userId", "mode": "asc" },
+        { "field": "status", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "specialTopics",
+      "purpose": "已发布小专题按发布时间倒序分页",
+      "fields": [
+        { "field": "status", "mode": "asc" },
+        { "field": "publishedAt", "mode": "desc" },
+        { "field": "_id", "mode": "desc" }
+      ]
+    },
+    {
+      "collection": "specialTopicEntries",
+      "purpose": "按专题版本读取已发布图文条目",
+      "fields": [
+        { "field": "topicId", "mode": "asc" },
+        { "field": "topicRevision", "mode": "asc" },
+        { "field": "status", "mode": "asc" },
+        { "field": "sortOrder", "mode": "asc" },
+        { "field": "_id", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "specialTopicUnlocks",
+      "purpose": "列出当前少年会员已经解锁的小专题",
+      "fields": [
+        { "field": "userId", "mode": "asc" },
+        { "field": "status", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "quizQuestions",
+      "purpose": "已发布少年爱题目按发布时间倒序",
+      "fields": [
+        { "field": "status", "mode": "asc" },
+        { "field": "publishedAt", "mode": "desc" },
+        { "field": "_id", "mode": "desc" }
+      ]
+    },
+    {
+      "collection": "quizQuestions",
+      "purpose": "提交答题记录时读取指定的已发布题目",
+      "fields": [
+        { "field": "_id", "mode": "asc" },
+        { "field": "status", "mode": "asc" }
+      ]
+    },
+    {
+      "collection": "bookChapters",
+      "purpose": "按书稿版本读取已发布整书章节",
+      "fields": [
+        { "field": "bookId", "mode": "asc" },
+        { "field": "bookRevision", "mode": "asc" },
+        { "field": "status", "mode": "asc" },
+        { "field": "sortOrder", "mode": "asc" },
+        { "field": "_id", "mode": "asc" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+page {
+  background: #f7f8f8;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 28rpx 28rpx 38rpx;
+}
+
+.page-heading {
+  color: #303535;
+  font-size: 32rpx;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.step-bar {
+  margin: 18rpx 0 24rpx;
+  display: flex;
+  gap: 12rpx;
+}
+
+.step {
+  height: 5rpx;
+  background: #d8dfdd;
+  border-radius: 999rpx;
+  flex: 1;
+}
+
+.step.active {
+  background: #2b9a7c;
+}
+
+.document-card {
+  padding: 24rpx 24rpx 22rpx;
+  background: #ffffff;
+  border: 2rpx solid #78bea9;
+  border-radius: 12rpx;
+  box-shadow: 0 8rpx 18rpx rgba(32, 107, 86, 0.06);
+}
+
+.document-scroll {
+  height: 930rpx;
+  padding: 4rpx 4rpx 12rpx;
+  box-sizing: border-box;
+}
+
+.document-title {
+  color: #25322f;
+  font-size: 30rpx;
+  font-weight: 600;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.document-lead,
+.paragraph {
+  color: #59635f;
+  font-size: 24rpx;
+  line-height: 1.75;
+  text-align: justify;
+}
+
+.document-lead {
+  margin-top: 24rpx;
+  padding: 20rpx;
+  background: #f3faf7;
+  border-radius: 8rpx;
+}
+
+.rule-item {
+  margin-top: 26rpx;
+  display: flex;
+  align-items: flex-start;
+}
+
+.rule-number {
+  width: 54rpx;
+  height: 42rpx;
+  margin-right: 16rpx;
+  color: #ffffff;
+  font-size: 20rpx;
+  font-weight: 600;
+  line-height: 42rpx;
+  text-align: center;
+  background: #2b9a7c;
+  border-radius: 999rpx;
+  flex-shrink: 0;
+}
+
+.rule-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.rule-title {
+  margin-bottom: 7rpx;
+  color: #25735e;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.agree-row {
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #deebe7;
+  display: flex;
+  align-items: flex-start;
+}
+
+.checkbox {
+  width: 34rpx;
+  height: 34rpx;
+  margin-top: 2rpx;
+  background: #ffffff;
+  border: 2rpx solid #68bea7;
+  border-radius: 5rpx;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox.checked {
+  background: #2b9a7c;
+  border-color: #2b9a7c;
+}
+
+.check-symbol {
+  color: #ffffff;
+  font-size: 25rpx;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.agree-text {
+  margin-left: 14rpx;
+  color: #68736f;
+  font-size: 22rpx;
+  line-height: 1.55;
+}
+
+.button-row {
+  margin-top: 24rpx;
+  display: flex;
+  gap: 18rpx;
+}
+
+.previous-button,
+.next-button {
+  height: 78rpx;
+  margin: 0;
+  padding: 0;
+  border-radius: 999rpx;
+  flex: 1;
+  font-size: 28rpx;
+  line-height: 78rpx;
+}
+
+.previous-button {
+  color: #2b9a7c;
+  background: #ffffff;
+  border: 2rpx solid #75c5af;
+}
+
+.next-button {
+  color: #ffffff;
+  background: #2b9a7c;
+}

@@ -1,0 +1,117 @@
+page {
+  background: #f5f6f6;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 24rpx;
+}
+
+.notes-card {
+  padding: 22rpx;
+  background: #ffffff;
+  border: 2rpx solid #8bcfbd;
+  border-radius: 11rpx;
+  box-shadow: 0 5rpx 12rpx rgba(27, 95, 76, 0.05);
+}
+
+.card-heading {
+  padding-bottom: 16rpx;
+  border-bottom: 2rpx solid #65bda5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-title {
+  color: #303836;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.card-count {
+  color: #2c9575;
+  font-size: 20rpx;
+}
+
+.note-row {
+  padding: 18rpx 4rpx 16rpx;
+  border-bottom: 1rpx solid #9fd3c5;
+}
+
+.note-row:last-child {
+  border-bottom: 0;
+}
+
+.note-title {
+  color: #35413d;
+  font-size: 23rpx;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.note-content {
+  margin-top: 8rpx;
+  color: #6e7975;
+  font-size: 21rpx;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.note-meta {
+  margin-top: 10rpx;
+  color: #9aa39f;
+  font-size: 18rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notes-page-status {
+  padding: 22rpx 0 6rpx;
+  color: #98a39f;
+  font-size: 19rpx;
+  text-align: center;
+}
+
+.notes-page-status.retry {
+  color: #2c9575;
+}
+
+.empty-state {
+  padding: 62rpx 20rpx 54rpx;
+  text-align: center;
+}
+
+.empty-lines {
+  width: 128rpx;
+  margin: 0 auto 26rpx;
+  padding: 24rpx 18rpx 12rpx;
+  border: 2rpx solid #78c4b0;
+  border-radius: 8rpx;
+}
+
+.empty-line {
+  height: 4rpx;
+  margin-bottom: 12rpx;
+  background: #8acdbb;
+  border-radius: 999rpx;
+}
+
+.empty-line.short {
+  width: 70%;
+}
+
+.empty-title {
+  color: #3c4744;
+  font-size: 25rpx;
+  font-weight: 600;
+}
+
+.empty-desc {
+  margin-top: 12rpx;
+  color: #899390;
+  font-size: 21rpx;
+  line-height: 1.65;
+}

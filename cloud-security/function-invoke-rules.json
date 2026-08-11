@@ -1,0 +1,56 @@
+{
+  "*": {
+    "invoke": false
+  },
+  "adminContentCenter": {
+    "invoke": "auth != null"
+  },
+  "familyCenter": {
+    "invoke": "auth != null"
+  },
+  "getAudioManifest": {
+    "invoke": "auth != null"
+  },
+  "getContentCatalog": {
+    "invoke": "auth != null"
+  },
+  "getContentDetail": {
+    "invoke": "auth != null"
+  },
+  "getFullBookAccess": {
+    "invoke": "auth != null"
+  },
+  "getNotes": {
+    "invoke": "auth != null"
+  },
+  "getUser": {
+    "invoke": "auth != null"
+  },
+  "getYouthTimeline": {
+    "invoke": "auth != null"
+  },
+  "login": {
+    "invoke": "auth != null"
+  },
+  "markContentRead": {
+    "invoke": "auth != null"
+  },
+  "moderationCenter": {
+    "invoke": "auth != null"
+  },
+  "memberInbox": {
+    "invoke": "auth != null"
+  },
+  "register": {
+    "invoke": "auth != null"
+  },
+  "quizCenter": {
+    "invoke": "auth != null"
+  },
+  "saveRecord": {
+    "invoke": "auth != null"
+  },
+  "specialTopicCenter": {
+    "invoke": "auth != null"
+  }
+}

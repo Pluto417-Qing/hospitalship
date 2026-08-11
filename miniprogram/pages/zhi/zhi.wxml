@@ -1,0 +1,70 @@
+<view class="timeline-page">
+  <view class="date-heading">
+    <view class="year-trigger" bindtap="openDatePicker">
+      <text>{{selectedYear}}</text>
+      <text wx:if="{{selectedMonth}}" class="selected-month">· {{selectedMonth}}月</text>
+      <text class="year-chevron">⌄</text>
+    </view>
+  </view>
+
+  <view class="timeline-list" wx:if="{{visibleEntries.length}}">
+    <view
+      class="timeline-item"
+      wx:for="{{visibleEntries}}"
+      wx:key="id"
+    >
+      <view class="timeline-node"></view>
+      <view class="message-card">
+        <view class="message-topline">
+          <view class="message-date">
+            {{item.month}}月{{item.day}}日 <text class="flag">⚑</text>
+          </view>
+          <view class="message-source">{{item.source}}</view>
+        </view>
+        <view class="message-content">{{item.content}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-card" wx:elif="{{timelineLoading}}">
+    <view class="empty-title">正在读取已审核消息</view>
+    <view class="empty-desc">请稍候。</view>
+  </view>
+
+  <view class="empty-card" wx:else>
+    <view class="empty-title">该月份暂无已审核消息</view>
+    <view class="empty-desc">请选择其他年月，或等待正式内容接入。</view>
+    <button class="empty-btn" bindtap="clearMonthFilter">查看全年</button>
+  </view>
+
+  <view
+    wx:if="{{datePickerVisible}}"
+    class="picker-mask"
+    bindtap="cancelDatePicker"
+  >
+    <view class="picker-sheet" catchtap="stopPropagation">
+      <view class="picker-title">请选择日期</view>
+      <picker-view
+        class="date-picker"
+        value="{{draftPickerValue}}"
+        indicator-style="height: 96rpx;"
+        bindchange="onPickerChange"
+      >
+        <picker-view-column>
+          <view class="picker-item" wx:for="{{yearOptions}}" wx:key="*this">
+            {{item}}
+          </view>
+        </picker-view-column>
+        <picker-view-column>
+          <view class="picker-item" wx:for="{{monthOptions}}" wx:key="*this">
+            {{item}}
+          </view>
+        </picker-view-column>
+      </picker-view>
+      <view class="picker-actions">
+        <button class="picker-btn cancel-btn" bindtap="cancelDatePicker">取消</button>
+        <button class="picker-btn confirm-btn" bindtap="confirmDatePicker">确定</button>
+      </view>
+    </view>
+  </view>
+</view>

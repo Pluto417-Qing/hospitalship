@@ -1,0 +1,101 @@
+{
+  "pages": [
+    "pages/splash/splash",
+    "pages/index/index",
+    "pages/bookText/bookText",
+    "pages/bookAudio/bookAudio",
+    "pages/article/article",
+    "pages/summary/summary",
+    "pages/zhi/zhi",
+    "pages/ai/ai",
+    "pages/zhen/zhen",
+    "pages/member/member",
+    "pages/memberLogin/memberLogin",
+    "pages/memberProfile/memberProfile",
+    "pages/memberRecovery/memberRecovery",
+    "pages/register1/register1",
+    "pages/register2/register2",
+    "pages/register3/register3",
+    "pages/memberSettings/memberSettings"
+  ],
+  "subPackages": [
+    {
+      "root": "pages/bookCatalog",
+      "pages": ["bookCatalog"]
+    },
+    {
+      "root": "pages/fullBook",
+      "pages": ["fullBook"]
+    },
+    {
+      "root": "pages/articleAudio",
+      "pages": ["articleAudio"]
+    },
+    {
+      "root": "pages/specialTopicDetail",
+      "pages": ["specialTopicDetail"]
+    },
+    {
+      "root": "pages/readerNotes",
+      "pages": ["readerNotes"]
+    },
+    {
+      "root": "pages/adminUploads",
+      "pages": ["adminUploads"]
+    },
+    {
+      "root": "pages/adminModeration",
+      "pages": ["adminModeration"]
+    },
+    {
+      "root": "pages/adminEditorial",
+      "pages": ["adminEditorial"]
+    },
+    {
+      "root": "pages/adminDraft",
+      "pages": ["adminDraft"]
+    },
+    {
+      "root": "pages/adminPreview",
+      "pages": ["adminPreview"]
+    }
+  ],
+  "window": {
+    "navigationBarTitleText": "中国医院船",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f5f7f6"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#777777",
+    "selectedColor": "#2fa986",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/zhi/zhi",
+        "text": "少年志"
+      },
+      {
+        "pagePath": "pages/ai/ai",
+        "text": "少年爱"
+      },
+      {
+        "pagePath": "pages/zhen/zhen",
+        "text": "少年真"
+      },
+      {
+        "pagePath": "pages/member/member",
+        "text": "少年我"
+      }
+    ]
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

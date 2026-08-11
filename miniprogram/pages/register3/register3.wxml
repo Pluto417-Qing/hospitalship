@@ -1,0 +1,95 @@
+<view class="page">
+  <view class="page-heading">填写会员信息</view>
+
+  <view class="step-bar" aria-label="注册进度：第三步，共三步">
+    <view class="step"></view>
+    <view class="step"></view>
+    <view class="step active"></view>
+  </view>
+
+  <view class="form-card">
+    <view class="form-section">
+      <view class="field">
+        <view class="field-label">会员代号</view>
+        <input
+          class="control"
+          placeholder="3-5位汉字"
+          placeholder-class="placeholder"
+          maxlength="5"
+          value="{{nickname}}"
+          bindinput="onNicknameInput"
+        />
+      </view>
+
+      <view class="field">
+        <view class="field-label">出生年份</view>
+        <picker mode="selector" range="{{yearOptions}}" bindchange="onYearChange">
+          <view class="control picker-control {{birthYear ? 'has-value' : ''}}">
+            <text>{{birthYear || '请选择出生年份'}}</text>
+            <text class="picker-arrow">⌄</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="field last-field">
+        <view class="field-label">居住地域</view>
+        <picker mode="region" value="{{region}}" bindchange="onRegionChange">
+          <view class="region-row">
+            <view class="region-cell {{region[0] ? 'has-value' : ''}}">
+              <text>{{region[0] || '省'}}</text><text class="picker-arrow">⌄</text>
+            </view>
+            <view class="region-cell {{region[1] ? 'has-value' : ''}}">
+              <text>{{region[1] || '市'}}</text><text class="picker-arrow">⌄</text>
+            </view>
+            <view class="region-cell {{region[2] ? 'has-value' : ''}}">
+              <text>{{region[2] || '区/县'}}</text><text class="picker-arrow">⌄</text>
+            </view>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="form-section security-section">
+      <view class="section-title">账号安全设置</view>
+
+      <view class="field">
+        <view class="field-label">会员密码</view>
+        <input
+          class="control"
+          placeholder="6位数字"
+          placeholder-class="placeholder"
+          type="number"
+          maxlength="6"
+          password="true"
+          value="{{password}}"
+          bindinput="onPasswordInput"
+        />
+      </view>
+
+      <view class="field">
+        <view class="field-label">密码找回</view>
+        <input
+          class="control"
+          placeholder="输入监护人手机号码"
+          placeholder-class="placeholder"
+          type="number"
+          maxlength="11"
+          value="{{phone}}"
+          bindinput="onPhoneInput"
+        />
+      </view>
+    </view>
+  </view>
+
+  <view class="button-row">
+    <button class="previous-button" bindtap="goPrev">上一步</button>
+    <button
+      class="submit-button"
+      loading="{{submitting}}"
+      disabled="{{submitting}}"
+      bindtap="submitRegister"
+    >
+      提交
+    </button>
+  </view>
+</view>

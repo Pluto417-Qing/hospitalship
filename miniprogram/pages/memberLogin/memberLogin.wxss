@@ -1,0 +1,196 @@
+page {
+  background: #f5f6f6;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 42rpx 30rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.page-title {
+  color: #303836;
+  font-size: 38rpx;
+  font-weight: 600;
+  text-align: center;
+}
+
+.page-desc {
+  margin: 16rpx auto 34rpx;
+  color: #75807c;
+  font-size: 23rpx;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.admin-entry {
+  min-height: 104rpx;
+  margin: 0 0 26rpx;
+  padding: 18rpx 20rpx;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  background: #fff7f5;
+  border: 2rpx solid #c95850;
+  border-radius: 12rpx;
+}
+
+.admin-entry-mark {
+  width: 60rpx;
+  height: 60rpx;
+  flex: 0 0 auto;
+  color: #ffffff;
+  font-size: 25rpx;
+  font-weight: 700;
+  line-height: 60rpx;
+  text-align: center;
+  background: #b93731;
+  border-radius: 10rpx;
+}
+
+.admin-entry-copy {
+  min-width: 0;
+  margin-left: 17rpx;
+  flex: 1;
+}
+
+.admin-entry-title {
+  color: #a9322d;
+  font-size: 25rpx;
+  font-weight: 700;
+}
+
+.admin-entry-desc {
+  margin-top: 7rpx;
+  color: #8b716d;
+  font-size: 18rpx;
+  line-height: 1.45;
+}
+
+.admin-entry-arrow {
+  margin-left: 14rpx;
+  color: #b93731;
+  font-size: 36rpx;
+}
+
+.state-card,
+.password-card,
+.profile-item {
+  background: #ffffff;
+  border: 2rpx solid #8bcfbd;
+  border-radius: 12rpx;
+}
+
+.state-card {
+  padding: 44rpx 28rpx;
+  color: #66716d;
+  font-size: 25rpx;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.section-title,
+.field-label {
+  margin-bottom: 14rpx;
+  color: #35403c;
+  font-size: 25rpx;
+  font-weight: 600;
+}
+
+.profile-item {
+  min-height: 106rpx;
+  margin-bottom: 14rpx;
+  padding: 16rpx 20rpx;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.profile-item.selected {
+  background: #eaf7f3;
+  border-color: #2b9a7c;
+}
+
+.avatar {
+  width: 68rpx;
+  height: 68rpx;
+  margin-right: 16rpx;
+  color: #ffffff;
+  font-size: 28rpx;
+  line-height: 68rpx;
+  text-align: center;
+  background: #397ca9;
+  border-radius: 8rpx;
+}
+
+.profile-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.nickname {
+  color: #303936;
+  font-size: 27rpx;
+  font-weight: 600;
+}
+
+.member-hint {
+  margin-top: 7rpx;
+  color: #77827e;
+  font-size: 19rpx;
+}
+
+.select-dot {
+  width: 22rpx;
+  height: 22rpx;
+  margin-left: 14rpx;
+  border: 3rpx solid #78bdaa;
+  border-radius: 50%;
+}
+
+.profile-item.selected .select-dot {
+  background: #2b9a7c;
+  box-shadow: inset 0 0 0 5rpx #ffffff;
+}
+
+.password-card {
+  margin-top: 28rpx;
+  padding: 24rpx;
+}
+
+.password-input {
+  height: 72rpx;
+  padding: 0 18rpx;
+  color: #303936;
+  font-size: 26rpx;
+  background: #f8faf9;
+  border: 1rpx solid #d4ddda;
+  border-radius: 7rpx;
+}
+
+.recovery-link {
+  padding-top: 18rpx;
+  color: #288f70;
+  font-size: 22rpx;
+  text-align: right;
+}
+
+.primary-button,
+.secondary-button {
+  height: 76rpx;
+  margin-top: 28rpx;
+  font-size: 26rpx;
+  line-height: 76rpx;
+  border-radius: 999rpx;
+}
+
+.primary-button {
+  color: #ffffff;
+  background: #2b9a7c;
+}
+
+.secondary-button {
+  color: #2b9a7c;
+  background: #ffffff;
+  border: 2rpx solid #2b9a7c;
+}

@@ -1,0 +1,73 @@
+page {
+  background: #f5f6f6;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 30rpx 28rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.notice-card,
+.form-card {
+  background: #ffffff;
+  border: 2rpx solid #8bcfbd;
+  border-radius: 12rpx;
+}
+
+.notice-card {
+  padding: 26rpx;
+}
+
+.notice-title {
+  color: #303936;
+  font-size: 29rpx;
+  font-weight: 600;
+}
+
+.notice-text {
+  margin-top: 12rpx;
+  color: #707b77;
+  font-size: 22rpx;
+  line-height: 1.7;
+}
+
+.form-card {
+  margin-top: 22rpx;
+  padding: 0 24rpx;
+}
+
+.field {
+  padding: 23rpx 0;
+  border-bottom: 1rpx solid #e1e8e5;
+}
+
+.last-field {
+  border-bottom: 0;
+}
+
+.field-label {
+  margin-bottom: 12rpx;
+  color: #46514d;
+  font-size: 23rpx;
+}
+
+.control {
+  height: 70rpx;
+  padding: 0 16rpx;
+  color: #303936;
+  font-size: 25rpx;
+  background: #f8faf9;
+  border: 1rpx solid #d5dedb;
+  border-radius: 7rpx;
+}
+
+.submit-button {
+  height: 76rpx;
+  margin-top: 30rpx;
+  color: #ffffff;
+  font-size: 26rpx;
+  line-height: 76rpx;
+  background: #2b9a7c;
+  border-radius: 999rpx;
+}

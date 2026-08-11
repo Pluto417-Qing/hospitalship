@@ -1,0 +1,91 @@
+<view class="page-with-tabbar home-page">
+  <view class="hero">
+    <swiper
+      class="hero-swiper"
+      autoplay
+      circular
+      interval="4500"
+      duration="500"
+      bindchange="onBannerChange"
+    >
+      <swiper-item wx:for="{{banners}}" wx:key="assetKey">
+        <view class="hero-slide">
+          <image
+            wx:if="{{item.url}}"
+            class="hero-image"
+            src="{{item.url}}"
+            mode="aspectFill"
+            data-index="{{index}}"
+            binderror="onHeroImageError"
+          />
+          <view wx:else class="hero-image-placeholder"></view>
+        </view>
+      </swiper-item>
+    </swiper>
+
+    <view class="hero-indicators">
+      <view
+        class="hero-indicator {{currentBanner === item ? 'is-active' : ''}}"
+        wx:for="{{indicators}}"
+        wx:key="*this"
+      ></view>
+    </view>
+
+    <view
+      class="custom-nav"
+      style="padding-top: {{statusBarHeight}}px; height: {{statusBarHeight + navBarHeight}}px;"
+    >
+      <view class="nav-title" style="height: {{navBarHeight}}px;">
+        <image
+          class="nav-logo"
+          src="/images/brand/china-hospital-ship-horizontal.png"
+          mode="aspectFit"
+          style="height: {{navBarHeight}}px;"
+          aria-label="中国医院船"
+        />
+      </view>
+    </view>
+  </view>
+
+  <view class="content">
+    <view class="book-shell" bindtap="openBookCatalog">
+      <view class="book-card rehab-card">
+        <view class="book-cover book-cover-placeholder">
+          <image
+            wx:if="{{bookCovers.rehab}}"
+            class="book-cover-image"
+            src="{{bookCovers.rehab}}"
+            mode="aspectFill"
+            data-key="rehab"
+            binderror="onBookCoverError"
+          />
+        </view>
+        <view class="book-info">
+          <view class="book-name">《中国医院船》</view>
+          <view class="book-subtitle">康复医学的故事</view>
+          <view class="book-link">全部 <text class="arrow">›</text></view>
+        </view>
+      </view>
+    </view>
+
+    <view class="book-shell" bindtap="openSummary">
+      <view class="book-card summary-card">
+        <view class="book-cover book-cover-placeholder">
+          <image
+            wx:if="{{bookCovers.summary}}"
+            class="book-cover-image"
+            src="{{bookCovers.summary}}"
+            mode="aspectFill"
+            data-key="summary"
+            binderror="onBookCoverError"
+          />
+        </view>
+        <view class="book-info">
+          <view class="book-name">《中国医院船》</view>
+          <view class="book-subtitle">三六五篇小故事</view>
+          <view class="book-link">全部 <text class="arrow">›</text></view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

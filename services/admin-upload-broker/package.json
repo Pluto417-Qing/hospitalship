@@ -1,0 +1,18 @@
+{
+  "name": "hospitalship-admin-upload-broker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One-time-ticket upload broker for private CloudBase admin assets",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/app.test.js test/artifact-inspector.test.js test/broker.test.js test/config.test.js test/multipart-receiver.test.js test/reservation-store.test.js test/security.test.js"
+  },
+  "dependencies": {
+    "@cloudbase/node-sdk": "3.18.3",
+    "busboy": "1.6.0"
+  }
+}

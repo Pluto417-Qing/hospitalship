@@ -1,0 +1,400 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="state-card">
+    <view class="state-spinner"></view>
+    <text class="state-title">正在读取内容草稿</text>
+    <text class="state-copy">系统会同时核验当前微信的管理权限。</text>
+  </view>
+
+  <view wx:elif="{{!authorized || !draft}}" class="state-card denied-card">
+    <view class="state-mark">!</view>
+    <text class="state-title">草稿暂时无法打开</text>
+    <text class="state-copy">{{pageError}}</text>
+    <button class="outline-button" bindtap="retryLoad">重新读取</button>
+  </view>
+
+  <block wx:else>
+    <view class="hero-card">
+      <view class="hero-topline">
+        <text class="asset-pill">{{draft.assetLabel}}</text>
+        <text class="state-pill state-{{draft.stateTone}}">{{draft.stateLabel}}</text>
+      </view>
+      <view class="hero-title">{{draft.title}}</view>
+      <view class="hero-meta">{{draft.isEditorial ? "最近保存：" : ("草稿版本：" + draft.draftVersion + " · ")}}{{draft.updateLabel}}</view>
+    </view>
+
+    <view wx:if="{{pageError}}" class="result-message error-message">
+      <text>{{pageError}}</text>
+      <view wx:if="{{serverIssues.length}}" class="issue-list compact-issues">
+        <view wx:for="{{serverIssues}}" wx:key="*this" class="issue-row">• {{item}}</view>
+      </view>
+    </view>
+    <view wx:if="{{actionMessage}}" class="result-message success-message">{{actionMessage}}</view>
+
+    <view wx:if="{{(draft.canEdit && capabilities.drafts) || (draft.canReview && capabilities.review) || (draft.canPublish && capabilities.publish)}}" class="card quick-action-card">
+      <view class="quick-action-heading">
+        <view>
+          <view class="section-title">快捷操作</view>
+          <view class="section-subtitle">长内容可在页面顶部直接完成当前步骤</view>
+        </view>
+        <text wx:if="{{formDirty}}" class="unsaved-label">有未保存修改</text>
+      </view>
+
+      <view wx:if="{{draft.canEdit && capabilities.drafts}}" class="quick-action-row">
+        <button class="quick-action-button quick-secondary-button" disabled="{{busyAction}}" loading="{{busyAction === 'saveDraft'}}" bindtap="saveDraft">保存草稿</button>
+        <button class="quick-action-button quick-primary-button" disabled="{{busyAction || draft.issues.length > 0}}" loading="{{busyAction === 'submitDraft'}}" bindtap="submitDraft">提交复核</button>
+      </view>
+
+      <view wx:if="{{draft.canReview && capabilities.review}}" class="quick-action-row">
+        <button class="quick-action-button quick-secondary-button" disabled="{{busyAction || !capabilities.assetPreview}}" loading="{{busyAction === 'preview' || busyAction === 'saveDraft'}}" bindtap="previewAsset">{{draft.usesStructuredPreview ? "预览发布效果" : (previewPlaying ? "录音播放中" : "预览原件")}}</button>
+        <button class="quick-action-button quick-primary-button" disabled="{{busyAction || previewedSnapshotHash !== draft.snapshotHash}}" loading="{{busyAction === 'reviewDraft'}}" data-decision="approve" bindtap="reviewDraft">{{draft.usesStructuredPreview ? "批准当前内容" : "批准当前快照"}}</button>
+      </view>
+
+      <view wx:if="{{draft.canPublish && capabilities.publish}}" class="quick-action-row quick-publish-row">
+        <button class="quick-action-button quick-primary-button" disabled="{{busyAction}}" loading="{{busyAction === 'publishDraft'}}" bindtap="publishDraft">发布已批准版本</button>
+      </view>
+    </view>
+
+    <view class="card source-card">
+      <view class="section-heading">
+        <view>
+          <view class="section-title">{{draft.usesStructuredPreview ? "发布效果预览" : "原件与结构检查"}}</view>
+          <view class="section-subtitle">{{draft.usesStructuredPreview ? "批准前请按读者看到的内容逐项核对" : "批准前必须核对当前快照对应的原件"}}</view>
+        </view>
+        <button class="mini-outline-button" disabled="{{busyAction || !capabilities.assetPreview}}" loading="{{busyAction === 'preview' || busyAction === 'saveDraft'}}" bindtap="previewAsset">{{draft.usesStructuredPreview ? (formDirty ? "保存并预览" : "预览发布效果") : (previewPlaying ? "录音播放中" : (formDirty ? "保存并预览" : "预览原件"))}}</button>
+      </view>
+      <view wx:if="{{!draft.isEditorial}}" class="inspection-grid">
+        <view class="inspection-item">
+          <text class="inspection-value">{{draft.inspection.format || "未知"}}</text>
+          <text class="inspection-label">文件格式</text>
+        </view>
+        <view class="inspection-item">
+          <text class="inspection-value">{{draft.inspection.paragraphCount || 0}}</text>
+          <text class="inspection-label">解析段落</text>
+        </view>
+        <view class="inspection-item">
+          <text class="inspection-value">{{draft.inspection.embeddedImageCount || 0}}</text>
+          <text class="inspection-label">内嵌图片</text>
+        </view>
+      </view>
+      <view wx:if="{{!draft.isEditorial && draft.inspection.needsManualStructure}}" class="inline-warning">原件需要人工确认完整结构，不能只发布自动抽取的预览片段。</view>
+      <view wx:if="{{draft.assetType === 'manuscript' || draft.assetType === 'special-topic'}}" class="confirm-panel">
+        <view>
+          <view class="confirm-title">确认完整结构</view>
+          <view class="confirm-copy">确认自动解析内容没有被截断，图片、段落和章节已经人工校对。开启后直接点击上方“保存并预览”。</view>
+        </view>
+        <switch color="#b93731" checked="{{form.structureConfirmed}}" disabled="{{!draft.canEdit || busyAction}}" data-field="structureConfirmed" bindchange="onSwitchChange" />
+      </view>
+      <view wx:if="{{draft.canReview && capabilities.review}}" class="preview-audit {{previewedSnapshotHash === draft.snapshotHash ? 'is-complete' : ''}}">
+        {{draft.usesStructuredPreview ? (previewedSnapshotHash === draft.snapshotHash ? "已核对当前发布内容" : "尚未核对当前发布内容") : (previewedSnapshotHash === draft.snapshotHash ? "已核对当前审核快照" : "尚未核对当前审核快照")}}
+      </view>
+    </view>
+
+    <view class="card editor-card">
+      <view class="section-heading">
+        <view>
+          <view class="section-title">内容资料</view>
+          <view class="section-subtitle">{{draft.canEdit && capabilities.drafts ? "可编辑状态，保存后以服务端检查结果为准" : "当前状态只读"}}</view>
+        </view>
+        <view class="version-tools">
+          <text wx:if="{{formDirty}}" class="unsaved-label">有未保存修改</text>
+          <text wx:if="{{!draft.isEditorial}}" class="version-label">V{{draft.draftVersion}}</text>
+          <text class="refresh-draft-link" bindtap="refreshDraft">重新载入</text>
+        </view>
+      </view>
+
+      <block wx:if="{{draft.assetType === 'manuscript'}}">
+        <view class="field-block">
+          <text class="field-label">文章标题</text>
+          <input class="text-input" maxlength="120" value="{{form.title}}" disabled="{{!draft.canEdit || busyAction}}" data-field="title" bindinput="onFieldInput" />
+        </view>
+        <view class="field-block">
+          <text class="field-label">副标题</text>
+          <input class="text-input" maxlength="240" value="{{form.subtitle}}" disabled="{{!draft.canEdit || busyAction}}" data-field="subtitle" bindinput="onFieldInput" />
+        </view>
+        <view class="field-row">
+          <view class="field-half">
+            <text class="field-label">来源</text>
+            <input class="text-input" maxlength="120" value="{{form.sourceLabel}}" disabled="{{!draft.canEdit || busyAction}}" data-field="sourceLabel" bindinput="onFieldInput" />
+          </view>
+          <view class="field-half">
+            <text class="field-label">科室</text>
+            <input class="text-input" maxlength="80" value="{{form.department}}" disabled="{{!draft.canEdit || busyAction}}" data-field="department" bindinput="onFieldInput" />
+          </view>
+        </view>
+        <view class="field-block">
+          <text class="field-label">归档位置</text>
+          <view class="readonly-field">《中国医院船》正文目录（系统自动归档和排序）</view>
+        </view>
+        <view class="field-block switch-list">
+          <view class="switch-row">
+            <text>展示在书稿目录</text>
+            <switch color="#b93731" checked="{{form.catalogBook}}" disabled="{{!draft.canEdit || busyAction}}" data-field="catalogBook" bindchange="onSwitchChange" />
+          </view>
+          <view class="switch-row">
+            <text>展示在读后感目录</text>
+            <switch color="#b93731" checked="{{form.catalogSummary}}" disabled="{{!draft.canEdit || busyAction}}" data-field="catalogSummary" bindchange="onSwitchChange" />
+          </view>
+        </view>
+        <view class="field-block">
+          <text class="field-label">免责声明</text>
+          <textarea class="text-area compact-area" maxlength="1000" value="{{form.disclaimer}}" disabled="{{!draft.canEdit || busyAction}}" data-field="disclaimer" bindinput="onFieldInput"></textarea>
+        </view>
+
+        <view class="subsection-heading">
+          <view>
+            <view class="subsection-title">正文结构</view>
+            <view class="section-subtitle">每个小节可以包含多个正文段落</view>
+          </view>
+          <button wx:if="{{draft.canEdit && capabilities.drafts}}" class="text-button" disabled="{{busyAction}}" bindtap="addSection">添加小节</button>
+        </view>
+        <view wx:for="{{form.sections}}" wx:key="index" wx:for-item="section" wx:for-index="sectionIndex" class="nested-card">
+          <view class="nested-heading">
+            <text>小节 {{sectionIndex + 1}}</text>
+            <text wx:if="{{draft.canEdit && form.sections.length > 1 && !section.hasEmbeddedImages}}" class="danger-link" data-index="{{sectionIndex}}" bindtap="removeSection">删除</text>
+          </view>
+          <input class="text-input" maxlength="120" placeholder="小节标题（可以留空）" value="{{section.heading}}" disabled="{{!draft.canEdit || busyAction}}" data-index="{{sectionIndex}}" data-field="heading" bindinput="onSectionFieldInput" />
+          <view wx:for="{{section.blocks}}" wx:key="index" wx:for-item="contentBlock" wx:for-index="blockIndex" class="paragraph-block">
+            <view wx:if="{{contentBlock.type === 'image'}}" class="embedded-image-placeholder">
+              <view class="embedded-image-mark">图</view>
+              <view>
+                <view class="embedded-image-title">Word 内嵌图片</view>
+                <view class="embedded-image-caption">{{contentBlock.caption || "无图片说明"}}</view>
+              </view>
+            </view>
+            <block wx:else>
+              <textarea class="text-area paragraph-area" maxlength="10000" placeholder="正文段落" value="{{contentBlock.text}}" disabled="{{!draft.canEdit || busyAction}}" data-section-index="{{sectionIndex}}" data-block-index="{{blockIndex}}" bindinput="onManuscriptBlockInput"></textarea>
+              <text wx:if="{{draft.canEdit && section.textBlockCount > 1}}" class="inline-delete" data-section-index="{{sectionIndex}}" data-block-index="{{blockIndex}}" bindtap="removeParagraph">删除本段</text>
+            </block>
+          </view>
+          <button wx:if="{{draft.canEdit && capabilities.drafts}}" class="add-row-button" disabled="{{busyAction}}" data-section-index="{{sectionIndex}}" bindtap="addParagraph">＋ 添加段落</button>
+        </view>
+      </block>
+
+      <block wx:elif="{{draft.assetType === 'audio'}}">
+        <view class="field-block">
+          <text class="field-label">录音标题</text>
+          <input class="text-input" maxlength="120" value="{{form.title}}" disabled="{{!draft.canEdit || busyAction}}" data-field="title" bindinput="onFieldInput" />
+        </view>
+        <view class="field-block">
+          <text class="field-label">配音者</text>
+          <input class="text-input" maxlength="80" value="{{form.narrator}}" disabled="{{!draft.canEdit || busyAction}}" data-field="narrator" bindinput="onFieldInput" />
+        </view>
+        <view class="field-block">
+          <text class="field-label">录音信息</text>
+          <view wx:if="{{form.durationSeconds > 0}}" class="readonly-field">
+            系统已识别，时长约 {{form.durationSeconds}} 秒，无需手工填写技术参数。
+          </view>
+          <view wx:else class="inline-warning">
+            暂未读出录音时长，请返回上传页重新选择原录音文件。
+          </view>
+        </view>
+      </block>
+
+      <block wx:elif="{{draft.assetType === 'special-topic'}}">
+        <view class="field-block">
+          <text class="field-label">专题标题</text>
+          <input class="text-input" maxlength="120" value="{{form.title}}" disabled="{{!draft.canEdit || busyAction}}" data-field="title" bindinput="onFieldInput" />
+        </view>
+        <view class="field-block">
+          <text class="field-label">专题简介</text>
+          <textarea class="text-area compact-area" maxlength="500" value="{{form.summary}}" disabled="{{!draft.canEdit || busyAction}}" data-field="summary" bindinput="onFieldInput"></textarea>
+        </view>
+        <view class="field-row">
+          <view class="field-half">
+            <text class="field-label">制作人</text>
+            <input class="text-input" maxlength="120" value="{{form.producer}}" disabled="{{!draft.canEdit || busyAction}}" data-field="producer" bindinput="onFieldInput" />
+          </view>
+          <view class="field-half">
+            <text class="field-label">首次解锁红五星</text>
+            <input class="text-input" type="number" value="{{form.unlockCostStars}}" disabled="{{!draft.canEdit || busyAction}}" data-field="unlockCostStars" bindinput="onFieldInput" />
+          </view>
+        </view>
+        <view class="field-help">专题和图文条目均按当前先后顺序展示，无需填写排序数字。</view>
+        <view class="subsection-heading">
+          <view>
+            <view class="subsection-title">图文条目</view>
+            <view class="section-subtitle">Word 里的图片会自动保留在原来的图文位置</view>
+          </view>
+          <button wx:if="{{draft.canEdit && capabilities.drafts}}" class="text-button" disabled="{{busyAction}}" bindtap="addTopicEntry">添加条目</button>
+        </view>
+        <view wx:for="{{form.entries}}" wx:key="index" wx:for-item="entry" wx:for-index="entryIndex" class="nested-card">
+          <view class="nested-heading">
+            <text>条目 {{entryIndex + 1}}</text>
+            <text wx:if="{{draft.canEdit && form.entries.length > 1 && !entry.hasEmbeddedImages}}" class="danger-link" data-index="{{entryIndex}}" bindtap="removeTopicEntry">删除</text>
+          </view>
+          <view wx:for="{{entry.blocks}}" wx:key="index" wx:for-item="block" wx:for-index="blockIndex" class="block-card">
+            <view class="block-toolbar">
+              <picker mode="selector" range="{{blockTypeOptions}}" range-key="label" value="{{block.type === 'heading' ? 1 : 0}}" disabled="{{!draft.canEdit || busyAction || block.type === 'image'}}" data-entry-index="{{entryIndex}}" data-block-index="{{blockIndex}}" bindchange="onTopicBlockTypeChange">
+                <view class="type-picker">{{block.type === "heading" ? "小标题" : block.type === "image" ? "Word 内图片" : "正文"}}⌄</view>
+              </picker>
+              <text wx:if="{{draft.canEdit && entry.blocks.length > 1 && !block.embeddedAssetId}}" class="inline-delete" data-entry-index="{{entryIndex}}" data-block-index="{{blockIndex}}" bindtap="removeTopicBlock">删除块</text>
+            </view>
+            <block wx:if="{{block.type === 'image'}}">
+              <view wx:if="{{block.embeddedAssetId}}" class="embedded-image-placeholder">
+                <view class="embedded-image-mark">图</view>
+                <view>
+                  <view class="embedded-image-title">Word 内嵌图片</view>
+                  <view class="embedded-image-caption">图片位置已保留</view>
+                </view>
+              </view>
+              <view wx:else class="inline-warning">这张图片未能从 Word 中读取，请返回上传页重新选择原文件。</view>
+              <input class="text-input block-second-input" maxlength="300" placeholder="图片说明" value="{{block.caption}}" disabled="{{!draft.canEdit || busyAction}}" data-entry-index="{{entryIndex}}" data-block-index="{{blockIndex}}" data-field="caption" bindinput="onTopicBlockInput" />
+            </block>
+            <textarea wx:else class="text-area paragraph-area" maxlength="10000" placeholder="{{block.type === 'heading' ? '小标题' : '图文正文'}}" value="{{block.text}}" disabled="{{!draft.canEdit || busyAction}}" data-entry-index="{{entryIndex}}" data-block-index="{{blockIndex}}" data-field="text" bindinput="onTopicBlockInput"></textarea>
+          </view>
+          <button wx:if="{{draft.canEdit && capabilities.drafts}}" class="add-row-button" disabled="{{busyAction}}" data-entry-index="{{entryIndex}}" bindtap="addTopicBlock">＋ 添加内容块</button>
+        </view>
+      </block>
+
+      <block wx:elif="{{draft.assetType === 'zhi-entry'}}">
+        <view class="field-block">
+          <text class="field-label">消息日期</text>
+          <picker mode="date" value="{{form.eventAt}}" start="2000-01-01" end="2100-12-31" disabled="{{!draft.canEdit || busyAction}}" bindchange="onEditorialDateChange">
+            <view class="picker-value">{{form.eventAt || "请选择日期"}}<text>⌄</text></view>
+          </picker>
+        </view>
+        <view class="field-block">
+          <text class="field-label">消息来源</text>
+          <input class="text-input" maxlength="120" placeholder="例如：中国医院船编辑部" value="{{form.source}}" disabled="{{!draft.canEdit || busyAction}}" data-field="source" bindinput="onFieldInput" />
+        </view>
+        <view class="field-block">
+          <text class="field-label">消息标签</text>
+          <input class="text-input" maxlength="80" placeholder="例如：志愿活动" value="{{form.label}}" disabled="{{!draft.canEdit || busyAction}}" data-field="label" bindinput="onFieldInput" />
+        </view>
+        <view class="field-block">
+          <text class="field-label">消息正文</text>
+          <textarea class="text-area editorial-message-area" maxlength="2000" placeholder="请填写要展示给少年会员的完整消息" value="{{form.content}}" disabled="{{!draft.canEdit || busyAction}}" data-field="content" bindinput="onFieldInput"></textarea>
+        </view>
+      </block>
+
+      <block wx:elif="{{draft.assetType === 'quiz-question'}}">
+        <view class="field-block">
+          <text class="field-label">所属主题</text>
+          <input class="text-input" maxlength="120" placeholder="例如：食管癌的故事" value="{{form.topic}}" disabled="{{!draft.canEdit || busyAction}}" data-field="topic" bindinput="onFieldInput" />
+        </view>
+        <view class="field-row">
+          <view class="field-half">
+            <text class="field-label">科室</text>
+            <input class="text-input" maxlength="160" placeholder="例如：胸外科" value="{{form.department}}" disabled="{{!draft.canEdit || busyAction}}" data-field="department" bindinput="onFieldInput" />
+          </view>
+          <view class="field-half">
+            <text class="field-label">来源说明</text>
+            <input class="text-input" maxlength="300" placeholder="例如：书稿第一章" value="{{form.source}}" disabled="{{!draft.canEdit || busyAction}}" data-field="source" bindinput="onFieldInput" />
+          </view>
+        </view>
+        <view class="field-block">
+          <text class="field-label">题目</text>
+          <textarea class="text-area editorial-question-area" maxlength="3000" placeholder="请输入完整题目" value="{{form.question}}" disabled="{{!draft.canEdit || busyAction}}" data-field="question" bindinput="onFieldInput"></textarea>
+        </view>
+        <view class="subsection-heading">
+          <view>
+            <view class="subsection-title">选项与正确答案</view>
+            <view class="section-subtitle">点击“设为正确答案”选择正确项</view>
+          </view>
+          <button wx:if="{{draft.canEdit && capabilities.drafts}}" class="text-button" disabled="{{busyAction || form.options.length >= 8}}" bindtap="addQuizOption">添加选项</button>
+        </view>
+        <view wx:for="{{form.options}}" wx:key="key" wx:for-item="quizOption" wx:for-index="optionIndex" class="quiz-option-card {{form.correctKey === quizOption.key ? 'is-correct' : ''}}">
+          <view class="quiz-option-topline">
+            <view class="quiz-option-letter">{{quizOption.key}}</view>
+            <view class="quiz-option-actions">
+              <text wx:if="{{draft.canEdit}}" class="correct-choice" data-key="{{quizOption.key}}" bindtap="chooseQuizCorrectOption">{{form.correctKey === quizOption.key ? "✓ 正确答案" : "设为正确答案"}}</text>
+              <text wx:else class="correct-choice">{{form.correctKey === quizOption.key ? "✓ 正确答案" : ""}}</text>
+              <text wx:if="{{draft.canEdit && form.options.length > 2}}" class="danger-link" data-index="{{optionIndex}}" bindtap="removeQuizOption">删除</text>
+            </view>
+          </view>
+          <input class="text-input quiz-option-input" maxlength="1000" placeholder="填写选项内容" value="{{quizOption.text}}" disabled="{{!draft.canEdit || busyAction}}" data-index="{{optionIndex}}" bindinput="onQuizOptionInput" />
+        </view>
+        <view class="field-block">
+          <text class="field-label">答对提示（选填）</text>
+          <input class="text-input" maxlength="500" value="{{form.correctFeedback}}" disabled="{{!draft.canEdit || busyAction}}" data-field="correctFeedback" bindinput="onFieldInput" />
+        </view>
+        <view class="field-block">
+          <text class="field-label">答错提示（选填）</text>
+          <input class="text-input" maxlength="500" value="{{form.wrongFeedback}}" disabled="{{!draft.canEdit || busyAction}}" data-field="wrongFeedback" bindinput="onFieldInput" />
+        </view>
+        <view class="field-block">
+          <text class="field-label">答案解析（选填）</text>
+          <textarea class="text-area editorial-explanation-area" maxlength="5000" value="{{form.explanation}}" disabled="{{!draft.canEdit || busyAction}}" data-field="explanation" bindinput="onFieldInput"></textarea>
+        </view>
+      </block>
+
+      <block wx:elif="{{draft.assetType === 'full-book-pdf'}}">
+        <view class="field-block">
+          <text class="field-label">整书标题</text>
+          <input class="text-input" maxlength="160" value="{{form.title}}" disabled="{{!draft.canEdit || busyAction}}" data-field="title" bindinput="onFieldInput" />
+        </view>
+        <view class="field-block">
+          <text class="field-label">副标题</text>
+          <input class="text-input" maxlength="240" value="{{form.subtitle}}" disabled="{{!draft.canEdit || busyAction}}" data-field="subtitle" bindinput="onFieldInput" />
+        </view>
+        <view class="field-block">
+          <text class="field-label">PDF 文件名</text>
+          <input class="text-input" maxlength="180" value="{{form.fileName}}" disabled="{{!draft.canEdit || busyAction}}" data-field="fileName" bindinput="onFieldInput" />
+        </view>
+        <view class="field-block">
+          <text class="field-label">正文目录</text>
+          <view class="readonly-field">
+            {{form.structureMode === "reuse-current" ? "沿用已发布的 Word 正文目录" : "首次发布时，从已经发布的 Word 正文自动生成"}}
+          </view>
+          <view class="field-help">请先发布至少一篇首页书稿。章节名称、顺序和正文均由系统带入，不需要填写编号。</view>
+        </view>
+      </block>
+
+      <block wx:else>
+        <view class="field-block">
+          <text class="field-label">图片说明</text>
+          <textarea class="text-area compact-area" maxlength="300" value="{{form.caption}}" disabled="{{!draft.canEdit || busyAction}}" data-field="caption" bindinput="onFieldInput"></textarea>
+        </view>
+        <view class="field-help">专题图片由上传的 Word 自动带入，不需要填写内部编号。</view>
+      </block>
+
+      <view wx:if="{{draft.assetType === 'manuscript' || draft.assetType === 'special-topic'}}" class="confirm-panel">
+        <view>
+          <view class="confirm-title">确认完整结构</view>
+          <view class="confirm-copy">完成全部内容校对后，可在这里再次确认。此开关与页面顶部状态同步。</view>
+        </view>
+        <switch color="#b93731" checked="{{form.structureConfirmed}}" disabled="{{!draft.canEdit || busyAction}}" data-field="structureConfirmed" bindchange="onSwitchChange" />
+      </view>
+
+    </view>
+
+    <view wx:if="{{draft.issues.length}}" class="card issue-card">
+      <view class="section-title">送审前还需处理</view>
+      <view class="issue-list">
+        <view wx:for="{{draft.issues}}" wx:key="*this" class="issue-row">• {{item}}</view>
+      </view>
+      <view wx:if="{{draft.canEdit}}" class="field-help">修改后请先保存，系统会重新计算完整性提示。</view>
+    </view>
+
+    <view wx:if="{{draft.canEdit && capabilities.drafts}}" class="card action-card">
+      <view class="section-title">保存与送审</view>
+      <view class="section-subtitle">先保存并消除所有完整性提示，再提交给审核员。</view>
+      <view class="button-row">
+        <button class="secondary-button" disabled="{{busyAction}}" loading="{{busyAction === 'saveDraft'}}" bindtap="saveDraft">保存草稿</button>
+        <button class="primary-button" disabled="{{busyAction || draft.issues.length > 0}}" loading="{{busyAction === 'submitDraft'}}" bindtap="submitDraft">提交复核</button>
+      </view>
+    </view>
+
+    <view wx:if="{{draft.canReview && capabilities.review}}" class="card action-card review-card">
+      <view class="section-title">内容复核</view>
+      <view class="section-subtitle">{{draft.usesStructuredPreview ? "退回或驳回必须填写原因；批准前必须预览发布效果。" : "退回或驳回必须填写原因；批准前必须预览当前原件。"}}</view>
+      <textarea class="text-area review-note" maxlength="1000" placeholder="填写审核意见（批准时可不填）" value="{{reviewNote}}" disabled="{{busyAction}}" bindinput="onReviewNoteInput"></textarea>
+      <button class="approve-button" disabled="{{busyAction || previewedSnapshotHash !== draft.snapshotHash}}" loading="{{busyAction === 'reviewDraft'}}" data-decision="approve" bindtap="reviewDraft">{{draft.usesStructuredPreview ? "批准当前内容" : "批准当前快照"}}</button>
+      <view class="button-row review-buttons">
+        <button class="secondary-button warning-button" disabled="{{busyAction}}" data-decision="request_changes" bindtap="reviewDraft">退回修改</button>
+        <button class="secondary-button reject-button" disabled="{{busyAction}}" data-decision="reject" bindtap="reviewDraft">驳回</button>
+      </view>
+    </view>
+
+    <view wx:if="{{draft.canPublish && capabilities.publish}}" class="card action-card publish-card">
+      <view class="section-title">正式发布</view>
+      <view class="section-subtitle">{{draft.isEditorial ? "系统会再次校验已批准的内容，若期间发生变化则不会覆盖。" : "系统会再次校验审核快照、目标版本和资源文件，冲突时不会覆盖。"}}</view>
+      <button class="publish-button" disabled="{{busyAction}}" loading="{{busyAction === 'publishDraft'}}" bindtap="publishDraft">发布已批准版本</button>
+    </view>
+
+    <view wx:if="{{draft.state === 'in_review' && !capabilities.review}}" class="card passive-card">草稿正在等待独立审核，当前不能继续编辑。</view>
+    <view wx:if="{{draft.state === 'approved' && !capabilities.publish}}" class="card passive-card">草稿已经审核通过，等待具有发布权限的管理员操作。</view>
+    <view wx:if="{{draft.state === 'published'}}" class="card published-card">这个版本已经正式发布到读者端。</view>
+    <view wx:if="{{draft.state === 'rejected'}}" class="card rejected-card">这个草稿已被终止。如需重新提交，请重新上传原件并创建新草稿。</view>
+  </block>
+</view>

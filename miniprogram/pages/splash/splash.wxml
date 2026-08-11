@@ -1,0 +1,8 @@
+<view class="splash" bindtap="skip">
+  <image
+    class="brand-logo"
+    src="/images/brand/china-hospital-ship-vertical.png"
+    mode="aspectFit"
+    aria-label="中国医院船"
+  />
+</view>

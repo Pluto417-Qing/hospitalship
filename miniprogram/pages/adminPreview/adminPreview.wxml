@@ -1,0 +1,134 @@
+<view class="preview-page">
+  <view class="safety-card">
+    <view class="safety-mark">预览</view>
+    <view class="safety-copy">
+      <view class="safety-title">管理员只读预览</view>
+      <view class="safety-text">这里不会正式发布、不会扣除红五星，也不会写入会员、阅读或答题记录。</view>
+    </view>
+  </view>
+
+  <view wx:if="{{errorMessage}}" class="state-card error-card">
+    <view class="state-title">预览无法打开</view>
+    <view class="state-copy">{{errorMessage}}</view>
+  </view>
+
+  <block wx:elif="{{ready}}">
+    <view class="validation-bar">
+      <text class="validation-dot"></text>
+      <text>服务端已校验当前草稿快照 · {{sourceModeLabel}}</text>
+    </view>
+
+    <view wx:if="{{isSpecialTopic}}" class="topic-heading">
+      <image wx:if="{{coverSrc}}" class="cover-image" src="{{coverSrc}}" mode="aspectFill" />
+      <view class="asset-pill">{{assetLabel}}</view>
+      <view class="topic-title">{{title}}</view>
+      <view class="topic-producer" wx:if="{{producer}}">制作：{{producer}}</view>
+      <view class="topic-summary" wx:if="{{summary}}">{{summary}}</view>
+      <view class="unlock-notice">{{notice}}</view>
+    </view>
+
+    <view wx:elif="{{isManuscript}}" class="article-heading">
+      <image wx:if="{{coverSrc}}" class="cover-image" src="{{coverSrc}}" mode="aspectFill" />
+      <view class="asset-pill">{{assetLabel}}</view>
+      <view class="article-title">{{title}}</view>
+      <view class="article-subtitle" wx:if="{{subtitle}}">{{subtitle}}</view>
+      <view class="article-meta" wx:if="{{metaLine}}">{{metaLine}}</view>
+      <view class="disclaimer" wx:if="{{notice}}">{{notice}}</view>
+    </view>
+
+    <block wx:if="{{isLongForm}}">
+      <view class="directory-card">
+        <view class="directory-heading">
+          <text>内容目录</text>
+          <text class="directory-hint">点击切换预览</text>
+        </view>
+        <scroll-view scroll-x="true" enhanced="true" show-scrollbar="false" class="directory-scroll">
+          <view class="directory-row">
+            <view
+              wx:for="{{directory}}"
+              wx:key="index"
+              class="directory-chip {{item.active ? 'is-active' : ''}}"
+              data-index="{{item.index}}"
+              bindtap="selectPart"
+            >
+              <text class="directory-number">{{item.index + 1}}</text>
+              <text>{{item.label}}</text>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <view class="entry-card">
+        <view class="entry-topline">
+          <view class="entry-title">{{selectedTitle}}</view>
+          <view class="entry-counter">{{selectedCounter}}</view>
+        </view>
+        <view wx:if="{{!contentBlocks.length}}" class="empty-copy">这一项暂时没有可显示的正文。</view>
+        <block
+          wx:for="{{contentBlocks}}"
+          wx:for-item="block"
+          wx:for-index="blockIndex"
+          wx:key="key"
+        >
+          <view class="content-heading" wx:if="{{block.type === 'heading'}}">{{block.text}}</view>
+          <view class="content-text" wx:elif="{{block.type === 'text'}}">{{block.text}}</view>
+          <view class="content-image-wrap" wx:elif="{{block.type === 'image'}}">
+            <image
+              wx:if="{{block.src && !block.imageFailed}}"
+              class="content-image"
+              src="{{block.src}}"
+              mode="widthFix"
+              data-index="{{blockIndex}}"
+              binderror="onImageError"
+            />
+            <view wx:else class="image-placeholder">
+              <view class="placeholder-mark">图</view>
+              <view>图片暂时无法显示，请返回草稿核对对应图片。</view>
+            </view>
+            <view class="image-caption" wx:if="{{block.caption}}">{{block.caption}}</view>
+          </view>
+        </block>
+      </view>
+    </block>
+
+    <view wx:elif="{{isZhiEntry && zhiEntry}}" class="zhi-card">
+      <view class="zhi-date">{{zhiEntry.eventAt || "日期待定"}}</view>
+      <view class="zhi-label">{{zhiEntry.label || title}}</view>
+      <view class="zhi-content">{{zhiEntry.content}}</view>
+      <view class="zhi-source" wx:if="{{zhiEntry.source}}">来源：{{zhiEntry.source}}</view>
+    </view>
+
+    <view wx:elif="{{isQuizQuestion && quiz}}" class="quiz-card">
+      <view class="quiz-eyebrow">少年爱 · 题目预览</view>
+      <view class="quiz-meta" wx:if="{{quiz.department}}">{{quiz.department}}</view>
+      <view class="quiz-question">{{quiz.question}}</view>
+      <view
+        wx:for="{{quiz.options}}"
+        wx:key="key"
+        class="quiz-option {{item.isCorrect ? 'is-correct' : ''}}"
+      >
+        <view class="option-key">{{item.key}}</view>
+        <view class="option-copy">
+          <view>{{item.text}}</view>
+          <view wx:if="{{item.isCorrect}}" class="correct-label">正确答案</view>
+        </view>
+      </view>
+      <view class="feedback-grid">
+        <view class="feedback-item" wx:if="{{quiz.correctFeedback}}">
+          <view class="feedback-label">答对提示</view>
+          <view>{{quiz.correctFeedback}}</view>
+        </view>
+        <view class="feedback-item" wx:if="{{quiz.wrongFeedback}}">
+          <view class="feedback-label">答错提示</view>
+          <view>{{quiz.wrongFeedback}}</view>
+        </view>
+        <view class="feedback-item" wx:if="{{quiz.explanation}}">
+          <view class="feedback-label">答案说明</view>
+          <view>{{quiz.explanation}}</view>
+        </view>
+      </view>
+      <view class="quiz-notice">本页只展示发布效果，不保存答题记录，也不发放奖励。</view>
+      <view class="quiz-source" wx:if="{{quiz.source}}">来源：{{quiz.source}}</view>
+    </view>
+  </block>
+</view>

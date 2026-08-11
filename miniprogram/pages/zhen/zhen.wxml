@@ -1,0 +1,46 @@
+<view class="topic-page">
+  <view class="topic-intro">
+    <view class="topic-intro-title">少年真 · 小专题</view>
+    <view class="topic-intro-copy">点击目录阅读专题。每个专题只在第一次解锁时扣取红五星，之后可反复阅读。</view>
+  </view>
+
+  <view class="state-card" wx:if="{{loading}}">正在读取小专题目录…</view>
+
+  <view class="state-card error" wx:elif="{{loadError}}">
+    <text>{{loadError}}</text>
+    <button class="retry-btn" bindtap="refreshTopics">重新加载</button>
+  </view>
+
+  <view class="state-card" wx:elif="{{sourceUnavailable}}">小专题正在准备中，敬请期待。</view>
+
+  <view class="state-card" wx:elif="{{topics.length === 0}}">暂时没有已开放的小专题。</view>
+
+  <view class="topic-list" wx:else>
+    <view
+      class="topic-card"
+      wx:for="{{topics}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="openTopic"
+    >
+      <image
+        class="topic-cover"
+        wx:if="{{item.previewCover}}"
+        src="{{item.previewCover}}"
+        mode="aspectFill"
+      />
+      <view class="topic-cover placeholder" wx:else>真</view>
+      <view class="topic-copy">
+        <view class="topic-number">第 {{item.displayNumber}} 号</view>
+        <view class="topic-title">{{item.title}}</view>
+        <view class="topic-producer" wx:if="{{item.producer}}">{{item.producer}}</view>
+        <view class="topic-summary" wx:if="{{item.summary}}">{{item.summary}}</view>
+      </view>
+      <view class="topic-status {{item.unlocked ? 'unlocked' : ''}}">
+        {{item.statusText}}
+      </view>
+    </view>
+  </view>
+
+  <view class="loading-more" wx:if="{{loadingMore}}">正在加载更多…</view>
+</view>

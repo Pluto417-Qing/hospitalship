@@ -1,0 +1,88 @@
+<view class="article-page" wx:if="{{content}}">
+  <view class="heading-card">
+    <view class="heading-meta">《中国医院船》 · {{content.sourceLabel}}</view>
+    <view class="article-title">{{content.title}}</view>
+  </view>
+
+  <view class="cover-card" wx:if="{{content.cover}}">
+    <image
+      class="article-cover"
+      src="{{content.cover}}"
+      mode="aspectFill"
+    />
+  </view>
+
+  <button class="audio-btn" bindtap="openAudio">
+    播放有声版病人故事和健康知识
+  </button>
+
+  <scroll-view
+    class="article-card"
+    scroll-y
+    enhanced
+    show-scrollbar="true"
+  >
+    <view
+      class="article-section"
+      wx:for="{{content.sections}}"
+      wx:for-item="section"
+      wx:key="heading"
+    >
+      <view class="section-title">{{section.heading}}</view>
+      <block wx:if="{{section.blocks && section.blocks.length}}">
+        <block wx:for="{{section.blocks}}" wx:for-item="block" wx:for-index="blockIndex" wx:key="blockIndex">
+          <view
+            wx:if="{{block.type === 'text'}}"
+            class="paragraph paragraph-{{section.kind}}"
+          >
+            {{block.text}}
+          </view>
+          <view wx:elif="{{block.type === 'image'}}" class="inline-image-card">
+            <image
+              class="inline-image"
+              src="{{block.src}}"
+              mode="widthFix"
+              lazy-load
+            />
+            <view wx:if="{{block.caption}}" class="inline-image-caption">{{block.caption}}</view>
+          </view>
+        </block>
+      </block>
+      <block wx:else>
+        <view
+          class="paragraph paragraph-{{section.kind}}"
+          wx:for="{{section.paragraphs}}"
+          wx:for-item="paragraph"
+          wx:key="*this"
+        >
+          {{paragraph}}
+        </view>
+      </block>
+    </view>
+
+    <view wx:if="{{content.disclaimer}}" class="health-disclaimer">
+      {{content.disclaimer}}
+    </view>
+  </scroll-view>
+
+  <view class="comment-card">
+    <view class="comment-header">
+      <view class="comment-title">我的读后感</view>
+      <text wx:if="{{!comment}}" class="comment-guidance">简体中文，文明用语，100-2000字</text>
+    </view>
+    <textarea
+      class="comment-input"
+      value="{{comment}}"
+      maxlength="2000"
+      bindinput="onCommentInput"
+    ></textarea>
+    <button
+      class="submit-btn"
+      loading="{{submitting}}"
+      disabled="{{submitting}}"
+      bindtap="submitComment"
+    >
+      {{reviewPending ? '等待复审' : (submitted ? '提交成功' : (needsRevision ? '改后提交' : '确认提交'))}}
+    </button>
+  </view>
+</view>

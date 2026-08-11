@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "seedType": "book",
+  "source": {
+    "asset": "testarticle/食管癌的故事（定稿）.pdf",
+    "sha256": "d443f7dcbbecedd15e4e12fd6dba8bd37d3568401fdb24597a2d7ffabeebc07f",
+    "scope": "chapter-source-only",
+    "note": "该 PDF 只是《食管癌的故事》章节来源，不是《中国医院船》整书 PDF。"
+  },
+  "document": {
+    "_id": "china-hospital-ship",
+    "bookId": "china-hospital-ship",
+    "currentRevision": "testarticle-book-2026-07-12",
+    "pdfRevision": "",
+    "title": "中国医院船",
+    "subtitle": "爱与真",
+    "status": "draft",
+    "reviewStatus": "pending",
+    "chapterCount": 1,
+    "sourceContentIds": [
+      "esophageal-cancer-story"
+    ],
+    "pdf": {
+      "mimeType": "application/pdf",
+      "fileName": "中国医院船.pdf",
+      "cloudPath": "protected/books/china-hospital-ship/testarticle-book-2026-07-12/china-hospital-ship.pdf",
+      "fileIDEnvironmentVariable": "CHINA_HOSPITAL_SHIP_PDF_FILE_ID",
+      "deploymentStatus": "pending-upload",
+      "requiredArtifact": "reviewed-complete-book-pdf"
+    }
+  }
+}

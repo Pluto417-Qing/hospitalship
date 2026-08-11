@@ -1,0 +1,30 @@
+<view class="audio-page" wx:if="{{content}}">
+  <view class="audio-card">
+    <view class="audio-cover-frame">
+      <image
+        wx:if="{{content.cover}}"
+        class="audio-cover"
+        src="{{content.cover}}"
+        mode="aspectFill"
+      />
+    </view>
+    <view class="audio-title">{{content.title}} — 病人故事与健康知识有声版</view>
+
+    <view class="progress-track">
+      <view class="progress-value" style="width: {{progressPercent}}%;"></view>
+      <view class="progress-dot" style="left: {{progressPercent}}%;"></view>
+    </view>
+    <view class="progress-meta">
+      <text>{{currentTimeText}}</text>
+      <text bindtap="cyclePlaybackRate">{{playbackRateText}}</text>
+      <text>{{remainingTimeText}}</text>
+    </view>
+
+    <view class="audio-controls">
+      <view class="skip-btn" bindtap="seekBackward">|◀</view>
+      <view class="play-btn" bindtap="togglePlayback">{{isPlaying ? 'Ⅱ' : '▶'}}</view>
+      <view class="skip-btn" bindtap="seekForward">▶|</view>
+    </view>
+
+  </view>
+</view>

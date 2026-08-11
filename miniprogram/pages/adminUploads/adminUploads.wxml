@@ -1,0 +1,300 @@
+<view class="page">
+  <view wx:if="{{accessLoading}}" class="state-card">
+    <view class="state-spinner"></view>
+    <text class="state-title">正在验证内容管理权限</text>
+    <text class="state-copy">上传、复核和发布能力由服务器分别确认。</text>
+  </view>
+
+  <view wx:elif="{{accessChecked && !authorized}}" class="state-card denied-card">
+    <view class="state-mark">!</view>
+    <text class="state-title">无内容管理权限</text>
+    <text class="state-copy">{{accessMessage}}</text>
+    <button class="outline-button" bindtap="retryAccess">重新验证</button>
+  </view>
+
+  <block wx:elif="{{authorized}}">
+    <view class="hero-card">
+      <view class="hero-kicker">内容管理</view>
+      <view class="hero-title">今天要更新什么？</view>
+      <view class="hero-copy">选择下面的栏目开始操作。上传内容不会自动发布，完成校对和复核后才会展示给读者。</view>
+    </view>
+
+    <view
+      wx:if="{{capabilities.moderation}}"
+      class="moderation-entry-card"
+      bindtap="openModeration"
+      hover-class="moderation-entry-card-hover"
+    >
+      <view class="moderation-entry-icon">审</view>
+      <view class="moderation-entry-copy">
+        <view class="moderation-entry-title">待复审读后感</view>
+        <view class="moderation-entry-subtitle">处理敏感词命中的读后感，批准或退回修改</view>
+      </view>
+      <text class="moderation-entry-arrow">›</text>
+    </view>
+
+    <view wx:if="{{capabilities.upload}}" class="entry-card-panel">
+      <view
+        wx:for="{{entryCards}}"
+        wx:key="id"
+        class="entry-card entry-{{item.tone}} {{selectedEntryId === item.id ? 'is-selected' : ''}}"
+        data-entry-id="{{item.id}}"
+        bindtap="onEntryTap"
+        hover-class="entry-card-hover"
+      >
+        <view class="entry-badge">{{item.badge}}</view>
+        <view class="entry-copy">
+          <view class="entry-title">{{item.title}}</view>
+          <view class="entry-subtitle">{{item.subtitle}}</view>
+        </view>
+        <text class="entry-arrow">›</text>
+      </view>
+    </view>
+
+    <view wx:if="{{capabilities.upload && selectedEntryKind === 'file'}}" class="form-card">
+      <view class="section-title">
+        {{selectedAssetType === "audio" ? "上传首页配音" : (selectedAssetType === "special-topic" ? "上传少年真小专题" : (selectedAssetType === "full-book-pdf" ? "上传下载版 PDF" : "上传首页书稿"))}}
+      </view>
+      <view class="section-subtitle">
+        {{selectedAssetType === "audio" ? "选择文章后上传对应的配音文件，时长会自动读取。" : (selectedAssetType === "full-book-pdf" ? "先发布 Word 正文，再补充供会员下载的 PDF。" : "选择 Word 文档，系统会先读取正文供你确认。")}}
+      </view>
+      <view wx:if="{{!uploadAvailable}}" class="result-message error-message">{{transportMessage}}</view>
+
+      <view wx:if="{{selectedEntryId === 'manuscript'}}" class="manuscript-stepper">
+        <view
+          class="manuscript-step {{manuscriptStep === 'word' ? 'is-active' : ''}}"
+          data-step="word"
+          bindtap="onManuscriptStepTap"
+        >
+          <text class="manuscript-step-number">1</text>
+          <view>
+            <view class="manuscript-step-title">Word 正文</view>
+            <view class="manuscript-step-copy">先上传并发布阅读正文</view>
+          </view>
+        </view>
+        <view class="manuscript-step-line"></view>
+        <view
+          class="manuscript-step {{manuscriptStep === 'pdf' ? 'is-active' : ''}}"
+          data-step="pdf"
+          bindtap="onManuscriptStepTap"
+        >
+          <text class="manuscript-step-number">2</text>
+          <view>
+            <view class="manuscript-step-title">下载版 PDF</view>
+            <view class="manuscript-step-copy">正文发布后补充下载文件</view>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{selectedAssetType === 'manuscript' || selectedAssetType === 'special-topic'}}" class="content-mode-block">
+        <view class="content-mode-switch">
+          <view class="content-mode-option {{contentMode === 'new' ? 'is-active' : ''}}" data-mode="new" bindtap="onContentModeTap">新建内容</view>
+          <view class="content-mode-option {{contentMode === 'update' ? 'is-active' : ''}}" data-mode="update" bindtap="onContentModeTap">更新已有内容</view>
+        </view>
+      </view>
+
+      <view wx:if="{{targetSelectionRequired}}" class="field-block target-picker-block">
+        <text class="field-label">{{targetPickerLabel}}</text>
+        <view wx:if="{{uploadTargetsLoading}}" class="target-state">正在读取可选内容…</view>
+        <view wx:elif="{{uploadTargetsError}}" class="target-state target-error">
+          <text>{{uploadTargetsError}}</text>
+          <text class="retry-link" bindtap="retryUploadTargets">重试</text>
+        </view>
+        <view wx:elif="{{uploadTargets.length === 0}}" class="target-state">{{emptyTargetMessage}}</view>
+        <picker
+          wx:else
+          mode="selector"
+          range="{{uploadTargets}}"
+          range-key="title"
+          value="{{selectedTargetIndex}}"
+          disabled="{{uploading}}"
+          bindchange="onUploadTargetChange"
+        >
+          <view class="picker-value target-picker-value">
+            <text class="{{selectedTargetTitle ? '' : 'picker-placeholder'}}">{{selectedTargetTitle || "请选择"}}</text>
+            <text class="picker-arrow">⌄</text>
+          </view>
+        </picker>
+        <view wx:if="{{selectedTargetSubtitle}}" class="target-subtitle">{{selectedTargetSubtitle}}</view>
+        <view wx:if="{{selectedAssetType === 'full-book-pdf'}}" class="pdf-readiness pdf-readiness-{{pdfReadinessTone}}">
+          <view class="pdf-readiness-title">{{pdfReadinessTitle}}</view>
+          <view class="pdf-readiness-copy">{{pdfReadinessMessage}}</view>
+        </view>
+      </view>
+
+      <view class="field-block file-field">
+        <view class="file-heading">
+          <text class="field-label">选择文件</text>
+          <text class="file-limit">{{fileFormatHint}}</text>
+        </view>
+        <button
+          class="choose-button"
+          disabled="{{uploading || fileChoosing || audioDurationLoading || !uploadAvailable || uploadTargetsLoading || (targetSelectionRequired && !selectedTargetTitle)}}"
+          loading="{{fileChoosing}}"
+          bindtap="chooseFile"
+        >
+          {{fileChoosing ? "正在打开文件选择" : (selectedFile ? "重新选择" : "从聊天或本机选择文件")}}
+        </button>
+        <view wx:if="{{selectedFile}}" class="selected-file">
+          <view class="file-icon">{{selectedAssetType === "audio" ? "音频" : (selectedAssetType === "full-book-pdf" ? "PDF" : "Word")}}</view>
+          <view class="file-copy">
+            <text class="file-name">{{selectedFile.fileName}}</text>
+            <text class="file-meta">{{selectedFile.sizeLabel}} · {{fileDisplayType}}</text>
+          </view>
+        </view>
+        <view
+          wx:if="{{selectedFile && (selectedAssetType === 'manuscript' || selectedAssetType === 'special-topic') && (localParseLoading || localParseSummary || localParseWarning || localParseError)}}"
+          class="local-parse-panel"
+        >
+          <view class="local-parse-heading">
+            {{localParseLoading ? "正在读取 Word" : (localParseError ? "Word 读取失败" : "Word 正文预览")}}
+          </view>
+          <view wx:if="{{localParseSummary}}" class="local-parse-summary">{{localParseSummary}}</view>
+          <view wx:if="{{localParseWarning}}" class="local-parse-warning">{{localParseWarning}}</view>
+          <view wx:if="{{localParseError}}" class="local-parse-error">
+            <text>{{localParseError}}</text>
+            <text class="retry-link" bindtap="retryLocalDocument">重试读取</text>
+          </view>
+          <view
+            wx:for="{{localParsePreview}}"
+            wx:key="index"
+            class="local-preview-paragraph"
+          >
+            {{item}}
+          </view>
+        </view>
+        <view wx:if="{{selectedFile && selectedAssetType === 'audio'}}" class="audio-duration-panel">
+          <view wx:if="{{audioDurationLoading}}" class="audio-duration-loading">正在读取配音时长…</view>
+          <view wx:elif="{{audioDurationError}}" class="audio-duration-error">{{audioDurationError}}</view>
+          <view wx:elif="{{audioDurationLabel}}" class="audio-duration-ready">已读取时长：{{audioDurationLabel}}</view>
+        </view>
+      </view>
+
+      <view wx:if="{{uploading || uploadStageLabel}}" class="progress-panel">
+        <view class="progress-heading">
+          <text>{{uploadStageLabel}}</text>
+          <text>{{uploadProgress}}%</text>
+        </view>
+        <view class="progress-track">
+          <view class="progress-fill" style="width: {{uploadProgress}}%;"></view>
+        </view>
+        <button
+          wx:if="{{uploading}}"
+          class="cancel-active-button"
+          bindtap="cancelActiveUpload"
+        >
+          取消本次上传
+        </button>
+      </view>
+
+      <view wx:if="{{uploadError}}" class="result-message error-message">
+        <text>{{uploadError}}</text>
+        <text wx:if="{{canRetry}}" class="retry-link" bindtap="retryUpload">重试</text>
+      </view>
+      <view wx:if="{{uploadSuccess}}" class="result-message success-message">{{uploadSuccess}}</view>
+
+      <button class="upload-button" disabled="{{uploading || fileChoosing || localParseLoading || audioDurationLoading || audioDurationError || !selectedFile || !uploadAvailable || (targetSelectionRequired && !selectedTargetTitle)}}" loading="{{uploading || localParseLoading || audioDurationLoading}}" bindtap="startUpload">{{uploading ? "正在上传" : (localParseLoading ? "正在读取 Word" : (audioDurationLoading ? "正在读取配音时长" : "上传并进入草稿"))}}</button>
+      <view class="publish-notice">
+        <text class="notice-dot"></text>
+        <text>上传后请继续创建草稿、检查内容并送审；系统不会自动发布。</text>
+      </view>
+    </view>
+
+    <view wx:if="{{capabilities.drafts}}" class="history-card">
+      <view class="history-heading">
+        <view>
+          <view class="section-title">我的上传</view>
+          <view class="section-subtitle">上传完成后，可继续创建或打开内容草稿</view>
+        </view>
+        <text class="refresh-link" bindtap="refreshHistory">{{historyLoading ? "刷新中" : "刷新"}}</text>
+      </view>
+      <view wx:if="{{historyError}}" class="history-error">{{historyError}}</view>
+      <view wx:if="{{!historyLoading && uploads.length === 0}}" class="empty-history">暂无上传记录</view>
+
+      <view wx:for="{{uploads}}" wx:key="uploadId" class="history-item">
+        <view class="history-topline">
+          <text class="history-file-name">{{item.fileName}}</text>
+          <text class="status-pill status-{{item.statusTone}}">{{item.statusLabel}}</text>
+        </view>
+        <view class="history-meta">
+          <text>{{item.assetLabel}}</text>
+          <text wx:if="{{item.createdLabel}}">{{item.createdLabel}}</text>
+        </view>
+        <view wx:if="{{item.canResumeClientImages}}" class="history-progress">
+          <view class="history-progress-heading">
+            <text>{{item.clientImageProgressLabel}}</text>
+            <text wx:if="{{item.clientImageProgressKnown && item.clientImageCount > 0}}">{{item.clientImageProgressPercent}}%</text>
+          </view>
+          <view wx:if="{{item.clientImageProgressKnown && item.clientImageCount > 0}}" class="history-progress-track">
+            <view class="history-progress-fill" style="width: {{item.clientImageProgressPercent}}%;"></view>
+          </view>
+        </view>
+        <view wx:if="{{item.canCleanupCanceledUpload}}" class="cleanup-progress">
+          {{item.cleanupProgressLabel}}
+        </view>
+        <view class="item-actions">
+          <button wx:if="{{item.canResumeClientImages}}" class="small-primary-button" disabled="{{creatingDraftId || cancelingUploadId || resumingClientImagesId || cleaningUpUploadId}}" loading="{{resumingClientImagesId === item.uploadId}}" data-upload-id="{{item.uploadId}}" bindtap="resumeClientImages">{{resumingClientImagesId === item.uploadId ? "正在继续确认" : "继续确认图片"}}</button>
+          <button wx:if="{{item.canCleanupCanceledUpload}}" class="small-outline-button" disabled="{{creatingDraftId || cancelingUploadId || resumingClientImagesId || cleaningUpUploadId}}" loading="{{cleaningUpUploadId === item.uploadId}}" data-upload-id="{{item.uploadId}}" bindtap="continueCanceledUploadCleanup">{{cleaningUpUploadId === item.uploadId ? "正在清理" : "继续清理"}}</button>
+          <button wx:if="{{item.canCreateDraft && capabilities.drafts}}" class="small-primary-button" disabled="{{creatingDraftId || cancelingUploadId || resumingClientImagesId || cleaningUpUploadId}}" loading="{{creatingDraftId === item.uploadId}}" data-upload-id="{{item.uploadId}}" bindtap="createOrOpenDraft">{{item.hasDraft ? "打开草稿" : "创建草稿"}}</button>
+          <button wx:if="{{item.canCancel}}" class="small-outline-button danger-button" disabled="{{creatingDraftId || cancelingUploadId || resumingClientImagesId || cleaningUpUploadId}}" loading="{{cancelingUploadId === item.uploadId}}" data-upload-id="{{item.uploadId}}" bindtap="cancelUpload">取消任务</button>
+        </view>
+      </view>
+      <button wx:if="{{historyHasMore}}" class="load-more-button" disabled="{{historyLoading}}" bindtap="loadMoreHistory">{{historyLoading ? "加载中" : "加载更多上传"}}</button>
+    </view>
+
+    <view wx:if="{{capabilities.drafts}}" class="history-card draft-card">
+      <view class="history-heading">
+        <view>
+          <view class="section-title">内容草稿</view>
+          <view class="section-subtitle">编辑、退回修改、已批准和已发布版本</view>
+        </view>
+        <text class="refresh-link" bindtap="refreshDrafts">{{draftsLoading ? "刷新中" : "刷新"}}</text>
+      </view>
+      <view wx:if="{{draftsError}}" class="history-error">{{draftsError}}</view>
+      <view wx:if="{{!draftsLoading && drafts.length === 0}}" class="empty-history">暂无内容草稿</view>
+      <view wx:for="{{drafts}}" wx:key="id" class="draft-item" data-draft-id="{{item.id}}" bindtap="openDraft">
+        <view class="draft-accent accent-{{item.assetType}}"></view>
+        <view class="draft-copy">
+          <view class="history-topline">
+            <text class="draft-title">{{item.displayTitle}}</text>
+            <text class="status-pill draft-status-{{item.stateTone}}">{{item.stateLabel}}</text>
+          </view>
+          <view class="history-meta">
+            <text>{{item.assetLabel}}</text>
+            <text wx:if="{{item.updateLabel}}">{{item.updateLabel}}</text>
+          </view>
+          <view wx:if="{{item.issueSummary}}" class="draft-issue">{{item.issueSummary}}</view>
+        </view>
+        <text class="item-arrow">›</text>
+      </view>
+      <button wx:if="{{draftsHasMore}}" class="load-more-button" disabled="{{draftsLoading}}" bindtap="loadMoreDrafts">{{draftsLoading ? "加载中" : "加载更多草稿"}}</button>
+    </view>
+
+    <view wx:if="{{capabilities.review}}" class="history-card review-queue-card">
+      <view class="history-heading">
+        <view>
+          <view class="section-title">待复核队列</view>
+          <view class="section-subtitle">必须预览当前快照原件后才能批准</view>
+        </view>
+        <text class="refresh-link" bindtap="refreshReviewQueue">{{reviewLoading ? "刷新中" : "刷新"}}</text>
+      </view>
+      <view wx:if="{{reviewError}}" class="history-error">{{reviewError}}</view>
+      <view wx:if="{{!reviewLoading && reviewDrafts.length === 0}}" class="empty-history">当前没有等待复核的草稿</view>
+      <view wx:for="{{reviewDrafts}}" wx:key="id" class="review-item" data-draft-id="{{item.id}}" bindtap="openDraft">
+        <view class="review-number">{{index + 1}}</view>
+        <view class="draft-copy">
+          <view class="draft-title">{{item.displayTitle}}</view>
+          <view class="history-meta">
+            <text>{{item.assetLabel}}</text>
+            <text>第 {{item.review.round}} 轮</text>
+          </view>
+        </view>
+        <text class="item-arrow">›</text>
+      </view>
+      <button wx:if="{{reviewHasMore}}" class="load-more-button" disabled="{{reviewLoading}}" bindtap="loadMoreReviewQueue">{{reviewLoading ? "加载中" : "加载更多待复核"}}</button>
+    </view>
+
+    <view wx:if="{{!capabilities.upload && !capabilities.drafts && capabilities.review}}" class="role-notice">当前账号是内容复核员，只显示待复核队列，不承担文件上传或正式发布。</view>
+    <view wx:if="{{capabilities.moderation && !capabilities.upload && !capabilities.drafts && !capabilities.review}}" class="role-notice">当前账号只承担读后感人工复审，不承担内容上传或正式发布。</view>
+  </block>
+</view>

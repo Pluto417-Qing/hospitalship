@@ -1,0 +1,18 @@
+<view class="summary-page">
+  <view
+    class="summary-card"
+    style="background: {{item.color}};"
+    wx:for="{{items}}"
+    wx:key="id"
+    data-id="{{item.id}}"
+    bindtap="openSummary"
+  >
+    <view class="summary-copy">
+      <view class="summary-meta">{{item.bookName}} {{item.dateLabel}}</view>
+      <view class="summary-title">{{item.title}}</view>
+    </view>
+    <view class="summary-status">
+      {{item.available ? (item.viewed ? '已阅读' : '未阅读') : '未开放'}}
+    </view>
+  </view>
+</view>

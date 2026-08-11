@@ -1,0 +1,28 @@
+{
+  "name": "hospitalship-miniprogram",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "check": "node check-project.js",
+    "test:package-media": "node test-package-media-budget.js",
+    "audit:sdk": "npm --prefix cloudfunctions/login audit --package-lock-only",
+    "audit:upload-broker": "npm --prefix services/admin-upload-broker audit --package-lock-only",
+    "setup:upload-broker": "npm --prefix services/admin-upload-broker ci --ignore-scripts",
+    "test:security": "node scripts/validate-cloud-security.js && node scripts/validate-deployment-target.js",
+    "test:member-auth": "node test-member-auth.js",
+    "test:topics-quiz": "node test-topics-quiz.js",
+    "test:fullbook": "node test-fullbook-access.js",
+    "test:moderation": "node test-moderation-review.js",
+    "test:admin-upload": "node test-admin-upload.js",
+    "test:admin-content-ui": "node test-admin-content-ui.js",
+    "test:admin-editorial-ui": "node test-admin-editorial-ui.js",
+    "test:admin-moderation-ui": "node test-admin-moderation-ui.js",
+    "test:admin-content-workflow": "node test-admin-content-workflow.js",
+    "test:docx-import": "node test-docx-import.js",
+    "test:docx-images": "node test-docx-image-transfer.js",
+    "test:client-manifest": "node test-client-manifest.js",
+    "test:admin-editorial": "node test-admin-editorial.js",
+    "test:upload-broker": "npm --prefix services/admin-upload-broker test",
+    "test": "npm run check && npm run test:package-media && npm run test:security && node test-miniprogram.js && node test-content-seeds.js && node test-cloudfunctions.js && node test-backend-services.js && npm run test:member-auth && npm run test:topics-quiz && npm run test:fullbook && npm run test:moderation && npm run test:admin-upload && npm run test:admin-content-ui && npm run test:admin-editorial-ui && npm run test:admin-moderation-ui && npm run test:admin-content-workflow && npm run test:docx-import && npm run test:docx-images && npm run test:client-manifest && npm run test:admin-editorial && npm run test:upload-broker"
+  }
+}

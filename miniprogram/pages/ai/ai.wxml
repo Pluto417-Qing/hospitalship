@@ -1,0 +1,113 @@
+<view class="quiz-shell" style="padding-top: {{navigationTotalHeight}}px;">
+  <view class="custom-navigation" style="height: {{navigationTotalHeight}}px;">
+    <view
+      class="navigation-back"
+      style="top: {{statusBarHeight}}px; height: {{navigationBarHeight}}px;"
+      role="button"
+      aria-label="返回"
+      bindtap="goBack"
+    >
+      <view class="navigation-chevron"></view>
+    </view>
+  </view>
+
+  <view class="quiz-page">
+    <view class="quiz-state" wx:if="{{loadingQuestions}}">正在读取题目…</view>
+    <view class="quiz-notice" wx:if="{{sourceNotice}}">{{sourceNotice}}</view>
+
+    <view
+      id="question-{{question.id}}"
+      class="question-card {{question.id !== '0001' ? 'is-long' : ''}} {{question.showExplanation ? 'is-answer' : ''}}"
+      wx:for="{{questions}}"
+      wx:for-item="question"
+      wx:key="id"
+    >
+      <block wx:if="{{question.showExplanation}}">
+        <view class="answer-header">
+          <view class="question-number">第 {{question.id}} 号答案</view>
+          <view
+            class="round-answer-btn back-answer-btn"
+            role="button"
+            data-question-id="{{question.id}}"
+            bindtap="toggleExplanation"
+          >
+            返回
+          </view>
+        </view>
+        <view class="answer-copy">{{question.explanation || '答案说明正在整理中。'}}</view>
+      </block>
+
+      <block wx:else>
+        <view class="question-header">
+          <view class="question-number">第 {{question.id}} 号</view>
+          <view
+            wx:if="{{question.id === '0001'}}"
+            class="favorite-icon"
+            role="button"
+            aria-label="查看答案"
+            data-question-id="{{question.id}}"
+            bindtap="toggleExplanation"
+          >
+            <image
+              class="favorite-star"
+              src="/images/quiz/favorite-star.svg"
+              mode="aspectFit"
+            ></image>
+          </view>
+          <view
+            wx:else
+            class="round-answer-btn"
+            role="button"
+            data-question-id="{{question.id}}"
+            bindtap="toggleExplanation"
+          >
+            看答案
+          </view>
+        </view>
+
+        <view class="question-source" bindtap="openArticle">
+          <text>{{question.topic}}</text>
+          <text class="source-department">{{question.department}}</text>
+        </view>
+
+        <view class="question-text">{{question.question}}</view>
+
+        <view class="save-error" wx:if="{{question.saveError}}">
+          <view>{{question.saveError}}</view>
+          <button
+            class="save-retry-btn"
+            data-question-id="{{question.id}}"
+            data-option-key="{{question.pendingSelectedKey}}"
+            bindtap="retryAnswer"
+          >重试保存</button>
+        </view>
+
+        <view class="option-row" wx:elif="{{!question.answered}}">
+          <view
+            class="option-btn {{question.saving ? 'is-saving' : ''}}"
+            wx:for="{{question.options}}"
+            wx:for-item="option"
+            wx:key="key"
+            role="button"
+            data-question-id="{{question.id}}"
+            data-option-key="{{option.key}}"
+            aria-label="{{option.text}}"
+            bindtap="chooseAnswer"
+          >
+            {{question.saving && question.pendingSelectedKey === option.key ? '保存中…' : ('我' + option.label)}}
+          </view>
+        </view>
+
+        <view
+          wx:else
+          class="feedback {{question.isCorrect ? 'is-correct' : 'is-wrong'}}"
+          data-question-id="{{question.id}}"
+          bindtap="resetAnswer"
+        >
+          <text class="feedback-symbol">{{question.isCorrect ? '✓' : '×'}}</text>
+          <text>{{question.feedback || (question.isCorrect ? '选对了，你太棒啦！' : '选错了，再想想哦！')}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,205 @@
+page {
+  background: #f4f4f4;
+}
+
+.full-book-page {
+  min-height: 100vh;
+  padding: 30rpx 34rpx 70rpx;
+  box-sizing: border-box;
+}
+
+.state-card,
+.book-heading,
+.chapter-card {
+  background: #ffffff;
+  border: 2rpx solid #cc411a;
+  border-radius: 14rpx;
+  box-shadow: 0 8rpx 22rpx rgba(0, 0, 0, 0.08);
+}
+
+.state-card {
+  margin-top: 90rpx;
+  padding: 64rpx 42rpx;
+  color: #555555;
+  text-align: center;
+}
+
+.state-mark {
+  width: 86rpx;
+  height: 86rpx;
+  margin: 0 auto 24rpx;
+  color: #ffffff;
+  background: #cc411a;
+  border-radius: 50%;
+  font-family: STKaiti, KaiTi, serif;
+  font-size: 42rpx;
+  font-weight: 700;
+  line-height: 86rpx;
+}
+
+.state-card.error .state-mark {
+  background: #a8a8a8;
+}
+
+.state-title {
+  color: #292929;
+  font-size: 34rpx;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.state-copy {
+  margin-top: 18rpx;
+  color: #777777;
+  font-size: 26rpx;
+  line-height: 1.75;
+}
+
+.state-btn,
+.more-btn {
+  height: 70rpx;
+  color: #ffffff;
+  background: #cc411a;
+  border-radius: 999rpx;
+  font-size: 27rpx;
+  line-height: 70rpx;
+}
+
+.state-btn {
+  width: 260rpx;
+  margin-top: 30rpx;
+}
+
+.state-btn::after,
+.more-btn::after,
+.pdf-btn::after {
+  border: 0;
+}
+
+.book-heading {
+  position: relative;
+  padding: 54rpx 34rpx 34rpx;
+  text-align: center;
+  overflow: hidden;
+}
+
+.book-heading::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10rpx;
+  background: #cc411a;
+  content: "";
+}
+
+.unlock-label {
+  display: inline-block;
+  padding: 8rpx 20rpx;
+  color: #9d341b;
+  background: #fae7e1;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.book-title {
+  margin-top: 24rpx;
+  color: #222222;
+  font-family: STKaiti, KaiTi, serif;
+  font-size: 48rpx;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.book-subtitle {
+  margin-top: 12rpx;
+  color: #777777;
+  font-size: 26rpx;
+  line-height: 1.65;
+}
+
+.pdf-btn {
+  width: 360rpx;
+  height: 70rpx;
+  margin: 32rpx auto 0;
+  color: #ffffff;
+  background: #cc411a;
+  border-radius: 999rpx;
+  font-size: 27rpx;
+  line-height: 70rpx;
+}
+
+.pdf-btn.is-disabled {
+  color: #777777;
+  background: #e6e6e6;
+}
+
+.pdf-tip {
+  margin-top: 14rpx;
+  color: #999999;
+  font-size: 21rpx;
+  line-height: 1.6;
+}
+
+.chapter-card {
+  margin-top: 26rpx;
+  padding: 38rpx 34rpx 46rpx;
+}
+
+.chapter-index {
+  color: #cc411a;
+  font-size: 21rpx;
+  font-weight: 700;
+  letter-spacing: 3rpx;
+}
+
+.chapter-title {
+  margin-top: 10rpx;
+  color: #242424;
+  font-family: STKaiti, KaiTi, serif;
+  font-size: 38rpx;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.chapter-divider {
+  width: 88rpx;
+  height: 5rpx;
+  margin: 20rpx 0 28rpx;
+  background: #cc411a;
+  border-radius: 999rpx;
+}
+
+.chapter-section + .chapter-section {
+  margin-top: 32rpx;
+}
+
+.section-title {
+  margin-bottom: 18rpx;
+  color: #7e2717;
+  font-size: 30rpx;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.chapter-paragraph {
+  margin-bottom: 20rpx;
+  color: #282828;
+  font-size: 28rpx;
+  line-height: 1.95;
+  text-align: justify;
+  text-indent: 2em;
+}
+
+.more-btn {
+  width: 330rpx;
+  margin: 34rpx auto 0;
+}
+
+.book-end {
+  padding: 38rpx 0 0;
+  color: #999999;
+  font-size: 23rpx;
+  text-align: center;
+}

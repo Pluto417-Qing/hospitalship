@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "发布效果预览",
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#f7f4f1",
+  "enablePullDownRefresh": false
+}

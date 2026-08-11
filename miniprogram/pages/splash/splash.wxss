@@ -1,0 +1,27 @@
+page {
+  background: #cc411a;
+}
+
+.splash {
+  width: 100vw;
+  height: 100vh;
+  background: #cc411a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-logo {
+  width: 144rpx;
+  height: 760rpx;
+  opacity: 0;
+  transform: translateY(20rpx);
+  animation: brand-in 0.8s ease forwards;
+}
+
+@keyframes brand-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
