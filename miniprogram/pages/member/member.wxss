@@ -118,7 +118,12 @@ page {
 
 .search-icon {
   color: #4d5b57;
-  font-size: 29rpx;
+  font-size: 60rpx;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  transform: scaleX(-1);
 }
 
 .panel {
@@ -191,7 +196,7 @@ page {
 }
 
 .star-card {
-  height: 102rpx;
+  height: 120rpx;
   color: #ffffff;
   background: #258e70;
   border-radius: 9rpx;
@@ -203,32 +208,39 @@ page {
 
 .red-star {
   color: #e13d36;
-  font-size: 34rpx;
+  font-size: 70rpx;
   line-height: 1;
 }
 
 .star-text {
-  margin-top: 7rpx;
-  font-size: 20rpx;
+  margin-top: 8rpx;
+  font-size: 30rpx;
   line-height: 1.2;
 }
 
 .family-actions {
   margin-top: 16rpx;
   display: flex;
+  align-items: stretch;
   gap: 14rpx;
 }
 
 .small-button {
   height: 56rpx;
   margin: 0;
-  padding: 0 10rpx;
+  padding: 0 16rpx;
   color: #ffffff;
   font-size: 20rpx;
-  line-height: 56rpx;
+  line-height: 1.2;
   background: #2b9a7c;
   border-radius: 999rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .small-button[disabled] {
@@ -290,15 +302,18 @@ page {
 }
 
 .confirm-button {
-  width: 90rpx;
+  width: 72rpx;
+  min-width: 72rpx;
   height: 48rpx;
   margin: 0 0 0 10rpx;
   padding: 0;
   color: #ffffff;
-  font-size: 19rpx;
+  font-size: 17rpx;
   line-height: 48rpx;
   background: #288f70;
   border-radius: 5rpx;
+  box-sizing: border-box;
+  flex: 0 0 72rpx;
 }
 
 .inline-notes {
@@ -360,8 +375,62 @@ page {
   border-radius: 11rpx;
 }
 
+.member-rules-dialog {
+  padding-bottom: 20rpx;
+}
+
 .family-list {
   height: 496rpx;
+}
+
+.member-rules-scroll {
+  height: 520rpx;
+  margin-top: 6rpx;
+  padding-right: 4rpx;
+}
+
+.member-rules-lead {
+  padding-top: 18rpx;
+  padding-bottom: 12rpx;
+}
+
+.member-rule-item {
+  margin-top: 18rpx;
+  display: flex;
+  align-items: flex-start;
+}
+
+.member-rule-number {
+  width: 54rpx;
+  height: 42rpx;
+  margin-right: 16rpx;
+  color: #ffffff;
+  font-size: 20rpx;
+  font-weight: 600;
+  line-height: 42rpx;
+  text-align: center;
+  background: #2b9a7c;
+  border-radius: 999rpx;
+  flex-shrink: 0;
+}
+
+.member-rule-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.member-rule-title {
+  margin-bottom: 7rpx;
+  color: #25735e;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.member-rule-paragraph {
+  color: #59635f;
+  font-size: 24rpx;
+  line-height: 1.75;
+  text-align: justify;
 }
 
 .dialog-title {

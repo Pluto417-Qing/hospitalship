@@ -87,9 +87,142 @@ page {
 .action-button {
   height: 76rpx;
   margin-top: 30rpx;
+  padding: 0;
   color: #ffffff;
   font-size: 26rpx;
-  line-height: 76rpx;
+  line-height: 1;
+  background: #2b9a7c;
+  border-radius: 999rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel {
+  margin-top: 18rpx;
+  background: #ffffff;
+  border: 2rpx solid #8bcfbd;
+  border-radius: 11rpx;
+  overflow: hidden;
+  box-shadow: 0 5rpx 12rpx rgba(27, 95, 76, 0.05);
+}
+
+.member-menu-item {
+  min-height: 78rpx;
+  padding: 0 20rpx;
+  border-bottom: 1rpx solid #d9e8e3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.member-menu-item:last-child {
+  border-bottom: 0;
+}
+
+.member-menu-label {
+  color: #333b39;
+  font-size: 24rpx;
+}
+
+.member-menu-arrow {
+  color: #98a4a1;
+  font-size: 38rpx;
+  line-height: 1;
+}
+
+.dialog-mask {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1200;
+  padding: 40rpx;
+  background: rgba(0, 0, 0, 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.member-rules-dialog {
+  width: 620rpx;
+  padding: 28rpx 28rpx 20rpx;
+  background: #ffffff;
+  border-radius: 11rpx;
+}
+
+.dialog-title {
+  color: #333b39;
+  font-size: 27rpx;
+  font-weight: 600;
+  text-align: center;
+}
+
+.dialog-divider {
+  height: 2rpx;
+  margin-top: 20rpx;
+  background: #59b69d;
+}
+
+.dialog-empty-tip {
+  padding: 18rpx 14rpx 10rpx;
+  color: #87918e;
+  font-size: 20rpx;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.member-rules-scroll {
+  height: 496rpx;
+  padding-right: 4rpx;
+}
+
+.member-rule-item {
+  margin-top: 18rpx;
+  display: flex;
+  align-items: flex-start;
+}
+
+.member-rule-number {
+  width: 54rpx;
+  height: 42rpx;
+  margin-right: 16rpx;
+  color: #ffffff;
+  font-size: 20rpx;
+  font-weight: 600;
+  line-height: 42rpx;
+  text-align: center;
+  background: #2b9a7c;
+  border-radius: 999rpx;
+  flex-shrink: 0;
+}
+
+.member-rule-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.member-rule-title {
+  margin-bottom: 7rpx;
+  color: #25735e;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.member-rule-paragraph {
+  color: #59635f;
+  font-size: 24rpx;
+  line-height: 1.75;
+  text-align: justify;
+}
+
+.dialog-button {
+  height: 62rpx;
+  margin-top: 20rpx;
+  color: #ffffff;
+  font-size: 23rpx;
+  line-height: 62rpx;
   background: #2b9a7c;
   border-radius: 999rpx;
 }

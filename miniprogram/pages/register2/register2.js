@@ -1,6 +1,7 @@
 const {
   READER_RULES_VERSION,
-  REGISTRATION_NOTICE_VERSION
+  REGISTRATION_NOTICE_VERSION,
+  registrationRules
 } = require("../../utils/policies");
 
 const RETURN_TARGETS = new Set(["article", "catalog"]);
@@ -31,7 +32,8 @@ Page({
   data: {
     agreed: false,
     returnTo: "",
-    mode: ""
+    mode: "",
+    registrationRules
   },
 
   onLoad(options = {}) {

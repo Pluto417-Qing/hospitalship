@@ -8,12 +8,14 @@
   </view>
 
   <view class="form-card">
+    <view class="form-heading">少年读者信息</view>
+
     <view class="form-section">
       <view class="field">
         <view class="field-label">会员代号</view>
         <input
           class="control"
-          placeholder="3-5位汉字"
+          placeholder="3-5个汉字"
           placeholder-class="placeholder"
           maxlength="5"
           value="{{nickname}}"
@@ -89,7 +91,7 @@
       disabled="{{submitting}}"
       bindtap="submitRegister"
     >
-      提交
+      确认提交
     </button>
   </view>
 </view>

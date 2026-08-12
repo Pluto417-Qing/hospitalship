@@ -14,43 +14,11 @@
         愿每一次阅读都带来知识、善意与成长。使用少年会员服务时，请共同遵守以下约定。
       </view>
 
-      <view class="rule-item">
-        <view class="rule-number">01</view>
+      <view class="rule-item" wx:for="{{registrationRules}}" wx:key="number">
+        <view class="rule-number">{{item.number}}</view>
         <view class="rule-copy">
-          <view class="rule-title">认真阅读，真实表达</view>
-          <view class="paragraph">读后感应由少年读者独立思考后完成，可以记录感受和疑问，不抄袭、不代写，也不发布与阅读无关的内容。</view>
-        </view>
-      </view>
-
-      <view class="rule-item">
-        <view class="rule-number">02</view>
-        <view class="rule-copy">
-          <view class="rule-title">友善交流，尊重他人</view>
-          <view class="paragraph">不发布侮辱、攻击、歧视、恐吓或其他伤害他人的言论，不传播违法、不良或未经证实的信息。</view>
-        </view>
-      </view>
-
-      <view class="rule-item">
-        <view class="rule-number">03</view>
-        <view class="rule-copy">
-          <view class="rule-title">保护隐私，谨慎分享</view>
-          <view class="paragraph">不要在代号、读后感或分享内容中填写真实姓名、学校班级、家庭住址、完整手机号等个人敏感信息。</view>
-        </view>
-      </view>
-
-      <view class="rule-item">
-        <view class="rule-number">04</view>
-        <view class="rule-copy">
-          <view class="rule-title">合理使用成长奖励</view>
-          <view class="paragraph">纪念章和红五星用于记录阅读成长，不代表医疗评价或现实权益。不得通过重复提交、虚假内容等方式获取奖励。</view>
-        </view>
-      </view>
-
-      <view class="rule-item">
-        <view class="rule-number">05</view>
-        <view class="rule-copy">
-          <view class="rule-title">监护陪伴，安全使用</view>
-          <view class="paragraph">监护人应关注少年读者的账号和分享行为。如发现账号异常或不适宜内容，请停止使用并及时联系项目团队。</view>
+          <view class="rule-title">{{item.title}}</view>
+          <view class="paragraph">{{item.paragraph}}</view>
         </view>
       </view>
     </scroll-view>
@@ -59,7 +27,7 @@
       <view class="checkbox {{agreed ? 'checked' : ''}}">
         <text wx:if="{{agreed}}" class="check-symbol">✓</text>
       </view>
-      <text class="agree-text">我和监护人已认真阅读、同意并遵守《少年读者规则》</text>
+      <text class="agree-text">我和监护人已认真阅读，同意并遵守上述少年读者规则</text>
     </view>
   </view>
 

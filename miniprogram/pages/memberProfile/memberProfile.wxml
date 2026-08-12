@@ -35,5 +35,40 @@
     </view>
 
     <button class="action-button" bindtap="goSettings">账号设置</button>
+
+    <view class="panel member-menu-panel">
+      <view class="member-menu-item" data-name="会员消息" bindtap="showPending">
+        <text class="member-menu-label">会员消息</text>
+        <text class="member-menu-arrow">›</text>
+      </view>
+      <view class="member-menu-item" bindtap="showMemberRules">
+        <text class="member-menu-label">会员规则</text>
+        <text class="member-menu-arrow">›</text>
+      </view>
+    </view>
   </block>
+
+  <view
+    wx:if="{{memberRulesVisible}}"
+    class="dialog-mask"
+    bindtap="hideMemberRules"
+  >
+    <view class="member-rules-dialog" catchtap="stopPropagation">
+      <view class="dialog-title">会员规则</view>
+      <view class="dialog-divider"></view>
+      <view class="dialog-empty-tip">
+        这就是注册时确认过的少年读者规则，供你随时查看。
+      </view>
+      <scroll-view class="member-rules-scroll" scroll-y enhanced show-scrollbar="true">
+        <view class="member-rule-item" wx:for="{{registrationRules}}" wx:key="number">
+          <view class="member-rule-number">{{item.number}}</view>
+          <view class="member-rule-copy">
+            <view class="member-rule-title">{{item.title}}</view>
+            <view class="member-rule-paragraph">{{item.paragraph}}</view>
+          </view>
+        </view>
+      </scroll-view>
+      <button class="dialog-button" bindtap="hideMemberRules">知道了</button>
+    </view>
+  </view>
 </view>

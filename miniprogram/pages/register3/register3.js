@@ -70,7 +70,7 @@ Page({
     const yearOptions = [];
     const currentYear = new Date().getFullYear();
 
-    for (let year = 2000; year <= currentYear; year += 1) {
+    for (let year = 1949; year <= 2049; year += 1) {
       yearOptions.push(String(year));
     }
 

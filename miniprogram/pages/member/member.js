@@ -1,12 +1,12 @@
 const adminContent = require("../../utils/adminContent");
 
 function createBadgeSlots(badges) {
-  const slots = Array.from({ length: 8 }, (_, index) => ({
+  const slots = Array.from({ length: 12 }, (_, index) => ({
     id: `badge-slot-${index}`,
     title: ""
   }));
 
-  badges.slice(0, 8).forEach((badge, index) => {
+  badges.slice(0, 12).forEach((badge, index) => {
     slots[index] = {
       ...badge,
       id: badge.id || `badge-earned-${index}`
@@ -379,7 +379,7 @@ Page({
         canAddMember: result.canAddMember === true,
         user: result.user,
         badgeSlots: createBadgeSlots(result.user.badges || [])
-    });
+      });
       this.prepareFamilyInvite({ userId: result.user.userId });
       this.retryPendingFamilyInvite();
       this.consumePendingMemberIntent();

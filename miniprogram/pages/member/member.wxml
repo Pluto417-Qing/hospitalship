@@ -105,7 +105,7 @@
     </view>
 
     <view class="panel family-panel">
-      <view class="panel-title">我的家人们</view>
+      <view class="panel-title">我的亲友团</view>
       <view class="family-actions">
         <button
           class="small-button"
@@ -144,6 +144,7 @@
         />
         <button
           class="confirm-button"
+          style="width: 150rpx; min-width: 150rpx;"
           loading="{{notesLoading}}"
           disabled="{{notesLoading}}"
           bindtap="openReaderNotes"
@@ -199,6 +200,30 @@
         </view>
         <view class="dialog-empty-tip">暂未建立亲友关系，可返回后点击“邀请亲友加入”。</view>
       </block>
+    </view>
+  </view>
+
+  <view
+    wx:if="{{memberRulesVisible}}"
+    class="dialog-mask"
+    bindtap="hideMemberRules"
+  >
+    <view class="family-dialog member-rules-dialog" catchtap="stopPropagation">
+      <view class="dialog-title">会员规则</view>
+      <view class="dialog-divider"></view>
+      <view class="dialog-empty-tip member-rules-lead">
+        这就是注册时确认过的少年读者规则，供你随时查看。
+      </view>
+      <scroll-view class="member-rules-scroll" scroll-y enhanced show-scrollbar="true">
+        <view class="member-rule-item" wx:for="{{registrationRules}}" wx:key="number">
+          <view class="member-rule-number">{{item.number}}</view>
+          <view class="member-rule-copy">
+            <view class="member-rule-title">{{item.title}}</view>
+            <view class="member-rule-paragraph">{{item.paragraph}}</view>
+          </view>
+        </view>
+      </scroll-view>
+      <button class="dialog-button" bindtap="hideMemberRules">知道了</button>
     </view>
   </view>
 </view>

@@ -9,7 +9,7 @@
 }
 
 .tabbar {
-  height: 112rpx;
+  height: 100rpx;
   display: flex;
   align-items: stretch;
 }
@@ -21,18 +21,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 8rpx;
+  padding-top: 10rpx;
 }
 
 .tab-icon {
-  width: 52rpx;
-  height: 52rpx;
+  width: 55rpx;
+  height: 55rpx;
+  object-fit: contain;
 }
 
 .tab-text {
-  margin-top: 4rpx;
-  font-size: 22rpx;
-  line-height: 30rpx;
+  margin-top: 6rpx;
+  font-size: 18rpx;
+  line-height: 24rpx;
 }
 
 .tab-line {

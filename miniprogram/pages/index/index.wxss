@@ -86,7 +86,7 @@ page {
 }
 
 .book-card {
-  min-height: 278rpx;
+  min-height: 328rpx;
   padding: 22rpx;
   border-radius: 24rpx;
   display: flex;
@@ -103,7 +103,7 @@ page {
 
 .book-cover {
   width: 55%;
-  height: 230rpx;
+  height: 270rpx;
   border-radius: 16rpx;
   flex-shrink: 0;
   overflow: hidden;
