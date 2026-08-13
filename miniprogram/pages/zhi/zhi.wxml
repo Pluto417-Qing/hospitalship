@@ -32,8 +32,8 @@
   </view>
 
   <view class="empty-card" wx:else>
-    <view class="empty-title">该月份暂无已审核消息</view>
-    <view class="empty-desc">请选择其他年月，或等待正式内容接入。</view>
+    <view class="empty-title">该月份暂无消息</view>
+    <view class="empty-desc">试试查看全年，或选择其他年月。</view>
     <button class="empty-btn" bindtap="clearMonthFilter">查看全年</button>
   </view>
 

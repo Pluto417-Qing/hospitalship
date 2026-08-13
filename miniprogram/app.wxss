@@ -2,7 +2,7 @@ page {
   min-height: 100%;
   background: #f6f6f6;
   color: #222222;
-  font-family: Arial, "Microsoft YaHei", sans-serif;
+  font-family: STKaiti, "Kaiti SC", KaiTi, "STKaiti", "华文楷体", serif;
 }
 
 .container {

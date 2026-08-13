@@ -13,7 +13,6 @@
 
   <view class="quiz-page">
     <view class="quiz-state" wx:if="{{loadingQuestions}}">正在读取题目…</view>
-    <view class="quiz-notice" wx:if="{{sourceNotice}}">{{sourceNotice}}</view>
 
     <view
       id="question-{{question.id}}"
@@ -65,9 +64,8 @@
           </view>
         </view>
 
-        <view class="question-source" bindtap="openArticle">
-          <text>{{question.topic}}</text>
-          <text class="source-department">{{question.department}}</text>
+        <view class="question-source">
+          <view class="source-info">{{question.department}} {{question.source}}</view>
         </view>
 
         <view class="question-text">{{question.question}}</view>

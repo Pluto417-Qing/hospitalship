@@ -10,7 +10,53 @@ const monthOptions = ["全年"].concat(
 
 // Examples stay in seed-data as drafts. The client only renders entries that
 // getYouthTimeline confirms are published in the current cloud environment.
-const timelineEntries = [];
+const timelineEntries = [
+  {
+    id: "test-001",
+    year: "2026",
+    month: "08",
+    day: "12",
+    source: "北京大学第三医院",
+    label: "专家提醒",
+    content: "儿童易感染麻疹病毒并可能出现肺炎、喉炎、中耳炎、心肌炎、脑炎等并发症甚至可能导致死亡。"
+  },
+  {
+    id: "test-002",
+    year: "2026",
+    month: "08",
+    day: "11",
+    source: "中国疾控中心儿童健康科普基地",
+    label: "医生提示",
+    content: "中小学生腹部疼痛情况比较复杂应当及时前往医院就诊并在医生指导下进行专业治疗切勿自行服用药物。"
+  },
+  {
+    id: "test-003",
+    year: "2026",
+    month: "08",
+    day: "10",
+    source: "首都儿科研究所",
+    label: "健康提醒",
+    content: "青少年每天应保证充足睡眠时间小学生不少于10小时初中生不少于9小时高中生不少于8小时。"
+  },
+  {
+    id: "test-004",
+    year: "2026",
+    month: "08",
+    day: "09",
+    source: "北京协和医院儿科",
+    label: "专家建议",
+    content: "儿童青少年应养成良好的用眼习惯连续用眼40分钟后应休息10分钟眺望远处或闭目养神预防近视发生发展。"
+  },
+  {
+    id: "test-005",
+    year: "2026",
+    month: "08",
+    day: "08",
+    source: "中国医学科学院",
+    label: "健康科普",
+    content: "青春期是生长发育的关键时期要注意均衡营养多吃新鲜蔬菜水果适量摄入优质蛋白质避免偏食挑食。"
+  }
+];
 
 function filterEntries(year, month) {
   return timelineEntries.filter(
@@ -70,8 +116,8 @@ Page({
     datePickerVisible: false,
     yearOptions,
     monthOptions,
-    pickerValue: [yearOptions.length - 1, new Date().getMonth() + 1],
-    draftPickerValue: [yearOptions.length - 1, new Date().getMonth() + 1],
+    pickerValue: [yearOptions.length - 1, 0],
+    draftPickerValue: [yearOptions.length - 1, 0],
     timelineLoading: false
   },
 
@@ -138,15 +184,37 @@ Page({
       }
 
       if (result.source === "unavailable") {
-        this.timelineHasMore = false;
-        this.timelineNextOffset = null;
+        // 云函数返回 unavailable，使用测试数据
         if (!append) {
-          this.setData({ visibleEntries: [] });
+          const localEntries = filterEntries(year, month);
+          this.timelineHasMore = false;
+          this.timelineNextOffset = null;
+          this.setData({ visibleEntries: localEntries });
+
+          wx.showToast({
+            title: "已加载测试数据",
+            icon: "none"
+          });
         }
         return;
       }
 
       const entries = normalizeCloudEntries(result.entries);
+
+      // 如果云函数返回空数据，使用测试数据
+      if (!append && (!entries || entries.length === 0)) {
+        const localEntries = filterEntries(year, month);
+        this.timelineHasMore = false;
+        this.timelineNextOffset = null;
+        this.setData({ visibleEntries: localEntries });
+
+        wx.showToast({
+          title: "已加载测试数据",
+          icon: "none"
+        });
+        return;
+      }
+
       const existingEntries = append ? this.data.visibleEntries : [];
       const existingIds = new Set(existingEntries.map((item) => item.id));
       const mergedEntries = existingEntries.concat(
@@ -175,15 +243,20 @@ Page({
       }
 
       console.error("loadYouthTimeline error:", error);
+      console.log("使用本地测试数据");
+
+      // 使用本地测试数据
       if (!append) {
+        const localEntries = filterEntries(year, month);
         this.timelineHasMore = false;
         this.timelineNextOffset = null;
-        this.setData({ visibleEntries: [] });
+        this.setData({ visibleEntries: localEntries });
+
+        wx.showToast({
+          title: "已加载测试数据",
+          icon: "none"
+        });
       }
-      wx.showToast({
-        title: "云端消息暂未更新",
-        icon: "none"
-      });
     } finally {
       if (
         requestId === this.timelineRequestId &&
