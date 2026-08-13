@@ -1,3 +1,5 @@
+const adminContent = require("../../utils/adminContent");
+
 function createBadgeSlots(badges) {
   // 12个固定占位名称
   const placeHolderNames = [
