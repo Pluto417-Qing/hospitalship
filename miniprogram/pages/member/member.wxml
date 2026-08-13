@@ -57,7 +57,10 @@
   <block wx:else>
     <view class="member-header" bindtap="goProfile">
       <view class="member-identity">
-        <view class="member-avatar">船</view>
+        <view class="member-avatar">
+          <!-- 替换为图片，src填你的头像图片地址 -->
+          <image class="avatar-img" src="../../images/avatar.png" mode="aspectFill"></image>
+        </view>
         <view class="member-copy">
           <view class="member-name">{{user.nickname}}</view>
         </view>
@@ -70,18 +73,19 @@
       <text class="search-icon">⌕</text>
     </view>
 
-    <view class="panel badge-panel">
+   <view class="panel badge-panel">
       <view class="panel-title">我的纪念章</view>
       <view class="badge-grid">
         <view
-          class="badge-item {{item.title ? 'earned' : ''}}"
+          class="badge-item {{item.earned ? 'earned' : ''}}"
           wx:for="{{badgeSlots}}"
           wx:key="id"
         >
           <view class="badge-circle">
-            <text wx:if="{{item.title}}" class="badge-star">★</text>
+            <!-- 只有earned为true才显示星星，不再判断title -->
+            <text wx:if="{{item.earned}}" class="badge-star">★</text>
           </view>
-          <text class="badge-name">{{item.title || "待获得"}}</text>
+          <text class="badge-name">{{item.title}}</text>
         </view>
       </view>
     </view>
@@ -90,15 +94,15 @@
       <view class="panel-title">我的红五星</view>
       <view class="star-grid">
         <view class="star-card">
-          <text class="red-star">★</text>
+          <image class="red-star" src="../../images/red-star.svg" mode="aspectFit" />
           <text class="star-text">总数：{{user.starTotal}}</text>
         </view>
         <view class="star-card">
-          <text class="red-star">★</text>
+          <image class="red-star" src="../../images/red-star.svg" mode="aspectFit" />
           <text class="star-text">已用：{{user.starUsed}}</text>
         </view>
         <view class="star-card">
-          <text class="red-star">★</text>
+          <image class="red-star" src="../../images/red-star.svg" mode="aspectFit" />
           <text class="star-text">剩余：{{user.starRemain}}</text>
         </view>
       </view>
@@ -144,7 +148,6 @@
         />
         <button
           class="confirm-button"
-          style="width: 150rpx; min-width: 150rpx;"
           loading="{{notesLoading}}"
           disabled="{{notesLoading}}"
           bindtap="openReaderNotes"

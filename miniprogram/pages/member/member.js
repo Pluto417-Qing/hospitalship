@@ -1,15 +1,33 @@
-const adminContent = require("../../utils/adminContent");
-
 function createBadgeSlots(badges) {
+  // 12个固定占位名称
+  const placeHolderNames = [
+    "韶山冲",
+    "岳麓山",
+    "井冈山",
+    "武夷山",
+    "白云山",
+    "大娄山",
+    "六盘山",
+    "金沙江",
+    "大渡河",
+    "夹金山",
+    "凤凰山",
+    "宝塔山"
+  ];
+
+  // 初始化12个槽位，默认未获得，显示预设地名
   const slots = Array.from({ length: 12 }, (_, index) => ({
     id: `badge-slot-${index}`,
-    title: ""
+    title: placeHolderNames[index],
+    earned: false // 是否真正获得徽章
   }));
 
+  // 将后端返回的真实徽章填充到对应位置
   badges.slice(0, 12).forEach((badge, index) => {
     slots[index] = {
       ...badge,
-      id: badge.id || `badge-earned-${index}`
+      id: badge.id || `badge-earned-${index}`,
+      earned: true //标记为已获得，点亮星星
     };
   });
 

@@ -59,6 +59,9 @@ page {
 
 .logout-button {
   height: 76rpx;
+  width: 420rpx; /* 改成你想要的宽度 */
+  min-width: 420rpx !important; /* 关键：覆盖小程序button内置min-width */
+  max-width: 420rpx;
   margin: 30rpx 0 0;
   padding: 0;
   color: #ffffff;
@@ -66,4 +69,5 @@ page {
   line-height: 76rpx;
   background: #2b9a7c;
   border-radius: 4rpx;
+  border: none; /* 清除button默认边框 */
 }

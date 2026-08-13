@@ -64,6 +64,8 @@ page {
 
 .logout-button {
   height: 88rpx;
+  width: 30rpx;
+  min-width: 40rpx !important;
   margin-top: 40rpx;
   padding: 0;
   color: #ffffff;

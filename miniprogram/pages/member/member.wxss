@@ -1,4 +1,5 @@
 page {
+  --page-font-scale: 1.2;
   background: #f5f6f6;
 }
 
@@ -21,7 +22,7 @@ page {
   height: 84rpx;
   margin: 0 auto 24rpx;
   color: #ffffff;
-  font-size: 34rpx;
+  font-size: calc(34rpx * var(--page-font-scale));
   line-height: 84rpx;
   background: #2b9a7c;
   border-radius: 10rpx;
@@ -29,14 +30,14 @@ page {
 
 .state-title {
   color: #303836;
-  font-size: 32rpx;
+  font-size: calc(32rpx * var(--page-font-scale));
   font-weight: 600;
 }
 
 .state-desc {
   margin-top: 18rpx;
   color: #7c8683;
-  font-size: 24rpx;
+  font-size: calc(24rpx * var(--page-font-scale));
   line-height: 1.7;
 }
 
@@ -44,7 +45,7 @@ page {
   height: 76rpx;
   margin-top: 34rpx;
   color: #ffffff;
-  font-size: 27rpx;
+  font-size: calc(27rpx * var(--page-font-scale));
   line-height: 76rpx;
   background: #2b9a7c;
   border-radius: 999rpx;
@@ -56,7 +57,6 @@ page {
   background: #ffffff;
   border: 2rpx solid #2b9a7c;
 }
-
 .member-header {
   min-height: 94rpx;
   padding: 8rpx 8rpx 16rpx;
@@ -66,24 +66,31 @@ page {
 }
 
 .member-identity {
-  min-width: 0;
   display: flex;
   align-items: center;
 }
 
 .member-avatar {
-  width: 76rpx;
-  height: 76rpx;
-  margin-right: 18rpx;
-  color: #ffffff;
-  font-family: STKaiti, KaiTi, serif;
+  /* 头像容器，正方形，和原来文字头像尺寸保持一致 */
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 8rpx; /* 如果想要圆形改成 50% */
+  overflow: hidden;
+  margin-right: 20rpx;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+}
+
+.member-name {
   font-size: 32rpx;
-  font-weight: 700;
-  line-height: 76rpx;
-  text-align: center;
-  background: #397ca9;
-  border-radius: 7rpx;
-  flex-shrink: 0;
+}
+
+.header-arrow {
+  color: #999;
+  font-size: 32rpx;
 }
 
 .member-copy {
@@ -92,7 +99,7 @@ page {
 
 .member-name {
   color: #2b3331;
-  font-size: 29rpx;
+  font-size: calc(29rpx * var(--page-font-scale));
   font-weight: 600;
   line-height: 1.35;
 }
@@ -100,7 +107,7 @@ page {
 .header-arrow {
   padding: 12rpx;
   color: #8d9693;
-  font-size: 42rpx;
+  font-size: calc(50rpx * var(--page-font-scale));
   line-height: 1;
 }
 
@@ -118,7 +125,7 @@ page {
 
 .search-icon {
   color: #4d5b57;
-  font-size: 60rpx;
+  font-size: calc(60rpx * var(--page-font-scale));
   line-height: 1;
   display: flex;
   align-items: center;
@@ -137,7 +144,7 @@ page {
 
 .panel-title {
   color: #303836;
-  font-size: 25rpx;
+  font-size: calc(25rpx * var(--page-font-scale));
   font-weight: 600;
   line-height: 1.4;
 }
@@ -172,7 +179,7 @@ page {
 
 .badge-star {
   color: #df4038;
-  font-size: 36rpx;
+  font-size: calc(36rpx * var(--page-font-scale));
   line-height: 1;
 }
 
@@ -180,12 +187,13 @@ page {
   width: 100%;
   margin-top: 5rpx;
   color: #838d8a;
-  font-size: 18rpx;
+  font-size: calc(23rpx * var(--page-font-scale));
   line-height: 1.35;
   display: block;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-weight: bold; /* 新增加粗 */
 }
 
 .star-grid {
@@ -208,13 +216,19 @@ page {
 
 .red-star {
   color: #e13d36;
-  font-size: 70rpx;
+  font-size: calc(70rpx * var(--page-font-scale));
   line-height: 1;
+}
+
+/* image version size */
+.red-star[mode] {
+  width: 70rpx;
+  height: 70rpx;
 }
 
 .star-text {
   margin-top: 8rpx;
-  font-size: 30rpx;
+  font-size: calc(30rpx * var(--page-font-scale));
   line-height: 1.2;
 }
 
@@ -222,23 +236,24 @@ page {
   margin-top: 16rpx;
   display: flex;
   align-items: stretch;
-  gap: 14rpx;
+  justify-content: space-between;
 }
 
 .small-button {
+  width: 250rpx;
+  min-width: 210rpx;
   height: 56rpx;
   margin: 0;
-  padding: 0 16rpx;
+  padding: 0 12rpx;
   color: #ffffff;
-  font-size: 20rpx;
+  font-size: calc(25rpx * var(--page-font-scale));
   line-height: 1.2;
   background: #2b9a7c;
   border-radius: 999rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
-  min-width: 0;
+  flex: 0 0 280rpx;
   white-space: nowrap;
   text-align: center;
 }
@@ -259,7 +274,7 @@ page {
   margin-top: 14rpx;
   padding: 12rpx 14rpx;
   color: #9a5b18;
-  font-size: 20rpx;
+  font-size: calc(20rpx * var(--page-font-scale));
   line-height: 1.55;
   background: #fff7e8;
   border: 1rpx solid #efc98d;
@@ -273,7 +288,7 @@ page {
 .collapse-link {
   padding: 6rpx 10rpx;
   color: #2b9877;
-  font-size: 20rpx;
+  font-size: calc(20rpx * var(--page-font-scale));
 }
 
 .password-row {
@@ -284,7 +299,7 @@ page {
 
 .password-label {
   color: #555f5c;
-  font-size: 20rpx;
+  font-size: calc(25rpx * var(--page-font-scale));
   flex-shrink: 0;
 }
 
@@ -294,7 +309,7 @@ page {
   margin-left: 8rpx;
   padding: 0 12rpx;
   color: #333b39;
-  font-size: 20rpx;
+  font-size: calc(23rpx * var(--page-font-scale));
   background: #ffffff;
   border: 1rpx solid #d8e0de;
   border-radius: 4rpx;
@@ -302,18 +317,21 @@ page {
 }
 
 .confirm-button {
-  width: 72rpx;
-  min-width: 72rpx;
+  width: 120rpx;
+  min-width: 140rpx;
   height: 48rpx;
-  margin: 0 0 0 10rpx;
+  margin: 0 0 0 12rpx;
   padding: 0;
   color: #ffffff;
-  font-size: 17rpx;
-  line-height: 48rpx;
+  font-size: calc(25rpx * var(--page-font-scale));
+  line-height: 1;
   background: #288f70;
   border-radius: 5rpx;
   box-sizing: border-box;
-  flex: 0 0 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 96rpx;
 }
 
 .inline-notes {
@@ -327,7 +345,7 @@ page {
 
 .inline-note-title {
   color: #37413e;
-  font-size: 21rpx;
+  font-size: calc(21rpx * var(--page-font-scale));
   font-weight: 600;
 }
 
@@ -335,7 +353,7 @@ page {
   max-height: 62rpx;
   margin-top: 6rpx;
   color: #747e7b;
-  font-size: 19rpx;
+  font-size: calc(19rpx * var(--page-font-scale));
   line-height: 31rpx;
   overflow: hidden;
 }
@@ -343,14 +361,14 @@ page {
 .expand-notes {
   padding: 18rpx 0 4rpx;
   color: #2b9a7c;
-  font-size: 20rpx;
+  font-size: calc(20rpx * var(--page-font-scale));
   text-align: center;
 }
 
 .empty-notes {
   padding: 24rpx 0 10rpx;
   color: #8e9895;
-  font-size: 21rpx;
+  font-size: calc(21rpx * var(--page-font-scale));
   text-align: center;
 }
 
@@ -405,7 +423,7 @@ page {
   height: 42rpx;
   margin-right: 16rpx;
   color: #ffffff;
-  font-size: 20rpx;
+  font-size: calc(20rpx * var(--page-font-scale));
   font-weight: 600;
   line-height: 42rpx;
   text-align: center;
@@ -422,20 +440,20 @@ page {
 .member-rule-title {
   margin-bottom: 7rpx;
   color: #25735e;
-  font-size: 26rpx;
+  font-size: calc(26rpx * var(--page-font-scale));
   font-weight: 600;
 }
 
 .member-rule-paragraph {
   color: #59635f;
-  font-size: 24rpx;
+  font-size: calc(24rpx * var(--page-font-scale));
   line-height: 1.75;
   text-align: justify;
 }
 
 .dialog-title {
   color: #333b39;
-  font-size: 27rpx;
+  font-size: calc(27rpx * var(--page-font-scale));
   font-weight: 600;
   text-align: center;
 }
@@ -458,7 +476,7 @@ page {
 .family-empty-name,
 .family-empty-status {
   color: #59635f;
-  font-size: 21rpx;
+  font-size: calc(21rpx * var(--page-font-scale));
 }
 
 .family-empty-status {
@@ -468,7 +486,7 @@ page {
 .dialog-empty-tip {
   padding: 24rpx 14rpx 8rpx;
   color: #87918e;
-  font-size: 20rpx;
+  font-size: calc(20rpx * var(--page-font-scale));
   line-height: 1.6;
   text-align: center;
 }
@@ -477,7 +495,7 @@ page {
   height: 62rpx;
   margin-top: 20rpx;
   color: #ffffff;
-  font-size: 23rpx;
+  font-size: calc(23rpx * var(--page-font-scale));
   line-height: 62rpx;
   background: #2b9a7c;
   border-radius: 999rpx;

@@ -16,7 +16,6 @@
 
 .tab-item {
   position: relative;
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,21 +24,17 @@
 }
 
 .tab-icon {
-  width: 65rpx;
-  height: 65rpx;
   object-fit: contain;
 }
 
 .tab-text {
-  margin-top: 6rpx;
-  font-size: 23rpx;
+  margin-top: 1rpx;
   line-height: 24rpx;
 }
 
 .tab-line {
   position: absolute;
   bottom: 2rpx;
-  width: 56rpx;
   height: 4rpx;
   border-radius: 4rpx;
 }
