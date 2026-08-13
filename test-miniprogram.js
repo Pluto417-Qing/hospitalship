@@ -425,7 +425,24 @@ test("首页使用安全导航尺寸且指示点数量跟随 banner", () => {
   assert.strictEqual(page.data.statusBarHeight, 20);
   assert.strictEqual(page.data.navBarHeight, 44);
   assert.strictEqual(page.data.indicators.length, page.data.banners.length);
-  assert.strictEqual(page.data.banners.length, 3);
+  assert.deepStrictEqual(
+    Array.from(page.data.banners, (banner) => banner.assetKey),
+    [
+      "banner02",
+      "banner03",
+      "banner04",
+      "banner05",
+      "banner06",
+      "banner07",
+      "banner08",
+      "banner09",
+      "banner10",
+      "banner11",
+      "banner12",
+      "banner13",
+      "banner14"
+    ]
+  );
 });
 
 test("书目页保存草稿、同步音频目标并记录会员登录回跳意图", async () => {
@@ -660,6 +677,139 @@ test("完整书稿登录失效后记录意图并在会员登录后回跳", async
     true
   );
   assert.strictEqual(storage.has("pendingMemberIntent"), false);
+});
+
+test("个人信息仅在服务端确认管理权限后显示上传入口", async () => {
+  const wxml = fs.readFileSync(
+    path.join(root, "miniprogram/pages/memberProfile/memberProfile.wxml"),
+    "utf8"
+  );
+  const phoneRowIndex = wxml.indexOf("手机号码");
+  const adminEntryIndex = wxml.indexOf("管理员上传界面");
+
+  assert(phoneRowIndex >= 0);
+  assert(adminEntryIndex > phoneRowIndex);
+  assert(
+    wxml.includes(
+      'wx:if="{{canManageUploads}}" class="menu-item" bindtap="goAdminUploads"'
+    )
+  );
+
+  const authorizedStatus = deferred();
+  const authorizedHarness = createWx({
+    async callFunction(request) {
+      if (request.name === "getUser") {
+        return {
+          result: {
+            loggedIn: true,
+            success: true,
+            user: { phoneMasked: "138****0000" }
+          }
+        };
+      }
+
+      assert.strictEqual(request.name, "adminContentCenter");
+      assert.strictEqual(request.data.action, "status");
+      return authorizedStatus.promise;
+    }
+  });
+  const authorizedPage = loadPage(
+    "miniprogram/pages/memberProfile/memberProfile.js",
+    {
+      app: { globalData: {} },
+      wx: authorizedHarness.wx
+    }
+  );
+
+  authorizedPage.onShow();
+  assert.strictEqual(authorizedPage.data.canManageUploads, false);
+  authorizedStatus.resolve({
+    result: {
+      authorized: true,
+      success: true,
+      capabilities: { upload: true }
+    }
+  });
+  await flush();
+  assert.strictEqual(authorizedPage.data.canManageUploads, true);
+  authorizedPage.goAdminUploads();
+  assert.strictEqual(
+    authorizedHarness.calls.navigateTo.some(
+      (request) => request.url === "/pages/adminUploads/adminUploads"
+    ),
+    true
+  );
+
+  const deniedHarness = createWx({
+    async callFunction(request) {
+      if (request.name === "getUser") {
+        return {
+          result: {
+            loggedIn: true,
+            success: true,
+            user: { phoneMasked: "138****0000" }
+          }
+        };
+      }
+
+      return {
+        result: {
+          authorized: false,
+          success: true,
+          capabilities: { upload: true }
+        }
+      };
+    }
+  });
+  const deniedPage = loadPage(
+    "miniprogram/pages/memberProfile/memberProfile.js",
+    {
+      app: { globalData: {} },
+      wx: deniedHarness.wx
+    }
+  );
+
+  deniedPage.onShow();
+  await flush();
+  deniedPage.goAdminUploads();
+  assert.strictEqual(deniedPage.data.canManageUploads, false);
+  assert.strictEqual(deniedHarness.calls.navigateTo.length, 0);
+
+  const lateStatus = deferred();
+  const hiddenHarness = createWx({
+    async callFunction(request) {
+      if (request.name === "getUser") {
+        return {
+          result: {
+            loggedIn: true,
+            success: true,
+            user: { phoneMasked: "138****0000" }
+          }
+        };
+      }
+
+      return lateStatus.promise;
+    }
+  });
+  const hiddenPage = loadPage(
+    "miniprogram/pages/memberProfile/memberProfile.js",
+    {
+      app: { globalData: {} },
+      wx: hiddenHarness.wx
+    }
+  );
+
+  hiddenPage.onShow();
+  hiddenPage.onHide();
+  lateStatus.resolve({
+    result: {
+      authorized: true,
+      success: true,
+      capabilities: { upload: true }
+    }
+  });
+  await flush();
+  assert.strictEqual(hiddenPage.data.canManageUploads, false);
 });
 
 test("会员设置仅在服务端确认管理权限后显示上传入口", async () => {

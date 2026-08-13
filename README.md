@@ -71,7 +71,7 @@
 
 ## 云存储路径
 
-- `published/images/app-home/v1/...`：固定的 6 张首页图片；仅管理员通过 `adminContentCenter.seedHomeAssets` 分次写入，普通客户端只能经 `getContentCatalog.homeAssets` 取得短期 HTTPS 地址
+- `published/images/app-home/v1/...`：固定的 15 张首页图片（13 张轮播图和 2 张书目封面）；仅管理员通过 `adminContentCenter.seedHomeAssets` 分次写入，普通客户端只能经 `getContentCatalog.homeAssets` 取得短期 HTTPS 地址
 - `published/images/<content-or-topic>/<revision>/...`：正式展示封面与图片；云函数核验发布状态和调用者身份后签发短期 HTTPS 地址，客户端不直接读取云文件 ID
 - `published/audio/<contentId>/assets/<uploadId>/primary.<ext>`：审核通过的会员音频；客户端不可直接读取，由 `getAudioManifest` 按独立 `audioRevision` 签发短期播放地址
 - `protected/special-topics/<topicId>/assets/<uploadId>/images/...`：单独上传并审核的专题图片

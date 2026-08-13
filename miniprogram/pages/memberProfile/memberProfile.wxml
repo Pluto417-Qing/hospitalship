@@ -18,6 +18,10 @@
         <text class="menu-label">手机号码</text>
         <text class="menu-value">{{user.phoneMasked || "暂未获取"}}</text>
       </view>
+      <view wx:if="{{canManageUploads}}" class="menu-item" bindtap="goAdminUploads">
+        <text class="menu-label">管理员上传界面</text>
+        <text class="menu-arrow">›</text>
+      </view>
     </view>
 
     <button class="logout-button" bindtap="handleLogout">退出登录</button>

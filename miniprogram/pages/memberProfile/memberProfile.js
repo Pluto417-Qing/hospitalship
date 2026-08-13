@@ -1,4 +1,20 @@
 const { registrationRules } = require("../../utils/policies");
+const adminContent = require("../../utils/adminContent");
+
+function hasAdminContentAccess(result) {
+  const capabilities = adminContent.normalizeCapabilities(result);
+
+  return Boolean(
+    result &&
+      result.success &&
+      result.authorized === true &&
+      (capabilities.upload ||
+        capabilities.drafts ||
+        capabilities.review ||
+        capabilities.moderation ||
+        capabilities.publish)
+  );
+}
 
 function normalizeInboxMessages(source) {
   if (!Array.isArray(source)) {
@@ -44,22 +60,54 @@ Page({
     loadError: "",
     user: null,
     registrationRules,
-    memberRulesVisible: false
+    memberRulesVisible: false,
+    canManageUploads: false
   },
 
   onShow() {
     this.isPageVisible = true;
     this.loadProfile();
+    this.checkAdminUploadAccess();
   },
 
   onHide() {
     this.isPageVisible = false;
     this.requestId = (this.requestId || 0) + 1;
+    this.adminAccessRequestId = (this.adminAccessRequestId || 0) + 1;
+    this.setData({ canManageUploads: false });
   },
 
   onUnload() {
     this.isPageVisible = false;
     this.requestId = (this.requestId || 0) + 1;
+    this.adminAccessRequestId = (this.adminAccessRequestId || 0) + 1;
+    this.data.canManageUploads = false;
+  },
+
+  async checkAdminUploadAccess() {
+    if (!wx.cloud || typeof wx.cloud.callFunction !== "function") {
+      return;
+    }
+
+    const requestId = (this.adminAccessRequestId || 0) + 1;
+    this.adminAccessRequestId = requestId;
+    this.setData({ canManageUploads: false });
+
+    try {
+      const response = await wx.cloud.callFunction({
+        name: "adminContentCenter",
+        data: { action: "status" }
+      });
+      const result = response.result || {};
+
+      if (!this.isPageVisible || requestId !== this.adminAccessRequestId) {
+        return;
+      }
+
+      this.setData({ canManageUploads: hasAdminContentAccess(result) });
+    } catch (error) {
+      console.error("check profile admin access error:", error);
+    }
   },
 
   async loadProfile() {
@@ -116,6 +164,16 @@ Page({
   goSettings() {
     wx.navigateTo({
       url: "/pages/memberSettings/memberSettings"
+    });
+  },
+
+  goAdminUploads() {
+    if (!this.data.canManageUploads) {
+      return;
+    }
+
+    wx.navigateTo({
+      url: "/pages/adminUploads/adminUploads"
     });
   },
 
