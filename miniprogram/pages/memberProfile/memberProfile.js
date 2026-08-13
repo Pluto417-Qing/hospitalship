@@ -290,5 +290,60 @@ Page({
     });
   },
 
+  handleLogout() {
+    wx.showModal({
+      title: "退出登录",
+      content: "确定要退出当前账号吗？",
+      confirmText: "退出",
+      cancelText: "取消",
+      success: (res) => {
+        if (res.confirm) {
+          this.performLogout();
+        }
+      }
+    });
+  },
+
+  async performLogout() {
+    wx.showLoading({
+      title: "正在退出...",
+      mask: true
+    });
+
+    try {
+      // 调用云函数退出登录
+      if (wx.cloud && typeof wx.cloud.callFunction === "function") {
+        await wx.cloud.callFunction({
+          name: "logout"
+        });
+      }
+
+      // 清除本地缓存
+      wx.clearStorageSync();
+
+      wx.hideLoading();
+
+      wx.showToast({
+        title: "已退出登录",
+        icon: "success",
+        duration: 2000
+      });
+
+      // 延迟返回并刷新
+      setTimeout(() => {
+        wx.reLaunch({
+          url: "/pages/member/member"
+        });
+      }, 2000);
+    } catch (error) {
+      console.error("logout error:", error);
+      wx.hideLoading();
+      wx.showToast({
+        title: "退出失败，请重试",
+        icon: "none"
+      });
+    }
+  },
+
   stopPropagation() {}
 });

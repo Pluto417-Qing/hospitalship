@@ -8,127 +8,87 @@ page {
   box-sizing: border-box;
 }
 
-.state-card,
-.info-card {
+.state-card {
   background: #ffffff;
   border: 2rpx solid #8bcfbd;
   border-radius: 12rpx;
-}
-
-.state-card {
   margin-top: 120rpx;
   padding: 42rpx 28rpx;
   color: #6e7975;
   font-size: 25rpx;
+  font-weight: 700;
   text-align: center;
 }
 
-.profile-header {
-  padding: 26rpx 0 34rpx;
-  text-align: center;
-}
-
-.avatar {
-  width: 92rpx;
-  height: 92rpx;
-  margin: 0 auto 16rpx;
-  color: #ffffff;
-  font-size: 36rpx;
-  line-height: 92rpx;
-  background: #397ca9;
-  border-radius: 10rpx;
-}
-
-.nickname {
-  color: #303936;
-  font-size: 34rpx;
-  font-weight: 600;
-}
-
-.member-label {
-  margin-top: 7rpx;
-  color: #7d8884;
-  font-size: 21rpx;
-}
-
-.info-card {
-  padding: 0 22rpx;
-}
-
-.info-row {
-  min-height: 88rpx;
-  border-bottom: 1rpx solid #e0e7e4;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.last-row {
-  border-bottom: 0;
-}
-
-.info-label {
-  color: #4e5955;
-  font-size: 24rpx;
-  flex-shrink: 0;
-}
-
-.info-value {
-  margin-left: 24rpx;
-  color: #747f7b;
-  font-size: 22rpx;
-  text-align: right;
-}
-
-.member-id {
-  word-break: break-all;
-}
-
-.action-button {
-  height: 76rpx;
-  margin-top: 30rpx;
-  padding: 0;
-  color: #ffffff;
-  font-size: 26rpx;
-  line-height: 1;
-  background: #2b9a7c;
-  border-radius: 999rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.panel {
-  margin-top: 18rpx;
+.menu-list {
   background: #ffffff;
-  border: 2rpx solid #8bcfbd;
-  border-radius: 11rpx;
+  border-radius: 12rpx;
   overflow: hidden;
-  box-shadow: 0 5rpx 12rpx rgba(27, 95, 76, 0.05);
 }
 
-.member-menu-item {
-  min-height: 78rpx;
-  padding: 0 20rpx;
+.menu-item {
+  min-height: 100rpx;
+  padding: 0 32rpx;
   border-bottom: 1rpx solid #d9e8e3;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.member-menu-item:last-child {
+.menu-item:last-child {
   border-bottom: 0;
 }
 
-.member-menu-label {
-  color: #333b39;
-  font-size: 24rpx;
+.menu-label {
+  color: #333333;
+  font-size: 32rpx;
+  font-weight: 700;
 }
 
-.member-menu-arrow {
-  color: #98a4a1;
-  font-size: 38rpx;
+.menu-arrow {
+  color: #b0b0b0;
+  font-size: 48rpx;
+  font-weight: 400;
   line-height: 1;
+}
+
+.menu-value {
+  color: #666666;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.info-item {
+  pointer-events: none;
+}
+
+.logout-button {
+  height: 88rpx;
+  margin-top: 40rpx;
+  padding: 0;
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 700;
+  line-height: 1;
+  background: #2b9a7c;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-button {
+  height: 76rpx;
+  padding: 0;
+  color: #ffffff;
+  font-size: 26rpx;
+  font-weight: 700;
+  line-height: 1;
+  background: #2b9a7c;
+  border-radius: 999rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dialog-mask {
@@ -155,7 +115,7 @@ page {
 .dialog-title {
   color: #333b39;
   font-size: 27rpx;
-  font-weight: 600;
+  font-weight: 700;
   text-align: center;
 }
 
@@ -169,6 +129,7 @@ page {
   padding: 18rpx 14rpx 10rpx;
   color: #87918e;
   font-size: 20rpx;
+  font-weight: 700;
   line-height: 1.6;
   text-align: center;
 }
@@ -190,7 +151,7 @@ page {
   margin-right: 16rpx;
   color: #ffffff;
   font-size: 20rpx;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 42rpx;
   text-align: center;
   background: #2b9a7c;
@@ -207,12 +168,13 @@ page {
   margin-bottom: 7rpx;
   color: #25735e;
   font-size: 26rpx;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .member-rule-paragraph {
   color: #59635f;
   font-size: 24rpx;
+  font-weight: 700;
   line-height: 1.75;
   text-align: justify;
 }
@@ -222,6 +184,7 @@ page {
   margin-top: 20rpx;
   color: #ffffff;
   font-size: 23rpx;
+  font-weight: 700;
   line-height: 62rpx;
   background: #2b9a7c;
   border-radius: 999rpx;
