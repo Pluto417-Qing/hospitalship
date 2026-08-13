@@ -86,7 +86,6 @@ page {
 }
 
 .book-card {
-  min-height: 370rpx;
   padding: 22rpx;
   border-radius: 24rpx;
   display: flex;
