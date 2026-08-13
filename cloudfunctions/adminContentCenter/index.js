@@ -153,13 +153,19 @@ const HOME_ASSET_MANIFEST_ID = "app-home-v1";
 const HOME_ASSET_REVISION = "app-home-v1";
 const HOME_ASSET_CLOUD_PREFIX = "published/images/app-home/v1";
 const HOME_ASSET_DEFINITIONS = Object.freeze([
-  Object.freeze({
-    key: "heroHospitalShip",
-    fileName: "hero-hospital-ship.jpg"
-  }),
-  Object.freeze({ key: "banner01", fileName: "banner-01.jpg" }),
   Object.freeze({ key: "banner02", fileName: "banner-02.jpg" }),
   Object.freeze({ key: "banner03", fileName: "banner-03.jpg" }),
+  Object.freeze({ key: "banner04", fileName: "banner-04.jpg" }),
+  Object.freeze({ key: "banner05", fileName: "banner-05.jpg" }),
+  Object.freeze({ key: "banner06", fileName: "banner-06.jpg" }),
+  Object.freeze({ key: "banner07", fileName: "banner-07.jpg" }),
+  Object.freeze({ key: "banner08", fileName: "banner-08.jpg" }),
+  Object.freeze({ key: "banner09", fileName: "banner-09.jpg" }),
+  Object.freeze({ key: "banner10", fileName: "banner-10.jpg" }),
+  Object.freeze({ key: "banner11", fileName: "banner-11.jpg" }),
+  Object.freeze({ key: "banner12", fileName: "banner-12.jpg" }),
+  Object.freeze({ key: "banner13", fileName: "banner-13.jpg" }),
+  Object.freeze({ key: "banner14", fileName: "banner-14.jpg" }),
   Object.freeze({ key: "bookRehab", fileName: "book-rehab.jpg" }),
   Object.freeze({ key: "bookSummary", fileName: "book-summary.jpg" })
 ]);

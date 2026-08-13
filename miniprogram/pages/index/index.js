@@ -1,4 +1,18 @@
-const HOME_BANNER_KEYS = ["heroHospitalShip", "banner02", "banner03"];
+const HOME_BANNER_KEYS = [
+  "banner02",
+  "banner03",
+  "banner04",
+  "banner05",
+  "banner06",
+  "banner07",
+  "banner08",
+  "banner09",
+  "banner10",
+  "banner11",
+  "banner12",
+  "banner13",
+  "banner14"
+];
 
 function normalizeAssetUrl(value) {
   const url = typeof value === "string" ? value.trim() : "";

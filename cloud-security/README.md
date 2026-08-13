@@ -43,7 +43,7 @@ npm run test:security
 
 正式资源路径约定：
 
-- `published/images/app-home/v1/...`：固定 6 张首页图片；只由活动 `admin` 重复调用 `adminContentCenter.seedHomeAssets` 分次写入，固定清单保存为 `publicAssets/app-home-v1`，普通客户端经 `getContentCatalog.homeAssets` 取得短期 HTTPS 地址
+- `published/images/app-home/v1/...`：固定 15 张首页图片（13 张轮播图和 2 张书目封面）；只由活动 `admin` 重复调用 `adminContentCenter.seedHomeAssets` 分次写入，固定清单保存为 `publicAssets/app-home-v1`，普通客户端经 `getContentCatalog.homeAssets` 取得短期 HTTPS 地址
 - `published/images/<content-or-topic>/<revision>/...`：正式展示封面与图片；云函数核验发布状态和调用者身份后签发短期 HTTPS 地址
 - `published/audio/<contentId>/assets/<uploadId>/primary.<ext>`：仅活动少年会员经 `getAudioManifest` 获取短期地址
 - `protected/special-topics/<topicId>/assets/<uploadId>/images/...`：单独上传并审核的专题图片；仅已解锁会员经 `specialTopicCenter` 获取短期地址
