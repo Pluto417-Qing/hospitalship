@@ -166,14 +166,13 @@ page {
 .question-source {
   margin-top: 4rpx;
   padding-right: 108rpx;
+}
+
+.source-info {
   color: #2975a9;
   font-size: 38rpx;
   font-weight: 600;
-  line-height: 1.45;
-}
-
-.source-department {
-  margin-left: 30rpx;
+  line-height: 1.4;
 }
 
 .question-text {

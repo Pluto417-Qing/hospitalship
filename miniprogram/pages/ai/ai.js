@@ -7,7 +7,7 @@ const TEST_QUESTIONS = [
     id: "test-001",
     revision: "v1",
     topic: "第0001号",
-    department: "急诊科",
+    department: "某某某",
     source: "北京协和医院急诊科",
     question: "如果XXXXXXXXXXXXXXX，XXXXX。此时你应该？",
     correctKey: "one",
@@ -21,7 +21,7 @@ const TEST_QUESTIONS = [
     id: "test-002",
     revision: "v1",
     topic: "第0002号",
-    department: "儿科",
+    department: "某某某",
     source: "北京协和医院急诊科",
     question: "关于儿童发热，以下哪种说法是正确的？",
     correctKey: "one",
@@ -35,7 +35,7 @@ const TEST_QUESTIONS = [
     id: "test-003",
     revision: "v1",
     topic: "第0003号",
-    department: "儿童保健科",
+    department: "某某某",
     source: "首都儿科研究所",
     question: "你是否每天坚持户外活动至少1小时？",
     correctKey: "one",
@@ -49,7 +49,7 @@ const TEST_QUESTIONS = [
     id: "test-004",
     revision: "v1",
     topic: "第0004号",
-    department: "预防保健科",
+    department: "某某某",
     source: "中国疾控中心",
     question: "关于洗手，以下哪种做法是正确的？",
     correctKey: "one",
@@ -63,7 +63,7 @@ const TEST_QUESTIONS = [
     id: "test-005",
     revision: "v1",
     topic: "第0005号",
-    department: "儿科",
+    department: "某某某",
     source: "北京大学第三医院",
     question: "青少年每天应该睡眠多长时间？",
     correctKey: "one",
@@ -80,7 +80,9 @@ function normalizeQuestion(source) {
     return null;
   }
 
-  const id = String(source.id || source.questionId || "").trim();
+  const rawId = String(source.id || source.questionId || "").trim();
+  // 去掉 "test-" 前缀，只保留数字部分
+  const id = rawId.replace(/^test-/i, "");
   const revision = String(source.revision || "").trim();
   const question = String(source.question || "").trim();
   const options = Array.isArray(source.options)
