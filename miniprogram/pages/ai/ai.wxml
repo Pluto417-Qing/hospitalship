@@ -12,6 +12,11 @@
   </view>
 
   <view class="quiz-page">
+    <!-- 护眼提示 -->
+    <view class="eye-care-tip">
+      <text class="eye-text">💡 护眼提示：每答5题休息一下，看看远处</text>
+    </view>
+
     <view class="quiz-state" wx:if="{{loadingQuestions}}">正在读取题目…</view>
     <view class="quiz-notice" wx:if="{{sourceNotice}}">{{sourceNotice}}</view>
 

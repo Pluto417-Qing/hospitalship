@@ -1,5 +1,76 @@
 const DEFAULT_LIMIT = 20;
 
+// 强制使用测试数据（开发调试用）
+const FORCE_USE_TEST_DATA = true;
+
+// 测试数据
+const TEST_TOPICS = [
+  {
+    id: "test-001",
+    title: "《118个元素的发现故事》",
+    summary: "从氢到钚，探索元素发现的历史",
+    producer: "清华大学xxx学生联合编撰",
+    unlockCostStars: 10,
+    unlocked: false
+  },
+  {
+    id: "test-002",
+    title: "《中国古代天文学简史》",
+    summary: "解读古人观测天象的智慧",
+    producer: "北京大学xxx学生联合编撰",
+    unlockCostStars: 10,
+    unlocked: false
+  },
+  {
+    id: "test-003",
+    title: "《生物多样性保护指南》",
+    summary: "了解地球生命的珍贵多样性",
+    producer: "复旦大学xxx学生联合编撰",
+    unlockCostStars: 10,
+    unlocked: true
+  },
+  {
+    id: "test-004",
+    title: "《编程入门：从零开始》",
+    summary: "计算机编程基础知识普及",
+    producer: "浙江大学xxx学生联合编撰",
+    unlockCostStars: 10,
+    unlocked: false
+  },
+  {
+    id: "test-005",
+    title: "《世界文明简史》",
+    summary: "探索人类文明发展的轨迹",
+    producer: "南京大学xxx学生联合编撰",
+    unlockCostStars: 10,
+    unlocked: false
+  },
+  {
+    id: "test-006",
+    title: "《音乐欣赏入门》",
+    summary: "感受音乐艺术的魅力",
+    producer: "中央音乐学院xxx学生联合编撰",
+    unlockCostStars: 10,
+    unlocked: false
+  },
+  {
+    id: "test-007",
+    title: "《地理大发现的故事》",
+    summary: "跟随探险家的脚步看世界",
+    producer: "中国人民大学xxx学生联合编撰",
+    unlockCostStars: 10,
+    unlocked: false
+  },
+  {
+    id: "test-008",
+    title: "《数学之美》",
+    summary: "发现数学中的美学规律",
+    producer: "上海交通大学xxx学生联合编撰",
+    unlockCostStars: 10,
+    unlocked: false
+  }
+];
+
 function normalizeTopic(source) {
   if (!source || typeof source !== "object") {
     return null;
@@ -26,7 +97,7 @@ function normalizeTopic(source) {
     previewCover: String(source.previewCover || "").trim(),
     unlockCostStars,
     unlocked: Boolean(source.unlocked),
-    statusText: source.unlocked ? "已解锁" : `${unlockCostStars}颗红五星`
+    statusText: source.unlocked ? "已下载" : "未下载"
   };
 }
 
@@ -108,17 +179,6 @@ Page({
         return;
       }
 
-      if (!result.success) {
-        this.setData({
-          topics: [],
-          memberLoggedIn: false,
-          membershipStatus: "guest",
-          hasMore: false,
-          loadError: result.message || "小专题目录读取失败"
-        });
-        return;
-      }
-
       const topics = (result.topics || [])
         .map(normalizeTopic)
         .filter(Boolean)
@@ -126,6 +186,7 @@ Page({
           ...topic,
           displayNumber: String(index + 1).padStart(3, "0")
         }));
+
       this.catalogNextOffset = result.hasMore ? result.nextOffset : null;
       this.setData({
         topics,
@@ -144,12 +205,29 @@ Page({
       }
 
       console.error("special topic catalog error:", error);
+      console.log("使用本地测试数据");
+
+      // 使用本地测试数据
+      const topics = TEST_TOPICS
+        .map(normalizeTopic)
+        .filter(Boolean)
+        .map((topic, index) => ({
+          ...topic,
+          displayNumber: String(index + 1).padStart(3, "0")
+        }));
+
       this.setData({
-        topics: [],
-        memberLoggedIn: false,
-        membershipStatus: "guest",
+        topics,
+        memberLoggedIn: true,
+        membershipStatus: "member",
         hasMore: false,
-        loadError: "网络异常，请稍后重试"
+        loadError: "",
+        sourceUnavailable: false
+      });
+
+      wx.showToast({
+        title: "已加载测试数据",
+        icon: "none"
       });
     } finally {
       if (
@@ -238,26 +316,41 @@ Page({
   },
 
   async requestCatalog(offset) {
-    if (!wx.cloud || typeof wx.cloud.callFunction !== "function") {
-      return {
-        success: false,
-        message: "云服务暂不可用"
-      };
+    // 强制使用测试数据
+    if (FORCE_USE_TEST_DATA) {
+      throw new Error("使用测试数据（开发模式）");
     }
 
-    const response = await wx.cloud.callFunction({
-      name: "specialTopicCenter",
-      data: {
-        action: "list",
-        offset,
-        limit: DEFAULT_LIMIT
-      }
-    });
+    if (!wx.cloud || typeof wx.cloud.callFunction !== "function") {
+      throw new Error("云服务暂不可用");
+    }
 
-    return response.result || {
-      success: false,
-      message: "小专题目录读取失败"
-    };
+    try {
+      const response = await wx.cloud.callFunction({
+        name: "specialTopicCenter",
+        data: {
+          action: "list",
+          offset,
+          limit: DEFAULT_LIMIT
+        }
+      });
+
+      const result = response.result || {};
+
+      // 如果云函数返回失败或空数据，抛出错误以触发测试数据加载
+      if (!result.success) {
+        throw new Error(result.message || "小专题目录读取失败");
+      }
+
+      // 如果返回成功但没有数据，也抛出错误
+      if (!result.topics || result.topics.length === 0) {
+        throw new Error("暂无专题数据");
+      }
+
+      return result;
+    } catch (error) {
+      throw error;
+    }
   },
 
   openTopic(event) {

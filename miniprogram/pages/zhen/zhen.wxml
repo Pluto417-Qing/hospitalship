@@ -31,7 +31,7 @@
       />
       <view class="topic-cover placeholder" wx:else>真</view>
       <view class="topic-copy">
-        <view class="topic-number">第 {{item.displayNumber}} 号</view>
+        <view class="topic-number">{{item.displayNumber}}</view>
         <view class="topic-title">{{item.title}}</view>
         <view class="topic-producer" wx:if="{{item.producer}}">{{item.producer}}</view>
         <view class="topic-summary" wx:if="{{item.summary}}">{{item.summary}}</view>

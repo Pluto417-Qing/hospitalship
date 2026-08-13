@@ -1,10 +1,10 @@
 page {
-  background: #f7f7f7;
+  background: #faf8f5; /* 暖色调，符合设计要求 */
 }
 
 .quiz-shell {
   min-height: 100vh;
-  background: #f7f7f7;
+  background: #faf8f5; /* 与page背景色一致 */
   box-sizing: border-box;
 }
 
@@ -42,6 +42,22 @@ page {
   box-sizing: border-box;
 }
 
+/* 护眼提示 */
+.eye-care-tip {
+  margin-bottom: 30rpx;
+  padding: 20rpx 28rpx;
+  background: linear-gradient(135deg, #fff9e6 0%, #ffe8cc 100%);
+  border-left: 6rpx solid #ffa726;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(255, 167, 38, 0.1);
+}
+
+.eye-text {
+  font-size: 30rpx;
+  color: #d84315;
+  line-height: 1.6;
+}
+
 .quiz-state,
 .quiz-notice {
   margin-bottom: 24rpx;
@@ -49,7 +65,7 @@ page {
   color: #3c6f91;
   background: #eaf4fb;
   border-radius: 14rpx;
-  font-size: 24rpx;
+  font-size: 28rpx;
   line-height: 1.55;
 }
 
@@ -60,7 +76,7 @@ page {
 
 .question-card {
   position: relative;
-  min-height: 458rpx;
+  min-height: 380rpx;
   margin-bottom: 30rpx;
   padding: 34rpx 28rpx 30rpx;
   background: #ffffff;
@@ -71,11 +87,11 @@ page {
 }
 
 .question-card.is-long {
-  min-height: 522rpx;
+  min-height: 420rpx;
 }
 
 .question-card.is-answer {
-  min-height: 458rpx;
+  min-height: 380rpx;
   padding: 40rpx 32rpx 34rpx;
 }
 
@@ -98,7 +114,7 @@ page {
 .question-number {
   padding-top: 5rpx;
   color: #2975a9;
-  font-size: 32rpx;
+  font-size: 38rpx;
   font-weight: 500;
   line-height: 1.35;
 }
@@ -139,7 +155,7 @@ page {
   color: #ffffff;
   background: #b997f0;
   border-radius: 50%;
-  font-size: 24rpx;
+  font-size: 28rpx;
   line-height: 1.2;
 }
 
@@ -151,7 +167,7 @@ page {
   margin-top: 4rpx;
   padding-right: 108rpx;
   color: #2975a9;
-  font-size: 34rpx;
+  font-size: 38rpx;
   font-weight: 600;
   line-height: 1.45;
 }
@@ -161,10 +177,10 @@ page {
 }
 
 .question-text {
-  margin-top: 48rpx;
+  margin-top: 28rpx;
   padding-right: 8rpx;
-  color: #5a5a5a;
-  font-size: 28rpx;
+  color: #333333; /* 黑色，符合设计稿要求 */
+  font-size: 32rpx;
   font-weight: 500;
   line-height: 1.55;
 }
@@ -172,7 +188,7 @@ page {
 .option-row {
   position: absolute;
   right: 24rpx;
-  bottom: 38rpx;
+  bottom: 28rpx;
   left: 24rpx;
   display: flex;
   justify-content: space-between;
@@ -193,7 +209,7 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26rpx;
+  font-size: 30rpx;
   font-weight: 600;
   line-height: 76rpx;
 }
@@ -208,7 +224,7 @@ page {
   bottom: 26rpx;
   left: 24rpx;
   color: #b84a42;
-  font-size: 24rpx;
+  font-size: 28rpx;
   line-height: 1.45;
   text-align: center;
 }
@@ -221,7 +237,7 @@ page {
   color: #ffffff;
   background: #2975a9;
   border-radius: 999rpx;
-  font-size: 24rpx;
+  font-size: 28rpx;
   line-height: 60rpx;
 }
 
@@ -237,7 +253,7 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 34rpx;
+  font-size: 38rpx;
   font-weight: 500;
   line-height: 1.35;
   text-align: center;
@@ -253,7 +269,7 @@ page {
 
 .feedback-symbol {
   margin-right: 18rpx;
-  font-size: 42rpx;
+  font-size: 46rpx;
   line-height: 1;
 }
 
