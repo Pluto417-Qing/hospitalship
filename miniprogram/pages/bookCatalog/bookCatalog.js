@@ -164,7 +164,9 @@ Page({
     const requestId = (this.catalogRequestId || 0) + 1;
     this.catalogRequestId = requestId;
     this.catalogLoading = true;
-    const result = await loadContentCatalogResult("book");
+
+    // 只使用本地固定的4项内容，不从云函数加载额外内容
+    const contents = bookContentList.slice(0, 4);
 
     if (
       requestId !== this.catalogRequestId ||
@@ -175,9 +177,8 @@ Page({
     }
 
     this.catalogLoading = false;
-    const contents = result.items;
-    this.catalogHasMore = result.hasMore;
-    this.catalogNextOffset = result.nextOffset;
+    this.catalogHasMore = false;
+    this.catalogNextOffset = 0;
 
     const selectedExists = contents.some(
       (item) => item.available && item.id === this.data.selectedContentId

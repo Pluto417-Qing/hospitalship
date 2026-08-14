@@ -33,7 +33,7 @@
     <textarea
       class="comment-input"
       value="{{comment}}"
-      maxlength="2000"
+      maxlength="500"
       bindinput="onCommentInput"
     ></textarea>
     <button
@@ -55,6 +55,6 @@
         aria-label="《中国医院船》"
       />
     </view>
-    <view class="full-book-status">少年会员提交读后感之后可下载全本/view>
+    <view class="full-book-status">少年会员提交读后感之后可下载全本</view>
   </view>
 </view>
