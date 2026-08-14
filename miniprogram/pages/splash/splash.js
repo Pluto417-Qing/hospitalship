@@ -4,7 +4,7 @@ Page({
       wx.switchTab({
         url: "/pages/index/index"
       });
-    }, 1500);
+    }, 3000);
   },
 
   skip() {
