@@ -150,6 +150,7 @@ function createWx(options = {}) {
     navigateBack: [],
     navigateTo: [],
     redirects: [],
+    reLaunch: [],
     showActionSheet: [],
     showLoading: [],
     switchTab: [],
@@ -264,6 +265,12 @@ function createWx(options = {}) {
     removeStorageSync(key) {
       storage.delete(key);
     },
+    reLaunch(request = {}) {
+      calls.reLaunch.push(request);
+      if (request.success) {
+        request.success({});
+      }
+    },
     setStorageSync(key, value) {
       storage.set(key, value);
     },
@@ -328,7 +335,7 @@ function loadPage(relativePath, options = {}) {
       }
       return localRequire(request);
     },
-    setTimeout,
+    setTimeout: options.setTimeout || setTimeout,
     wx: options.wx
   };
 
@@ -810,6 +817,70 @@ test("个人信息仅在服务端确认管理权限后显示上传入口", async
   });
   await flush();
   assert.strictEqual(hiddenPage.data.canManageUploads, false);
+});
+
+test("会员个人信息页退出登录会撤销服务端会话并清理本地会员态", async () => {
+  const storage = new Map([
+    ["familyInviteCache", { token: "cached" }],
+    ["pendingFamilyInvite", { token: "pending" }],
+    ["pendingMemberIntent", { type: "note" }],
+    ["pendingQuizFocus", { id: "quiz-a" }],
+    ["bookCatalogCommentDraft", { comment: "本机读后感草稿" }],
+    ["summaryReadContentIds", ["legacy-read-id"]]
+  ]);
+  const app = {
+    globalData: {
+      canAddMember: false,
+      memberProfile: { phoneMasked: "138****0000" },
+      memberProfiles: [{ memberId: "TEST2012EXAMPLE" }],
+      readerNotes: [{ id: "note-a" }],
+      registrationConsent: { accepted: true }
+    }
+  };
+  const harness = createWx({
+    async callFunction(request) {
+      assert.strictEqual(request.name, "login");
+      assert.strictEqual(request.data.action, "logout");
+      return { result: { loggedIn: false, success: true } };
+    },
+    storage
+  });
+  const page = loadPage("miniprogram/pages/memberProfile/memberProfile.js", {
+    app,
+    setTimeout: (handler) => {
+      handler();
+      return 1;
+    },
+    wx: harness.wx
+  });
+  page.setData({
+    canManageUploads: true,
+    memberRulesVisible: true,
+    user: { memberId: "TEST2012EXAMPLE" }
+  });
+
+  await page.performLogout();
+
+  assert.strictEqual(harness.calls.cloud.length, 1);
+  assert.strictEqual(storage.has("familyInviteCache"), false);
+  assert.strictEqual(storage.has("pendingFamilyInvite"), false);
+  assert.strictEqual(storage.has("pendingMemberIntent"), false);
+  assert.strictEqual(storage.has("pendingQuizFocus"), false);
+  assert.strictEqual(storage.has("bookCatalogCommentDraft"), false);
+  assert.strictEqual(storage.has("summaryReadContentIds"), false);
+  assert.strictEqual(app.globalData.memberProfile, null);
+  assert.strictEqual(Array.isArray(app.globalData.readerNotes), true);
+  assert.strictEqual(app.globalData.readerNotes.length, 0);
+  assert.strictEqual(Array.isArray(app.globalData.memberProfiles), true);
+  assert.strictEqual(app.globalData.memberProfiles.length, 0);
+  assert.strictEqual(app.globalData.registrationConsent, null);
+  assert.strictEqual(app.globalData.canAddMember, true);
+  assert.strictEqual(page.data.user, null);
+  assert.strictEqual(page.data.canManageUploads, false);
+  assert.strictEqual(page.data.memberRulesVisible, false);
+  assert.strictEqual(harness.calls.hideLoading, 1);
+  assert.strictEqual(harness.calls.toasts.at(-1).title, "已退出登录");
+  assert.strictEqual(harness.calls.reLaunch.at(-1).url, "/pages/member/member");
 });
 
 test("会员设置仅在服务端确认管理权限后显示上传入口", async () => {

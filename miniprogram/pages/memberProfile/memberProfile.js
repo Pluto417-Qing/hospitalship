@@ -369,15 +369,26 @@ Page({
     });
 
     try {
-      // 调用云函数退出登录
       if (wx.cloud && typeof wx.cloud.callFunction === "function") {
-        await wx.cloud.callFunction({
-          name: "logout"
+        const response = await wx.cloud.callFunction({
+          name: "login",
+          data: {
+            action: "logout"
+          }
         });
+        const result = response.result || {};
+
+        if (!result.success) {
+          wx.hideLoading();
+          wx.showToast({
+            title: result.message || "退出失败，请重试",
+            icon: "none"
+          });
+          return;
+        }
       }
 
-      // 清除本地缓存
-      wx.clearStorageSync();
+      this.clearLocalSensitiveState();
 
       wx.hideLoading();
 
@@ -401,6 +412,35 @@ Page({
         icon: "none"
       });
     }
+  },
+
+  clearLocalSensitiveState() {
+    const app = getApp();
+
+    if (app && app.globalData) {
+      app.globalData.memberProfile = null;
+      app.globalData.readerNotes = [];
+      app.globalData.registrationConsent = null;
+      app.globalData.memberProfiles = [];
+      app.globalData.canAddMember = true;
+    }
+
+    try {
+      wx.removeStorageSync("familyInviteCache");
+      wx.removeStorageSync("pendingFamilyInvite");
+      wx.removeStorageSync("pendingMemberIntent");
+      wx.removeStorageSync("pendingQuizFocus");
+      wx.removeStorageSync("bookCatalogCommentDraft");
+      wx.removeStorageSync("summaryReadContentIds");
+    } catch (error) {
+      console.warn("clear profile logout state error:", error);
+    }
+
+    this.setData({
+      user: null,
+      canManageUploads: false,
+      memberRulesVisible: false
+    });
   },
 
   stopPropagation() {}
