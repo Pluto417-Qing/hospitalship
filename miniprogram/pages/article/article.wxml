@@ -68,7 +68,7 @@
   <view class="comment-card">
     <view class="comment-header">
       <view class="comment-title">我的读后感</view>
-      <text wx:if="{{!comment}}" class="comment-guidance">简体中文，文明用语，100-2000字</text>
+      <text wx:if="{{!comment}}" class="comment-guidance">简体中文，文明用语，100至500字</text>
     </view>
     <textarea
       class="comment-input"
