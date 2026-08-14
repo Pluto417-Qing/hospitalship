@@ -105,6 +105,8 @@ function readText(value, fallback) {
 }
 
 const NOTES_PAGE_LIMIT = 20;
+const MEMBER_PASSWORD_PATTERN = /^[\u4e00-\u9fa5]{3,5}$/;
+const LEGACY_MEMBER_PASSWORD_PATTERN = /^\d{6}$/;
 
 function normalizeNotes(source, startIndex = 0) {
   if (!Array.isArray(source)) {
@@ -122,6 +124,13 @@ function normalizeNotes(source, startIndex = 0) {
       completedAtText: formatCompletedAt(note.completedAt)
     };
   });
+}
+
+function isValidMemberPassword(value) {
+  return (
+    MEMBER_PASSWORD_PATTERN.test(value) ||
+    LEGACY_MEMBER_PASSWORD_PATTERN.test(value)
+  );
 }
 
 Page({
@@ -175,7 +184,7 @@ Page({
     const nextOffset = Number(payload.nextOffset);
     const notesHasMore =
       payload.hasMore === true &&
-      /^\d{8}$/.test(password) &&
+      isValidMemberPassword(password) &&
       Number.isInteger(nextOffset) &&
       nextOffset >= notes.length &&
       nextOffset <= 10000;
@@ -204,7 +213,7 @@ Page({
       !this.isPageVisible ||
       this.data.notesLoading ||
       !this.data.notesHasMore ||
-      !/^\d{8}$/.test(String(this.noteAccessPassword || "")) ||
+      !isValidMemberPassword(String(this.noteAccessPassword || "")) ||
       !Number.isInteger(this.notesNextOffset)
     ) {
       return;

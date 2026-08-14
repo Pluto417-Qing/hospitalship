@@ -42,6 +42,8 @@ const PENDING_MEMBER_INTENT_KEY = "pendingMemberIntent";
 const PENDING_QUIZ_FOCUS_KEY = "pendingQuizFocus";
 const MEMBER_INTENT_TTL_MS = 30 * 60 * 1000;
 const NOTES_PAGE_LIMIT = 20;
+const MEMBER_PASSWORD_PATTERN = /^[\u4e00-\u9fa5]{3,5}$/;
+const LEGACY_MEMBER_PASSWORD_PATTERN = /^\d{6}$/;
 const TERMINAL_INVITE_CODES = new Set([
   "INVALID_INVITE",
   "INVITE_EXPIRED",
@@ -54,6 +56,13 @@ const TERMINAL_INVITE_CODES = new Set([
 
 function isValidInviteToken(token) {
   return /^[a-f0-9]{64}$/.test(String(token || "").toLowerCase());
+}
+
+function isValidMemberPassword(value) {
+  return (
+    MEMBER_PASSWORD_PATTERN.test(value) ||
+    LEGACY_MEMBER_PASSWORD_PATTERN.test(value)
+  );
 }
 
 function readFamilyInviteCache(userId) {
@@ -646,9 +655,9 @@ Page({
   },
 
   async openReaderNotes() {
-    if (!/^\d{8}$/.test(this.data.notePassword)) {
+    if (!isValidMemberPassword(this.data.notePassword)) {
       wx.showToast({
-        title: "请输入6位会员密码",
+        title: "请输入3至5位汉字会员密码",
         icon: "none"
       });
       return;

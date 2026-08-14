@@ -1,7 +1,17 @@
 const adminContent = require("../../utils/adminContent");
 
+const MEMBER_PASSWORD_PATTERN = /^[\u4e00-\u9fa5]{3,5}$/;
+const LEGACY_MEMBER_PASSWORD_PATTERN = /^\d{6}$/;
+
 function normalizeMemberId(value) {
   return String(value || "").trim().toUpperCase().slice(0, 40);
+}
+
+function isValidMemberPassword(value) {
+  return (
+    MEMBER_PASSWORD_PATTERN.test(value) ||
+    LEGACY_MEMBER_PASSWORD_PATTERN.test(value)
+  );
 }
 
 function shouldPreserveCatalogDraft() {
@@ -188,8 +198,8 @@ Page({
       return;
     }
 
-    if (!/^\d{6}$/.test(this.data.password)) {
-      wx.showToast({ title: "请输入6位会员密码", icon: "none" });
+    if (!isValidMemberPassword(this.data.password)) {
+      wx.showToast({ title: "请输入3至5位汉字会员密码", icon: "none" });
       return;
     }
 

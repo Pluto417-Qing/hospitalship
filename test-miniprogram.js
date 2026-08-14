@@ -3192,9 +3192,9 @@ test("注册页卸载后忽略晚到的注册结果", async () => {
   page.setData({
     birthYear: "2012",
     city: "北京市 北京市 海淀区",
-    confirmPassword: "12345678",
+    confirmPassword: "海船号",
     nickname: "TEST",
-    password: "12345678",
+    password: "海船号",
     phone: "13800138000"
   });
   const submitPromise = page.submitRegister();
@@ -3242,8 +3242,8 @@ test("忘记密码沿用已选会员且忽略隐藏前发出的晚到响应", as
   assert.strictEqual(recoveryPage.data.memberId, "TEST2012EXAMPLE");
   recoveryPage.setData({
     phone: "13800138000",
-    newPassword: "87654321",
-    confirmPassword: "87654321"
+    newPassword: "新海船",
+    confirmPassword: "新海船"
   });
 
   const resetPromise = recoveryPage.submitReset();
@@ -3279,7 +3279,7 @@ test("会员页隐藏时清空读后感且忽略晚到响应", async () => {
   });
   page.isPageVisible = true;
   page.setData({
-    notePassword: "12345678",
+    notePassword: "海船号",
     notesUnlocked: true,
     readerNotes: [{ id: "old-note" }],
     visibleReaderNotes: [{ id: "old-note" }]
@@ -3337,11 +3337,11 @@ test("会员读后感首屏分页且密码只短暂经 EventChannel 传递", asy
     wx: harness.wx
   });
   page.isPageVisible = true;
-  page.setData({ notePassword: "12345678" });
+  page.setData({ notePassword: "海船号" });
 
   await page.openReaderNotes();
 
-  assert.strictEqual(harness.calls.cloud[0].data.password, "12345678");
+  assert.strictEqual(harness.calls.cloud[0].data.password, "海船号");
   assert.strictEqual(harness.calls.cloud[0].data.offset, 0);
   assert.strictEqual(harness.calls.cloud[0].data.limit, 20);
   assert.strictEqual(page.data.notePassword, "");
@@ -3349,7 +3349,7 @@ test("会员读后感首屏分页且密码只短暂经 EventChannel 传递", asy
   assert.strictEqual(app.globalData.readerNotes.length, 0);
 
   page.openAllReaderNotes();
-  assert.strictEqual(emittedPayload.password, "12345678");
+  assert.strictEqual(emittedPayload.password, "海船号");
   assert.strictEqual(emittedPayload.nextOffset, 4);
   assert.strictEqual(emittedPayload.total, 5);
 
@@ -4474,7 +4474,7 @@ test("读后感页经 EventChannel 增量加载并在隐藏时清空密码", asy
         id: "note-a"
       }
     ],
-    password: "12345678",
+    password: "海船号",
     hasMore: true,
     nextOffset: 1,
     total: 2
@@ -4484,7 +4484,7 @@ test("读后感页经 EventChannel 增量加载并在隐藏时清空密码", asy
 
   await page.onReachBottom();
 
-  assert.strictEqual(harness.calls.cloud[0].data.password, "12345678");
+  assert.strictEqual(harness.calls.cloud[0].data.password, "海船号");
   assert.strictEqual(harness.calls.cloud[0].data.offset, 1);
   assert.strictEqual(harness.calls.cloud[0].data.limit, 20);
   assert.strictEqual(page.data.notes.length, 2);

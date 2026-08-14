@@ -127,7 +127,7 @@ Page({
     const tabBar = this.getTabBar && this.getTabBar();
 
     if (tabBar) {
-      tabBar.setData({ selected: 1 });
+      tabBar.setData({ selected: 1, hidden: false });
     }
 
     this.loadTimeline(this.data.selectedYear, this.data.selectedMonth);
@@ -137,6 +137,7 @@ Page({
     this.pageVisible = false;
     this.timelineRequestId = (this.timelineRequestId || 0) + 1;
     this.timelineLoading = false;
+    this.setTabBarHidden(false);
     this.setData({ timelineLoading: false });
   },
 
@@ -145,6 +146,15 @@ Page({
     this.pageDestroyed = true;
     this.timelineRequestId = (this.timelineRequestId || 0) + 1;
     this.timelineLoading = false;
+    this.setTabBarHidden(false);
+  },
+
+  setTabBarHidden(hidden) {
+    const tabBar = this.getTabBar && this.getTabBar();
+
+    if (tabBar) {
+      tabBar.setData({ hidden });
+    }
   },
 
   async loadTimeline(year, month, { append = false } = {}) {
@@ -278,6 +288,7 @@ Page({
   },
 
   openDatePicker() {
+    this.setTabBarHidden(true);
     this.setData({
       datePickerVisible: true,
       draftPickerValue: this.data.pickerValue
@@ -291,6 +302,7 @@ Page({
   },
 
   cancelDatePicker() {
+    this.setTabBarHidden(false);
     this.setData({
       datePickerVisible: false,
       draftPickerValue: this.data.pickerValue
@@ -310,6 +322,7 @@ Page({
       selectedMonth,
       visibleEntries: filterEntries(selectedYear, selectedMonth)
     });
+    this.setTabBarHidden(false);
     this.loadTimeline(selectedYear, selectedMonth);
   },
 

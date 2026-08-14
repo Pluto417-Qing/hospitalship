@@ -35,7 +35,7 @@
     <view class="state-avatar">船</view>
     <view class="state-title">登录少年会员</view>
     <view class="state-desc">
-      当前微信已管理{{profiles.length}}位少年会员。请选择会员并输入对应的6位会员密码。
+      当前微信已管理{{profiles.length}}位少年会员。请选择会员并输入对应的会员密码。
     </view>
     <button class="state-button" bindtap="goLogin">选择会员登录</button>
     <button
@@ -95,15 +95,24 @@
       <view class="star-grid">
         <view class="star-card">
           <image class="red-star" src="../../images/red-star.svg" mode="aspectFit" />
-          <text class="star-text">总数：{{user.starTotal}}</text>
+          <view class="star-text">
+            <text class="star-label">总数：</text>
+            <text class="star-number">{{user.starTotal}}</text>
+          </view>
         </view>
         <view class="star-card">
           <image class="red-star" src="../../images/red-star.svg" mode="aspectFit" />
-          <text class="star-text">已用：{{user.starUsed}}</text>
+          <view class="star-text">
+            <text class="star-label">已用：</text>
+            <text class="star-number">{{user.starUsed}}</text>
+          </view>
         </view>
         <view class="star-card">
           <image class="red-star" src="../../images/red-star.svg" mode="aspectFit" />
-          <text class="star-text">剩余：{{user.starRemain}}</text>
+          <view class="star-text">
+            <text class="star-label">剩余：</text>
+            <text class="star-number">{{user.starRemain}}</text>
+          </view>
         </view>
       </view>
     </view>
@@ -139,10 +148,8 @@
         <text class="password-label">请输入密码：</text>
         <input
           class="password-input"
-          type="number"
           password
-          maxlength="8"
-          placeholder="6位会员密码"
+          maxlength="6"
           value="{{notePassword}}"
           bindinput="onNotePasswordInput"
         />

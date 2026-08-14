@@ -181,8 +181,8 @@ page {
 .picker-sheet {
   position: relative;
   width: 750rpx;
-  height: 670rpx;
-  padding: 58rpx 20rpx 38rpx;
+  height: calc(670rpx + env(safe-area-inset-bottom));
+  padding: 58rpx 20rpx calc(38rpx + env(safe-area-inset-bottom));
   background: #ffffff;
   border-radius: 24rpx 24rpx 0 0;
   box-sizing: border-box;
@@ -231,9 +231,9 @@ page {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 38rpx;
+  bottom: calc(54rpx + env(safe-area-inset-bottom));
   z-index: 10;
-  height: 86rpx;
+  height: 92rpx;
 }
 
 .picker-btn {
@@ -249,6 +249,7 @@ page {
   font-weight: 500;
   line-height: 82rpx;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .cancel-btn {

@@ -10,6 +10,7 @@ const REGISTRATION_NOTICE_VERSION = "registration-notice-2026-07-12";
 const READER_RULES_VERSION = "reader-rules-v1";
 const MAX_MEMBERS_PER_GUARDIAN = 2;
 const SESSION_DURATION_MS = 30 * 24 * 60 * 60 * 1000;
+const MEMBER_PASSWORD_PATTERN = /^[\u4e00-\u9fa5]{3,5}$/;
 const SCRYPT_OPTIONS = Object.freeze({
   N: 16384,
   r: 8,
@@ -224,10 +225,10 @@ exports.main = async (event = {}) => {
       };
     }
 
-    if (!/^\d{6}$/.test(password)) {
+    if (!MEMBER_PASSWORD_PATTERN.test(password)) {
       return {
         success: false,
-        message: "会员密码应为6位数字"
+        message: "会员密码应为3至5位汉字"
       };
     }
 

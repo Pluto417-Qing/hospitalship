@@ -1,6 +1,6 @@
 <view class="page">
   <view class="page-title">登录少年会员</view>
-  <view class="page-desc">当前微信可管理最多两位少年读者，每位会员使用自己的6位密码登录。</view>
+  <view class="page-desc">当前微信可管理最多两位少年读者，每位会员使用自己的密码登录。</view>
 
   <view wx:if="{{canManageUploads}}" class="admin-entry" bindtap="goAdminUploads">
     <view class="admin-entry-mark">管</view>
@@ -42,14 +42,13 @@
     </view>
 
     <view class="password-card">
-      <view class="field-label">6位会员密码</view>
+      <view class="field-label">会员密码</view>
       <input
         class="password-input"
-        type="number"
         password="true"
         maxlength="6"
         value="{{password}}"
-        placeholder="请输入所选会员的密码"
+        placeholder="请输入3至5位汉字密码"
         bindinput="onPasswordInput"
       />
       <view class="recovery-link" bindtap="goRecovery">忘记密码</view>

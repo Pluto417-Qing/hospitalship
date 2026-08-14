@@ -11,6 +11,8 @@ const MAX_PASSWORD_FAILURES = 5;
 const PASSWORD_LOCK_MS = 5 * 60 * 1000;
 const MAX_RECOVERY_FAILURES = 5;
 const RECOVERY_LOCK_MS = 15 * 60 * 1000;
+const MEMBER_PASSWORD_PATTERN = /^[\u4e00-\u9fa5]{3,5}$/;
+const LEGACY_MEMBER_PASSWORD_PATTERN = /^\d{6}$/;
 const SCRYPT_OPTIONS = Object.freeze({
   N: 16384,
   r: 8,
@@ -75,6 +77,13 @@ function verifyPassword(password, user) {
       : hashLegacyPassword(password, user.passwordSalt);
 
   return safeEqualHex(inputHash, user.passwordHash);
+}
+
+function isValidMemberPassword(value) {
+  return (
+    MEMBER_PASSWORD_PATTERN.test(value) ||
+    LEGACY_MEMBER_PASSWORD_PATTERN.test(value)
+  );
 }
 
 function isActiveUser(user) {
@@ -251,7 +260,7 @@ async function loginAction(openid, event) {
   const memberId = String(event.memberId || "").trim().toUpperCase();
   const password = String(event.password || "");
 
-  if (!/^\d{6}$/.test(password)) {
+  if (!isValidMemberPassword(password)) {
     return {
       success: false,
       code: "INVALID_CREDENTIALS",
@@ -442,7 +451,7 @@ async function resetPasswordAction(openid, event) {
   if (
     !memberId ||
     !/^1[3-9]\d{9}$/.test(phone) ||
-    !/^\d{6}$/.test(newPassword)
+    !MEMBER_PASSWORD_PATTERN.test(newPassword)
   ) {
     return {
       success: false,

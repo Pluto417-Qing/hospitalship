@@ -2,6 +2,8 @@ function normalizeMemberId(value) {
   return String(value || "").trim().toUpperCase().slice(0, 40);
 }
 
+const MEMBER_PASSWORD_PATTERN = /^[\u4e00-\u9fa5]{3,5}$/;
+
 Page({
   data: {
     memberId: "",
@@ -55,13 +57,13 @@ Page({
 
   onNewPasswordInput(event) {
     this.setData({
-      newPassword: String(event.detail.value || "").slice(0, 6)
+      newPassword: String(event.detail.value || "").slice(0, 5)
     });
   },
 
   onConfirmPasswordInput(event) {
     this.setData({
-      confirmPassword: String(event.detail.value || "").slice(0, 6)
+      confirmPassword: String(event.detail.value || "").slice(0, 5)
     });
   },
 
@@ -83,8 +85,8 @@ Page({
       return "请输入登记的监护人手机号";
     }
 
-    if (!/^\d{6}$/.test(this.data.newPassword)) {
-      return "新密码应为6位数字";
+    if (!MEMBER_PASSWORD_PATTERN.test(this.data.newPassword)) {
+      return "新密码应为3至5位汉字";
     }
 
     if (this.data.newPassword !== this.data.confirmPassword) {

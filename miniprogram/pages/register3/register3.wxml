@@ -58,10 +58,9 @@
         <view class="field-label">会员密码</view>
         <input
           class="control"
-          placeholder="6位数字"
+          placeholder="3至5位汉字"
           placeholder-class="placeholder"
-          type="number"
-          maxlength="6"
+          maxlength="5"
           password="true"
           value="{{password}}"
           bindinput="onPasswordInput"

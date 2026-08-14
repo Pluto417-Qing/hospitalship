@@ -177,10 +177,10 @@ function loadFunction(name, database, openid) {
 
 function registrationEvent(overrides = {}) {
   return {
-    nickname: "BOAT",
+    nickname: "海船号",
     birthYear: 2012,
     city: "北京 海淀区",
-    password: "12345678",
+    password: "海船号",
     phone: "13800138000",
     consents: {
       noticeVersion: "registration-notice-2026-07-12",
@@ -231,7 +231,7 @@ async function run() {
   const differentPhone = await register(
     registrationEvent({
       addMember: true,
-      nickname: "OTHER",
+      nickname: "另一号",
       phone: "13900139000"
     })
   );
@@ -240,9 +240,9 @@ async function run() {
   const second = await register(
     registrationEvent({
       addMember: true,
-      nickname: "SHIP",
+      nickname: "和平号",
       birthYear: 2014,
-      password: "87654321"
+      password: "和平船"
     })
   );
   assert.strictEqual(second.success, true);
@@ -258,7 +258,7 @@ async function run() {
   );
 
   const third = await register(
-    registrationEvent({ addMember: true, nickname: "THIRD" })
+    registrationEvent({ addMember: true, nickname: "第三号" })
   );
   assert.strictEqual(third.code, "MEMBER_LIMIT_REACHED");
 
@@ -266,7 +266,7 @@ async function run() {
     "register",
     database,
     "guardian-openid-b"
-  )(registrationEvent({ nickname: "CROSS" }));
+  )(registrationEvent({ nickname: "跨区号" }));
   assert.strictEqual(otherGuardian.code, "GUARDIAN_ALREADY_REGISTERED");
 
   const logout = await login({ action: "logout" });
@@ -279,14 +279,14 @@ async function run() {
   const wrongPassword = await login({
     action: "login",
     memberId: first.user.memberId,
-    password: "00000000"
+    password: "错误码"
   });
   assert.strictEqual(wrongPassword.code, "INVALID_CREDENTIALS");
 
   const firstLogin = await login({
     action: "login",
     memberId: first.user.memberId,
-    password: "12345678"
+    password: "海船号"
   });
   assert.strictEqual(firstLogin.success, true);
   assert.strictEqual(firstLogin.user.memberId, first.user.memberId);
@@ -379,7 +379,7 @@ async function run() {
   const secondLogin = await login({
     action: "login",
     memberId: second.user.memberId,
-    password: "87654321"
+    password: "和平船"
   });
   assert.strictEqual(secondLogin.success, true);
   const secondRewards = await getUser();
@@ -392,7 +392,7 @@ async function run() {
       await login({
         action: "login",
         memberId: first.user.memberId,
-        password: "12345678"
+        password: "海船号"
       })
     ).success,
     true
@@ -402,7 +402,7 @@ async function run() {
     action: "resetPassword",
     memberId: first.user.memberId,
     phone: "13900139000",
-    newPassword: "11223344"
+    newPassword: "新海船"
   });
   assert.strictEqual(resetMismatch.code, "RECOVERY_INFORMATION_MISMATCH");
 
@@ -410,7 +410,7 @@ async function run() {
     action: "resetPassword",
     memberId: first.user.memberId,
     phone: "13800138000",
-    newPassword: "11223344"
+    newPassword: "新海船"
   });
   assert.strictEqual(reset.success, true);
   assert.strictEqual((await getUser()).loggedIn, false);
@@ -418,13 +418,13 @@ async function run() {
   const oldPassword = await login({
     action: "login",
     memberId: first.user.memberId,
-    password: "12345678"
+    password: "海船号"
   });
   assert.strictEqual(oldPassword.code, "INVALID_CREDENTIALS");
   const newPassword = await login({
     action: "login",
     memberId: first.user.memberId,
-    password: "11223344"
+    password: "新海船"
   });
   assert.strictEqual(newPassword.success, true);
 
@@ -445,22 +445,22 @@ async function run() {
     "guardian-openid-concurrent"
   );
   assert.strictEqual(
-    (await concurrentRegister(registrationEvent({ nickname: "FIRST" }))).success,
+    (await concurrentRegister(registrationEvent({ nickname: "第一号" }))).success,
     true
   );
   const concurrentAdds = await Promise.all([
     concurrentRegister(
       registrationEvent({
         addMember: true,
-        nickname: "SECOND",
-        password: "22334455"
+        nickname: "第二号",
+        password: "第二船"
       })
     ),
     concurrentRegister(
       registrationEvent({
         addMember: true,
-        nickname: "THIRD",
-        password: "33445566"
+        nickname: "第三号",
+        password: "第三船"
       })
     )
   ]);
@@ -489,7 +489,7 @@ async function run() {
     recoveryOpenid
   );
   const recoveryMember = await recoveryRegister(
-    registrationEvent({ nickname: "LOCK" })
+    registrationEvent({ nickname: "锁定号" })
   );
   let recoveryFailure;
 
@@ -498,7 +498,7 @@ async function run() {
       action: "resetPassword",
       memberId: recoveryMember.user.memberId,
       phone: "13900139000",
-      newPassword: "55667788"
+      newPassword: "重置船"
     });
   }
 
@@ -509,7 +509,7 @@ async function run() {
         action: "resetPassword",
         memberId: recoveryMember.user.memberId,
         phone: "13800138000",
-        newPassword: "55667788"
+        newPassword: "重置船"
       })
     ).code,
     "RECOVERY_LOCKED"

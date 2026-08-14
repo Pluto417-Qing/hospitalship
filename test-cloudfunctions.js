@@ -317,8 +317,8 @@ function createActiveUser(overrides = {}) {
   return {
     _id: overrides._id || primaryUserId,
     openid,
-    memberId: "AB2012A1B2C3D4E5F6",
-    nickname: "AB",
+    memberId: "海船号2012A1B2C3D4E5F6",
+    nickname: "海船号",
     birthYear: 2012,
     city: "北京",
     phone: "13800138000",
@@ -350,10 +350,10 @@ function createActiveSession(user, overrides = {}) {
 
 function registrationEvent(overrides = {}) {
   return {
-    nickname: "AB",
+    nickname: "海船号",
     birthYear: 2012,
     city: "北京",
-    password: "12345678",
+    password: "海船号",
     phone: "13800138000",
     consents: {
       noticeVersion: "registration-notice-2026-07-12",
@@ -424,8 +424,8 @@ async function testRegistrationTransactions() {
   const response = await register(registrationEvent());
 
   assert.strictEqual(response.success, true);
-  assert.ok(response.user.memberId.startsWith("AB2012"));
-  assert.strictEqual(response.user.memberId.length, "AB2012".length + 12);
+  assert.ok(response.user.memberId.startsWith("海船号2012"));
+  assert.strictEqual(response.user.memberId.length, "海船号2012".length + 12);
   assert.strictEqual(
     response.user.guardianPhoneVerificationStatus,
     "unverified"
@@ -449,8 +449,8 @@ async function testRegistrationTransactions() {
   const registerA = getMain("register", sharedDatabase, "openid-one");
   const registerB = getMain("register", sharedDatabase, "openid-two");
   const concurrent = await Promise.all([
-    registerA(registrationEvent({ nickname: "AA" })),
-    registerB(registrationEvent({ nickname: "BB" }))
+    registerA(registrationEvent({ nickname: "甲一号" })),
+    registerB(registrationEvent({ nickname: "乙二号" }))
   ]);
 
   assert.strictEqual(
@@ -1018,7 +1018,7 @@ async function testGetUserRewardAuthority() {
 }
 
 async function testGetNotesTransactionLock() {
-  const password = "12345678";
+  const password = "海船号";
   const legacySalt = "legacy-salt";
   const legacyUser = createActiveUser({
     passwordSalt: legacySalt,
@@ -1187,7 +1187,7 @@ async function testGetNotesTransactionLock() {
   });
   const getNotes = getMain("getNotes", lockDatabase);
   const attempts = await Promise.all(
-    Array.from({ length: 5 }, () => getNotes({ password: "00000000" }))
+    Array.from({ length: 5 }, () => getNotes({ password: "错误码" }))
   );
   assert.strictEqual(
     attempts.filter((item) => item.code === "PASSWORD_LOCKED").length,

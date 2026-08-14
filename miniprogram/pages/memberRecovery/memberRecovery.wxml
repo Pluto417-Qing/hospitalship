@@ -32,11 +32,10 @@
       <view class="field-label">新密码</view>
       <input
         class="control"
-        type="number"
         password="true"
-        maxlength="6"
+        maxlength="5"
         value="{{newPassword}}"
-        placeholder="设置新的6位数字密码"
+        placeholder="设置新的3至5位汉字密码"
         bindinput="onNewPasswordInput"
       />
     </view>
@@ -44,9 +43,8 @@
       <view class="field-label">确认新密码</view>
       <input
         class="control"
-        type="number"
         password="true"
-        maxlength="6"
+        maxlength="5"
         value="{{confirmPassword}}"
         placeholder="再次输入新密码"
         bindinput="onConfirmPasswordInput"

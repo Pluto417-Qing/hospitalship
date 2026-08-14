@@ -13,6 +13,8 @@ const MAX_PAGE_LIMIT = 50;
 const MAX_PAGE_OFFSET = 10000;
 const DATABASE_BATCH_SIZE = 100;
 const MAX_LEGACY_NOTE_SCAN = MAX_PAGE_OFFSET + MAX_PAGE_LIMIT + 1;
+const MEMBER_PASSWORD_PATTERN = /^[\u4e00-\u9fa5]{3,5}$/;
+const LEGACY_MEMBER_PASSWORD_PATTERN = /^\d{6}$/;
 const SCRYPT_OPTIONS = Object.freeze({
   N: 16384,
   r: 8,
@@ -85,6 +87,13 @@ function verifyPassword(password, user, algorithm) {
       : hashLegacyPassword(password, user.passwordSalt);
 
   return safeEqualHex(inputHash, user.passwordHash);
+}
+
+function isValidMemberPassword(value) {
+  return (
+    MEMBER_PASSWORD_PATTERN.test(value) ||
+    LEGACY_MEMBER_PASSWORD_PATTERN.test(value)
+  );
 }
 
 function toTimestamp(value) {
@@ -250,11 +259,11 @@ exports.main = async (event = {}) => {
       };
     }
 
-    if (!/^\d{6}$/.test(password)) {
+    if (!isValidMemberPassword(password)) {
       return {
         success: false,
         code: "INVALID_PASSWORD_FORMAT",
-        message: "请输入6位会员密码"
+        message: "请输入3至5位汉字会员密码"
       };
     }
 

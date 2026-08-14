@@ -7,6 +7,7 @@ const RETURN_ROUTES = Object.freeze({
   article: "pages/article/article",
   catalog: "pages/bookCatalog/bookCatalog"
 });
+const MEMBER_PASSWORD_PATTERN = /^[\u4e00-\u9fa5]{3,5}$/;
 
 function normalizeReturnTo(value) {
   return Object.prototype.hasOwnProperty.call(RETURN_ROUTES, value) ? value : "";
@@ -245,8 +246,8 @@ Page({
       return "请选择注册县域";
     }
 
-    if (!/^\d{6}$/.test(password)) {
-      return "会员密码应为6位数字";
+    if (!MEMBER_PASSWORD_PATTERN.test(password)) {
+      return "会员密码应为3至5位汉字";
     }
 
     if (!/^1[3-9]\d{9}$/.test(phone)) {
@@ -354,7 +355,7 @@ Page({
 
       wx.showModal({
         title: "注册成功",
-        content: "请妥善保管6位会员密码。完整会员编号可在“少年我—个人信息”中查看。",
+        content: "请妥善保管会员密码。完整会员编号可在“少年我—个人信息”中查看。",
         showCancel: false,
         confirmText: destinationCopy.confirmText,
         success: () => {
