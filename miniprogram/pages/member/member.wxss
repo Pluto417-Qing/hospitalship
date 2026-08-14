@@ -9,13 +9,19 @@ page {
 }
 
 .state-card {
-  width: 100%;
-  margin: 16rpx auto 0;
-  padding: 58rpx 36rpx 56rpx;
+  margin-top: 180rpx;
+  padding: 54rpx 36rpx;
   background: #ffffff;
   border: 2rpx solid #8bcfbd;
   border-radius: 14rpx;
   text-align: center;
+}
+
+.register-state {
+  width: 100%;
+  min-height: 610rpx;
+  margin: 16rpx auto 0;
+  padding: 58rpx 36rpx 56rpx;
 }
 
 .state-avatar {
