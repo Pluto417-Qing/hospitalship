@@ -1,69 +1,72 @@
 <view class="page">
-  <view class="page-title">登录少年会员</view>
-  <view class="page-desc">当前微信可管理最多两位少年读者，每位会员使用自己的密码登录。</view>
+  <view class="login-panel">
+    <view class="panel-avatar">船</view>
+    <view class="page-title">登录少年会员</view>
+    <view class="page-desc">当前微信可管理最多两位少年读者，每位会员使用自己的密码登录。</view>
 
-  <view wx:if="{{canManageUploads}}" class="admin-entry" bindtap="goAdminUploads">
-    <view class="admin-entry-mark">管</view>
-    <view class="admin-entry-copy">
-      <view class="admin-entry-title">管理员内容中心</view>
-      <view class="admin-entry-desc">使用当前微信管理员身份进入上传、复核或发布流程</view>
-    </view>
-    <view class="admin-entry-arrow">›</view>
-  </view>
-
-  <view wx:if="{{loading}}" class="state-card">正在读取会员列表...</view>
-  <view wx:elif="{{loadError}}" class="state-card">
-    <view>{{loadError}}</view>
-    <button class="secondary-button" bindtap="retryLoad">重新加载</button>
-  </view>
-  <view wx:elif="{{!profiles.length}}" class="state-card">
-    <view>当前微信还没有少年会员。</view>
-    <button class="primary-button" bindtap="goRegister">注册少年会员</button>
-  </view>
-
-  <block wx:else>
-    <view class="section-title">选择会员</view>
-    <view class="profile-list">
-      <view
-        class="profile-item {{selectedMemberId === item.memberId ? 'selected' : ''}}"
-        wx:for="{{profiles}}"
-        wx:key="memberId"
-        wx:for-index="profileIndex"
-        data-member-id="{{item.memberId}}"
-        bindtap="selectProfile"
-      >
-        <view class="avatar">船</view>
-        <view class="profile-copy">
-          <view class="nickname">{{item.nickname}} · 会员{{profileIndex + 1}}</view>
-          <view class="member-hint">{{item.birthYear}}年 · {{item.city}}</view>
-        </view>
-        <view class="select-dot"></view>
+    <view wx:if="{{canManageUploads}}" class="admin-entry" bindtap="goAdminUploads">
+      <view class="admin-entry-mark">管</view>
+      <view class="admin-entry-copy">
+        <view class="admin-entry-title">管理员内容中心</view>
+        <view class="admin-entry-desc">使用当前微信管理员身份进入上传、复核或发布流程</view>
       </view>
+      <view class="admin-entry-arrow">›</view>
     </view>
 
-    <view class="password-card">
-      <view class="field-label">会员密码</view>
-      <input
-        class="password-input"
-        password="true"
-        maxlength="6"
-        value="{{password}}"
-        placeholder="请输入3至5位汉字密码"
-        bindinput="onPasswordInput"
-      />
-      <view class="recovery-link" bindtap="goRecovery">忘记密码</view>
+    <view wx:if="{{loading}}" class="state-card">正在读取会员列表...</view>
+    <view wx:elif="{{loadError}}" class="state-card">
+      <view>{{loadError}}</view>
+      <button class="secondary-button" bindtap="retryLoad">重新加载</button>
+    </view>
+    <view wx:elif="{{!profiles.length}}" class="state-card">
+      <view>当前微信还没有少年会员。</view>
+      <button class="primary-button" bindtap="goRegister">注册少年会员</button>
     </view>
 
-    <button
-      class="primary-button"
-      loading="{{submitting}}"
-      disabled="{{submitting}}"
-      bindtap="submitLogin"
-    >登录</button>
-    <button
-      wx:if="{{canAddMember}}"
-      class="secondary-button"
-      bindtap="goAddMember"
-    >新增少年会员</button>
-  </block>
+    <block wx:else>
+      <view class="section-title">选择会员</view>
+      <view class="profile-list">
+        <view
+          class="profile-item {{selectedMemberId === item.memberId ? 'selected' : ''}}"
+          wx:for="{{profiles}}"
+          wx:key="memberId"
+          wx:for-index="profileIndex"
+          data-member-id="{{item.memberId}}"
+          bindtap="selectProfile"
+        >
+          <view class="avatar">船</view>
+          <view class="profile-copy">
+            <view class="nickname">{{item.nickname}} · 会员{{profileIndex + 1}}</view>
+            <view class="member-hint">{{item.birthYear}}年 · {{item.city}}</view>
+          </view>
+          <view class="select-dot"></view>
+        </view>
+      </view>
+
+      <view class="password-card">
+        <view class="field-label">会员密码</view>
+        <input
+          class="password-input"
+          password="true"
+          maxlength="6"
+          value="{{password}}"
+          placeholder="请输入3至5位汉字密码"
+          bindinput="onPasswordInput"
+        />
+        <view class="recovery-link" bindtap="goRecovery">忘记密码</view>
+      </view>
+
+      <button
+        class="primary-button"
+        loading="{{submitting}}"
+        disabled="{{submitting}}"
+        bindtap="submitLogin"
+      >登录</button>
+      <button
+        wx:if="{{canAddMember}}"
+        class="secondary-button"
+        bindtap="goAddMember"
+      >新增少年会员</button>
+    </block>
+  </view>
 </view>

@@ -9,8 +9,9 @@ page {
 }
 
 .state-card {
-  margin-top: 180rpx;
-  padding: 54rpx 36rpx;
+  width: 100%;
+  margin: 16rpx auto 0;
+  padding: 58rpx 36rpx 56rpx;
   background: #ffffff;
   border: 2rpx solid #8bcfbd;
   border-radius: 14rpx;
@@ -42,11 +43,16 @@ page {
 }
 
 .state-button {
+  width: 384rpx;
   height: 76rpx;
-  margin-top: 34rpx;
+  margin: 34rpx auto 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #ffffff;
   font-size: calc(27rpx * var(--page-font-scale));
-  line-height: 76rpx;
+  line-height: 1.2;
   background: #2b9a7c;
   border-radius: 999rpx;
 }

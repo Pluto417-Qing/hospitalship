@@ -4,8 +4,34 @@ page {
 
 .page {
   min-height: 100vh;
-  padding: 42rpx 30rpx 60rpx;
+  padding: 34rpx 0 60rpx;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-panel {
+  width: 100%;
+  min-height: 610rpx;
+  padding: 58rpx 36rpx 56rpx;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 2rpx solid #8bcfbd;
+  border-radius: 14rpx;
+  text-align: center;
+}
+
+.panel-avatar {
+  width: 84rpx;
+  height: 84rpx;
+  margin: 0 auto 24rpx;
+  color: #ffffff;
+  font-size: 41rpx;
+  font-weight: 700;
+  line-height: 84rpx;
+  background: #2b9a7c;
+  border-radius: 10rpx;
 }
 
 .page-title {
@@ -16,16 +42,17 @@ page {
 }
 
 .page-desc {
-  margin: 16rpx auto 34rpx;
+  max-width: 560rpx;
+  margin: 16rpx auto 36rpx;
   color: #75807c;
-  font-size: 23rpx;
+  font-size: 27rpx;
   line-height: 1.7;
   text-align: center;
 }
 
 .admin-entry {
   min-height: 104rpx;
-  margin: 0 0 26rpx;
+  margin: 0 0 28rpx;
   padding: 18rpx 20rpx;
   display: flex;
   align-items: center;
@@ -77,12 +104,10 @@ page {
 .password-card,
 .profile-item {
   background: #ffffff;
-  border: 2rpx solid #8bcfbd;
-  border-radius: 12rpx;
 }
 
 .state-card {
-  padding: 44rpx 28rpx;
+  padding: 0;
   color: #66716d;
   font-size: 25rpx;
   line-height: 1.6;
@@ -104,6 +129,8 @@ page {
   display: flex;
   align-items: center;
   box-sizing: border-box;
+  border: 2rpx solid #8bcfbd;
+  border-radius: 12rpx;
 }
 
 .profile-item.selected {
@@ -155,7 +182,7 @@ page {
 
 .password-card {
   margin-top: 28rpx;
-  padding: 24rpx;
+  padding: 0;
 }
 
 .password-input {
@@ -177,10 +204,15 @@ page {
 
 .primary-button,
 .secondary-button {
+  width: 384rpx;
   height: 76rpx;
-  margin-top: 28rpx;
+  margin: 28rpx auto 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 26rpx;
-  line-height: 76rpx;
+  line-height: 1.2;
   border-radius: 999rpx;
 }
 
