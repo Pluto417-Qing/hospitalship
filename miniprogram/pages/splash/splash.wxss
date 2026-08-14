@@ -25,3 +25,15 @@ page {
     transform: translateY(0);
   }
 }
+
+.member-limit {
+  position: fixed;
+  right: 30rpx;
+  bottom: 80rpx;
+  color: #ffffff;
+  font-family: STKaiti, KaiTi, serif;
+  font-size: 32rpx;
+  font-weight: 700;
+  opacity: 0;
+  animation: brand-in 0.8s ease 0.3s forwards;
+}

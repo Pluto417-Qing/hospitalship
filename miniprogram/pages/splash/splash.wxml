@@ -5,4 +5,5 @@
     mode="aspectFit"
     aria-label="中国医院船"
   />
+  <view class="member-limit">（首批会员限九百位）</view>
 </view>
