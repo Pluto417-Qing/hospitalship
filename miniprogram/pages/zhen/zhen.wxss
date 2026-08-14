@@ -23,7 +23,7 @@ page {
 }
 
 .topic-intro-title {
-  color: #8f251c;
+  color: #f5714f;
   font-size: 52rpx;
   font-weight: 700;
 }
