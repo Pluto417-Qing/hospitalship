@@ -23,6 +23,8 @@
       </swiper-item>
     </swiper>
 
+    <view class="hero-top-scrim"></view>
+
     <view class="hero-indicators">
       <view
         class="hero-indicator {{currentBanner === item ? 'is-active' : ''}}"
@@ -40,7 +42,6 @@
           class="nav-logo"
           src="/images/brand/china-hospital-ship-horizontal.png"
           mode="aspectFit"
-          style="height: {{navBarHeight}}px;"
           aria-label="中国医院船"
         />
       </view>

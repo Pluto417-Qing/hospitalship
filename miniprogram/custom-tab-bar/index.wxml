@@ -13,7 +13,7 @@
         class="tab-icon"
         src="{{item.iconPath}}"
         mode="aspectFit"
-        style="width: {{item.iconWidth}}rpx; height: {{item.iconHeight}}rpx;"
+        style="top: {{item.iconTop}}rpx; width: {{item.iconWidth}}rpx; height: {{item.iconHeight}}rpx; transform: translateX(-50%) scaleX({{item.iconScaleX}});"
       />
       <text
         class="tab-text"

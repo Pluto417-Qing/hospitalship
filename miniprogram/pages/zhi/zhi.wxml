@@ -17,7 +17,8 @@
       <view class="message-card">
         <view class="message-topline">
           <view class="message-date">
-            {{item.month}}月{{item.day}}日 <text class="flag">⚑</text>
+            <text class="message-date-text">{{item.month}}月{{item.day}}日</text>
+            <image class="flag" src="/images/youth-red-flag.svg" mode="aspectFit" />
           </view>
           <view class="message-source">{{item.source}}</view>
         </view>
@@ -47,7 +48,7 @@
       <picker-view
         class="date-picker"
         value="{{draftPickerValue}}"
-        indicator-style="height: 96rpx;"
+        indicator-style="height: 98rpx;"
         bindchange="onPickerChange"
       >
         <picker-view-column>
@@ -61,10 +62,10 @@
           </view>
         </picker-view-column>
       </picker-view>
-      <view class="picker-actions">
-        <button class="picker-btn cancel-btn" bindtap="cancelDatePicker">取消</button>
-        <button class="picker-btn confirm-btn" bindtap="confirmDatePicker">确定</button>
-      </view>
+      <cover-view class="picker-actions">
+        <cover-view class="picker-btn cancel-btn" bindtap="cancelDatePicker">取消</cover-view>
+        <cover-view class="picker-btn confirm-btn" bindtap="confirmDatePicker">确定</cover-view>
+      </cover-view>
     </view>
   </view>
 </view>

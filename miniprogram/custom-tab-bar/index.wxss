@@ -5,11 +5,12 @@
   left: 0;
   z-index: 999;
   background: #ffffff;
-  box-shadow: 0 -8rpx 28rpx rgba(0, 0, 0, 0.08);
+  filter: drop-shadow(0 -8rpx 17rpx rgba(0, 0, 0, 0.2));
 }
 
 .tabbar {
-  height: 150rpx;
+  position: relative;
+  height: 132rpx;
   display: flex;
   align-items: stretch;
 }
@@ -17,30 +18,39 @@
 .tab-item {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding-top: 5rpx;
-  gap: 1rpx;
+  min-width: 0;
+  height: 100%;
 }
 
 .tab-icon {
+  position: absolute;
+  left: 50%;
   display: block;
   object-fit: contain;
+  transform: translateX(-50%);
 }
 
 .tab-text {
-  margin-top: 0;
-  font-family: STKaiti, KaiTi, serif;
+  position: absolute;
+  top: 72rpx;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: "PingFang SC", STKaiti, KaiTi, serif;
   font-weight: 600;
-  line-height: 1;
+  line-height: 24rpx;
 }
 
 .tab-line {
   position: absolute;
-  bottom: 2rpx;
+  bottom: 4rpx;
+  left: 50%;
   height: 4rpx;
   border-radius: 4rpx;
+  transform: translateX(-50%);
 }
 
 .safe-area {

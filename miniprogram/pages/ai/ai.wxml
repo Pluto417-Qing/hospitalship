@@ -11,19 +11,24 @@
     </view>
   </view>
 
+  <view class="design-scrollbar" aria-hidden="true">
+    <view class="design-scrollbar-thumb"></view>
+  </view>
+
   <view class="quiz-page">
     <view class="quiz-state" wx:if="{{loadingQuestions}}">正在读取题目…</view>
 
     <view
       id="question-{{question.id}}"
-      class="question-card {{question.id !== '0001' ? 'is-long' : ''}} {{question.showExplanation ? 'is-answer' : ''}}"
+      class="question-card {{question.id !== '0001' && questionIndex !== 0 ? 'is-long' : ''}} {{question.showExplanation ? 'is-answer' : ''}}"
       wx:for="{{questions}}"
       wx:for-item="question"
+      wx:for-index="questionIndex"
       wx:key="id"
     >
       <block wx:if="{{question.showExplanation}}">
         <view class="answer-header">
-          <view class="question-number">第 {{question.id}} 号答案</view>
+          <view class="question-number">第 {{questionIndex < 9 ? '000' : questionIndex < 99 ? '00' : questionIndex < 999 ? '0' : ''}}{{questionIndex + 1}} 号答案</view>
           <view
             class="round-answer-btn back-answer-btn"
             role="button"
@@ -38,7 +43,7 @@
 
       <block wx:else>
         <view class="question-header">
-          <view class="question-number">第 {{question.id}} 号</view>
+          <view class="question-number">第 {{questionIndex < 9 ? '000' : questionIndex < 99 ? '00' : questionIndex < 999 ? '0' : ''}}{{questionIndex + 1}} 号</view>
           <view
             wx:if="{{question.id === '0001'}}"
             class="favorite-icon"
@@ -49,7 +54,21 @@
           >
             <image
               class="favorite-star"
-              src="/images/quiz/favorite-star.svg"
+              src="/images/quiz/figma-answer-star.png"
+              mode="aspectFit"
+            ></image>
+          </view>
+          <view
+            wx:elif="{{questionIndex === 0}}"
+            class="favorite-icon"
+            role="button"
+            aria-label="查看答案"
+            data-question-id="{{question.id}}"
+            bindtap="toggleExplanation"
+          >
+            <image
+              class="favorite-star"
+              src="/images/quiz/figma-answer-star.png"
               mode="aspectFit"
             ></image>
           </view>

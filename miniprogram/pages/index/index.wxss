@@ -1,11 +1,11 @@
 page {
-  background: #f3f3f3;
+  background: #f5f5f5;
 }
 
 .home-page {
   min-height: 100vh;
-  padding-bottom: calc(132rpx + env(safe-area-inset-bottom));
-  background: #f3f3f3;
+  padding-bottom: calc(136rpx + env(safe-area-inset-bottom));
+  background: #f5f5f5;
   box-sizing: border-box;
 }
 
@@ -28,27 +28,44 @@ page {
   background: #d7d7d7;
 }
 
+.hero-top-scrim {
+  position: absolute;
+  top: -96rpx;
+  left: -14rpx;
+  z-index: 8;
+  width: 770rpx;
+  height: 286rpx;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.61) 0%,
+    rgba(0, 0, 0, 0.36) 32.7%,
+    rgba(0, 0, 0, 0.2) 84.6%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+}
+
 .hero-indicators {
   position: absolute;
   right: 0;
-  bottom: 18rpx;
+  bottom: 17rpx;
   left: 0;
   z-index: 12;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10rpx;
+  gap: 6rpx;
 }
 
 .hero-indicator {
-  width: 24rpx;
-  height: 5rpx;
+  width: 12rpx;
+  height: 6rpx;
   background: rgba(255, 255, 255, 0.68);
   border-radius: 999rpx;
 }
 
 .hero-indicator.is-active {
-  width: 30rpx;
+  width: 18rpx;
   background: #ffffff;
 }
 
@@ -70,24 +87,26 @@ page {
 }
 
 .nav-logo {
-  width: 420rpx;
+  width: 446rpx;
+  height: 108rpx;
 }
 
 .content {
-  padding: 38rpx 28rpx 24rpx;
+  padding: 46rpx 20rpx 24rpx;
 }
 
 .book-shell {
-  margin-bottom: 34rpx;
-  padding: 24rpx;
+  margin-bottom: 36rpx;
+  padding: 28rpx 22rpx;
   background: #ffffff;
-  border-radius: 26rpx;
-  box-shadow: 0 12rpx 24rpx rgba(0, 0, 0, 0.14);
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 13rpx rgba(0, 0, 0, 0.2);
 }
 
 .book-card {
-  padding: 22rpx;
-  border-radius: 24rpx;
+  min-height: 320rpx;
+  padding: 24rpx 24rpx 16rpx;
+  border-radius: 14rpx;
   display: flex;
   overflow: hidden;
 }
@@ -97,13 +116,13 @@ page {
 }
 
 .summary-card {
-  background: #9ecce9;
+  background: #9ed0ea;
 }
 
 .book-cover {
-  width: 55%;
-  height: 270rpx;
-  border-radius: 16rpx;
+  width: 352rpx;
+  height: 280rpx;
+  border-radius: 14rpx;
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -122,33 +141,39 @@ page {
   position: relative;
   flex: 1;
   min-width: 0;
-  padding: 28rpx 10rpx 12rpx 34rpx;
+  padding: 44rpx 0 0 32rpx;
   color: #ffffff;
 }
 
 .book-name {
+  font-family: "PingFang SC", STKaiti, KaiTi, serif;
   font-size: 34rpx;
   font-weight: 600;
+  line-height: 58rpx;
   white-space: nowrap;
 }
 
 .book-subtitle {
-  margin-top: 24rpx;
-  padding-left: 16rpx;
-  font-family: STKaiti, KaiTi, serif;
-  font-size: 31rpx;
-  font-weight: 1000;
-  line-height: 1.55;
+  margin-top: 0;
+  padding-left: 18rpx;
+  font-family: "PingFang SC", STKaiti, KaiTi, serif;
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 58rpx;
+  white-space: nowrap;
 }
 
 .book-link {
   position: absolute;
-  right: 4rpx;
-  bottom: 6rpx;
-  font-size: 28rpx;
+  right: 2rpx;
+  bottom: 0;
+  font-family: Roboto, "PingFang SC", sans-serif;
+  font-size: 26rpx;
+  font-weight: 500;
+  line-height: 44rpx;
 }
 
 .arrow {
   margin-left: 8rpx;
-  font-size: 36rpx;
+  font-size: 28rpx;
 }

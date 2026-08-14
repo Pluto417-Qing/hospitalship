@@ -21,6 +21,7 @@ page {
   color: #7550b9;
   display: flex;
   align-items: center;
+  font-family: "PingFang SC", "Helvetica Neue", Arial, sans-serif;
   font-size: 54rpx;
   font-weight: 700;
   line-height: 1;
@@ -90,22 +91,33 @@ page {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18rpx;
+  gap: 12rpx;
 }
 
 .message-date {
-  flex-shrink: 0;
+  flex: 0 0 174rpx;
   color: #714bb3;
+  display: flex;
+  align-items: center;
+  font-family: "PingFang SC", "Helvetica Neue", Arial, sans-serif;
   font-size: 40rpx;
   font-weight: 700;
   line-height: 1;
+  white-space: nowrap;
+}
+
+.message-date-text {
+  display: inline-block;
+  flex-shrink: 0;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .flag {
-  margin-left: 8rpx;
-  color: #d8211f;
-  font-size: 40rpx;
-  vertical-align: middle;
+  width: 34rpx;
+  height: 34rpx;
+  margin-left: 6rpx;
+  flex-shrink: 0;
 }
 
 .message-source {
@@ -163,84 +175,96 @@ page {
   background: rgba(0, 0, 0, 0.42);
   display: flex;
   align-items: flex-end;
+  justify-content: center;
 }
 
 .picker-sheet {
-  width: 100%;
-  max-height: 80vh;
-  padding: 46rpx 28rpx calc(120rpx + env(safe-area-inset-bottom));
+  position: relative;
+  width: 750rpx;
+  height: 670rpx;
+  padding: 58rpx 20rpx 38rpx;
   background: #ffffff;
-  border-radius: 28rpx 28rpx 0 0;
+  border-radius: 24rpx 24rpx 0 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
 
 .picker-title {
-  padding: 0 18rpx;
+  padding: 0 28rpx;
   color: #7850b8;
-  font-size: 44rpx;
-  font-weight: 700;
+  font-family: "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  font-size: 40rpx;
+  font-weight: 500;
+  line-height: 56rpx;
 }
 
 .date-picker {
-  height: 330rpx;
-  margin-top: 32rpx;
+  width: 702rpx;
+  height: 190rpx;
+  margin-left: 0;
+  margin-top: 114rpx;
   background: linear-gradient(
     to bottom,
     transparent 0,
-    transparent 117rpx,
-    #f6f4f7 117rpx,
-    #f6f4f7 213rpx,
-    transparent 213rpx
+    transparent 46rpx,
+    #f4f4f5 46rpx,
+    #f4f4f5 144rpx,
+    transparent 144rpx
   );
-  border-radius: 14rpx;
+  border-radius: 12rpx;
 }
 
 .picker-item {
-  height: 96rpx;
-  color: #7951b8;
+  height: 98rpx;
+  color: #7552af;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: "PingFang SC", "Helvetica Neue", Arial, sans-serif;
   font-size: 40rpx;
+  font-weight: 500;
+  line-height: 56rpx;
 }
 
 .picker-actions {
-  margin-top: 34rpx;
-  padding-bottom: 20rpx;
-  display: flex;
-  justify-content: center;
-  gap: 46rpx;
-  flex-shrink: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 38rpx;
+  z-index: 10;
+  height: 86rpx;
 }
 
 .picker-btn {
-  width: 224rpx;
-  height: 76rpx;
+  position: absolute;
+  top: 0;
+  width: 212rpx;
+  height: 86rpx;
   margin: 0;
   padding: 0;
-  border-radius: 14rpx;
-  font-size: 36rpx;
-  line-height: 76rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 16rpx;
+  font-family: "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  font-size: 32rpx;
+  font-weight: 500;
+  line-height: 82rpx;
+  text-align: center;
 }
 
 .cancel-btn {
-  color: #222222;
+  left: 122rpx;
+  color: #181818;
   background: #ffffff;
-  border: 2rpx solid #ad82e9;
+  border: 2rpx solid #b997f0;
 }
 
 .confirm-btn {
+  left: 386rpx;
   color: #ffffff;
-  background: #ad82e9;
-  border: 2rpx solid #ad82e9;
+  background: #b997f0;
+  border: 2rpx solid #b997f0;
 }
 
-.empty-btn::after,
-.picker-btn::after {
+.empty-btn::after {
   border: none;
 }

@@ -6,34 +6,31 @@
     wx:key="id"
   >
     <view class="content-title">{{item.title}}</view>
-
-    <view class="card-actions">
-      <button
-        class="action-btn"
-        data-id="{{item.id}}"
-        bindtap="openContent"
-      >
-        看文本
-      </button>
-      <button
-        class="action-btn"
-        data-id="{{item.id}}"
-        bindtap="openAudio"
-      >
-        听配音
-      </button>
-    </view>
+    <button
+      class="action-btn text-btn"
+      data-id="{{item.id}}"
+      bindtap="openContent"
+    >
+      看文本
+    </button>
+    <button
+      class="action-btn audio-btn"
+      data-id="{{item.id}}"
+      bindtap="openAudio"
+    >
+      听配音
+    </button>
   </view>
 
   <view class="comment-card">
     <view class="comment-heading">
       <view class="comment-label">我的读后感</view>
-      <text wx:if="{{!comment}}" class="comment-guidance">简体中文，文明用语，100至500字</text>
+      <text wx:if="{{!comment}}" class="comment-guidance">简体中文，文明用语，50-500字</text>
     </view>
     <textarea
       class="comment-input"
       value="{{comment}}"
-      maxlength="500"
+      maxlength="2000"
       bindinput="onCommentInput"
     ></textarea>
     <button
@@ -47,14 +44,12 @@
   </view>
 
   <view class="full-book-card" bindtap="openFullBook">
-    <view class="full-book-title">
-      <image
-        class="full-book-logo"
-        src="/images/brand/china-hospital-ship-horizontal-bracketed.png"
-        mode="aspectFit"
-        aria-label="《中国医院船》"
-      />
-    </view>
+    <image
+      class="full-book-logo"
+      src="/images/brand/china-hospital-ship-horizontal-bracketed.png"
+      mode="aspectFit"
+      aria-label="《中国医院船》"
+    />
     <view class="full-book-status">少年会员提交读后感之后可下载全本</view>
   </view>
 </view>

@@ -1,10 +1,10 @@
 page {
-  background: #faf8f5; /* 暖色调，符合设计要求 */
+  background: linear-gradient(180deg, #f6f6f6 0%, #ffffff 100%);
 }
 
 .quiz-shell {
   min-height: 100vh;
-  background: #faf8f5; /* 与page背景色一致 */
+  background: linear-gradient(180deg, #f6f6f6 0%, #ffffff 100%);
   box-sizing: border-box;
 }
 
@@ -15,30 +15,50 @@ page {
   left: 0;
   z-index: 1000;
   background: #ffffff;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -24rpx 61rpx rgba(0, 0, 0, 0.25);
 }
 
 .navigation-back {
   position: absolute;
   left: 0;
-  width: 94rpx;
+  width: 62rpx;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .navigation-chevron {
-  width: 22rpx;
-  height: 22rpx;
-  margin-left: -12rpx;
-  border-bottom: 3rpx solid #323232;
-  border-left: 3rpx solid #323232;
+  width: 20rpx;
+  height: 20rpx;
+  margin-left: 2rpx;
+  border-bottom: 2rpx solid #000000;
+  border-left: 2rpx solid #000000;
   transform: rotate(45deg);
+}
+
+.design-scrollbar {
+  position: fixed;
+  top: 230rpx;
+  right: 14rpx;
+  z-index: 20;
+  width: 12rpx;
+  height: 1218rpx;
+  background: rgba(217, 217, 217, 0.48);
+  border-radius: 18rpx;
+  pointer-events: none;
+}
+
+.design-scrollbar-thumb {
+  width: 12rpx;
+  height: 166rpx;
+  margin-top: 192rpx;
+  background: #acacac;
+  border-radius: 18rpx;
 }
 
 .quiz-page {
   min-height: 0;
-  padding: 46rpx 40rpx calc(156rpx + env(safe-area-inset-bottom));
+  padding: 50rpx 38rpx calc(168rpx + env(safe-area-inset-bottom)) 42rpx;
   box-sizing: border-box;
 }
 
@@ -76,47 +96,56 @@ page {
 
 .question-card {
   position: relative;
-  min-height: 380rpx;
-  margin-bottom: 30rpx;
-  padding: 34rpx 28rpx 30rpx;
+  width: 670rpx;
+  height: 420rpx;
+  min-height: 420rpx;
+  margin-bottom: 28rpx;
+  padding: 0;
   background: #ffffff;
   border: 2rpx solid #367dae;
-  border-radius: 18rpx;
-  box-shadow: 0 5rpx 12rpx rgba(29, 106, 151, 0.08);
+  border-radius: 20rpx;
+  box-shadow: 0 8rpx 12rpx rgba(0, 0, 0, 0.09);
   box-sizing: border-box;
 }
 
 .question-card.is-long {
+  height: 420rpx;
   min-height: 420rpx;
 }
 
 .question-card.is-answer {
-  min-height: 380rpx;
-  padding: 40rpx 32rpx 34rpx;
+  height: 420rpx;
+  min-height: 420rpx;
+  padding: 0;
 }
 
 .question-header,
 .answer-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20rpx;
+  display: block;
 }
 
 .question-header {
-  min-height: 58rpx;
+  min-height: 0;
 }
 
 .answer-header {
-  min-height: 104rpx;
+  min-height: 0;
 }
 
 .question-number {
-  padding-top: 5rpx;
+  position: absolute;
+  top: 44rpx;
+  left: 28rpx;
+  padding-top: 0;
   color: #2975a9;
-  font-size: 38rpx;
+  font-family: "PingFang SC", sans-serif;
+  font-size: 32rpx;
   font-weight: 500;
-  line-height: 1.35;
+  line-height: 40rpx;
+}
+
+.question-card.is-long .question-number {
+  top: 40rpx;
 }
 
 .favorite-icon,
@@ -133,30 +162,34 @@ page {
 }
 
 .favorite-icon {
-  width: 72rpx;
-  height: 72rpx;
+  top: 40rpx;
+  right: 36rpx;
+  width: 48rpx;
+  height: 46rpx;
   background: transparent;
 }
 
 .favorite-star {
-  width: 54rpx;
-  height: 54rpx;
+  width: 48rpx;
+  height: 46rpx;
 }
 
 .round-answer-btn {
   top: 34rpx;
-  right: 18rpx;
-  width: 108rpx;
-  min-width: 108rpx;
-  max-width: 108rpx;
-  height: 108rpx;
-  min-height: 108rpx;
-  max-height: 108rpx;
+  right: 20rpx;
+  width: 106rpx;
+  min-width: 106rpx;
+  max-width: 106rpx;
+  height: 106rpx;
+  min-height: 106rpx;
+  max-height: 106rpx;
   color: #ffffff;
   background: #b997f0;
   border-radius: 50%;
+  font-family: "PingFang SC", sans-serif;
   font-size: 28rpx;
-  line-height: 1.2;
+  font-weight: 500;
+  line-height: 40rpx;
 }
 
 .back-answer-btn {
@@ -164,53 +197,77 @@ page {
 }
 
 .question-source {
-  margin-top: 4rpx;
-  padding-right: 108rpx;
+  position: absolute;
+  top: 98rpx;
+  right: 28rpx;
+  left: 28rpx;
+  margin-top: 0;
+  padding-right: 0;
+}
+
+.question-card.is-long .question-source {
+  top: 92rpx;
+  right: 116rpx;
 }
 
 .source-info {
   color: #2975a9;
-  font-size: 38rpx;
-  font-weight: 600;
-  line-height: 1.4;
+  font-family: "PingFang SC", sans-serif;
+  font-size: 40rpx;
+  font-weight: 500;
+  line-height: 50rpx;
 }
 
 .question-text {
-  margin-top: 28rpx;
-  padding-right: 8rpx;
-  color: #333333; /* 黑色，符合设计稿要求 */
+  position: absolute;
+  top: 174rpx;
+  right: 22rpx;
+  left: 22rpx;
+  margin-top: 0;
+  padding-right: 0;
+  color: #5a5a5a;
+  font-family: "PingFang SC", sans-serif;
   font-size: 32rpx;
   font-weight: 500;
-  line-height: 1.55;
+  line-height: 40rpx;
+}
+
+.question-card.is-long .question-text {
+  top: 174rpx;
 }
 
 .option-row {
   position: absolute;
-  right: 24rpx;
-  bottom: 28rpx;
-  left: 24rpx;
+  right: 28rpx;
+  bottom: 30rpx;
+  left: 22rpx;
   display: flex;
   justify-content: space-between;
+}
+
+.question-card.is-long .option-row {
+  bottom: 30rpx;
 }
 
 .option-btn {
   width: 238rpx;
   min-width: 238rpx;
   max-width: 238rpx;
-  height: 76rpx;
+  height: 78rpx;
   margin: 0;
   padding: 0 10rpx;
   color: #ffffff;
   background: #2975a9;
-  border-radius: 16rpx;
+  border-radius: 20rpx;
   flex: none;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 30rpx;
+  font-family: "PingFang SC", sans-serif;
+  font-size: 28rpx;
   font-weight: 600;
-  line-height: 76rpx;
+  line-height: 58rpx;
 }
 
 .option-btn.is-saving {
@@ -219,9 +276,9 @@ page {
 
 .save-error {
   position: absolute;
-  right: 24rpx;
-  bottom: 26rpx;
-  left: 24rpx;
+  right: 28rpx;
+  bottom: 34rpx;
+  left: 28rpx;
   color: #b84a42;
   font-size: 28rpx;
   line-height: 1.45;
@@ -247,7 +304,7 @@ page {
 .feedback {
   position: absolute;
   right: 28rpx;
-  bottom: 50rpx;
+  bottom: 48rpx;
   left: 28rpx;
   display: flex;
   align-items: center;
@@ -273,9 +330,10 @@ page {
 }
 
 .answer-copy {
-  margin-top: 26rpx;
+  margin-top: 22rpx;
   color: #5a5a5a;
+  font-family: "PingFang SC", sans-serif;
   font-size: 28rpx;
-  line-height: 1.42;
+  line-height: 40rpx;
   text-align: justify;
 }
