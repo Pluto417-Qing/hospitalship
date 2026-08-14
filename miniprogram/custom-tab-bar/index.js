@@ -7,10 +7,10 @@ Component({
     text: "首页",
     iconPath: "/images/tabbar/home.png",
     color: "#8A5A44",
-    flex: 1, //修改
+    flex: 1,
     iconWidth: 56,
-    iconHeight: 72,
-    textSize: 25,
+    iconHeight: 56,
+    textSize: 26,
     lineWidth: 60
   },
   {
@@ -18,10 +18,10 @@ Component({
     text: "少年志",
     iconPath: "/images/tabbar/zhi.png",
     color: "#7C36C6",
-    flex: 1, //修改
-    iconWidth: 60,
-    iconHeight: 70,
-    textSize: 23,
+    flex: 1,
+    iconWidth: 56,
+    iconHeight: 56,
+    textSize: 26,
     lineWidth: 54
   },
   {
@@ -29,10 +29,10 @@ Component({
     text: "少年爱",
     iconPath: "/images/tabbar/ai.png",
     color: "#267EB2",
-    flex: 1, //修改
-    iconWidth: 50,
-    iconHeight: 64,
-    textSize: 23,
+    flex: 1,
+    iconWidth: 56,
+    iconHeight: 56,
+    textSize: 26,
     lineWidth: 52
   },
   {
@@ -40,10 +40,10 @@ Component({
     text: "少年真",
     iconPath: "/images/tabbar/zhen.png",
     color: "#D94432",
-    flex: 1, //修改
-    iconWidth: 50,
-    iconHeight: 66,
-    textSize: 23,
+    flex: 1,
+    iconWidth: 56,
+    iconHeight: 56,
+    textSize: 26,
     lineWidth: 54
   },
   {
@@ -51,10 +51,10 @@ Component({
     text: "少年我",
     iconPath: "/images/tabbar/wo.png",
     color: "#008867",
-    flex: 1, //修改
-    iconWidth: 54,
-    iconHeight: 70,
-    textSize: 25,
+    flex: 1,
+    iconWidth: 56,
+    iconHeight: 56,
+    textSize: 26,
     lineWidth: 58
   }
 ]

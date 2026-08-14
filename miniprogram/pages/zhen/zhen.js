@@ -9,7 +9,7 @@ const TEST_TOPICS = [
     id: "test-001",
     title: "《118个元素的发现故事》",
     summary: "从氢到钚，探索元素发现的历史",
-    producer: "清华大学xxx学生联合编撰",
+    producer: "xx大学xxx学生联合编撰",
     unlockCostStars: 10,
     unlocked: false
   },
@@ -17,7 +17,7 @@ const TEST_TOPICS = [
     id: "test-002",
     title: "《中国古代天文学简史》",
     summary: "解读古人观测天象的智慧",
-    producer: "北京大学xxx学生联合编撰",
+    producer: "xx大学xxx学生联合编撰",
     unlockCostStars: 10,
     unlocked: false
   },
@@ -25,7 +25,7 @@ const TEST_TOPICS = [
     id: "test-003",
     title: "《生物多样性保护指南》",
     summary: "了解地球生命的珍贵多样性",
-    producer: "复旦大学xxx学生联合编撰",
+    producer: "xx大学xxx学生联合编撰",
     unlockCostStars: 10,
     unlocked: true
   },
@@ -33,7 +33,7 @@ const TEST_TOPICS = [
     id: "test-004",
     title: "《编程入门：从零开始》",
     summary: "计算机编程基础知识普及",
-    producer: "浙江大学xxx学生联合编撰",
+    producer: "xx大学xxx学生联合编撰",
     unlockCostStars: 10,
     unlocked: false
   },
@@ -41,7 +41,7 @@ const TEST_TOPICS = [
     id: "test-005",
     title: "《世界文明简史》",
     summary: "探索人类文明发展的轨迹",
-    producer: "南京大学xxx学生联合编撰",
+    producer: "xx大学xxx学生联合编撰",
     unlockCostStars: 10,
     unlocked: false
   },
@@ -49,7 +49,7 @@ const TEST_TOPICS = [
     id: "test-006",
     title: "《音乐欣赏入门》",
     summary: "感受音乐艺术的魅力",
-    producer: "中央音乐学院xxx学生联合编撰",
+    producer: "xx大学xxx学生联合编撰",
     unlockCostStars: 10,
     unlocked: false
   },
@@ -57,7 +57,7 @@ const TEST_TOPICS = [
     id: "test-007",
     title: "《地理大发现的故事》",
     summary: "跟随探险家的脚步看世界",
-    producer: "中国人民大学xxx学生联合编撰",
+    producer: "xx大学xxx学生联合编撰",
     unlockCostStars: 10,
     unlocked: false
   },
@@ -65,7 +65,7 @@ const TEST_TOPICS = [
     id: "test-008",
     title: "《数学之美》",
     summary: "发现数学中的美学规律",
-    producer: "上海交通大学xxx学生联合编撰",
+    producer: "xx大学xxx学生联合编撰",
     unlockCostStars: 10,
     unlocked: false
   }

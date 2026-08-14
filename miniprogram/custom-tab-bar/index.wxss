@@ -21,15 +21,19 @@
   align-items: center;
   justify-content: center;
   padding-top: 5rpx;
+  gap: 8rpx;
 }
 
 .tab-icon {
+  display: block;
   object-fit: contain;
 }
 
 .tab-text {
-  margin-top: 1rpx;
-  line-height: 24rpx;
+  margin-top: 0;
+  font-family: STKaiti, KaiTi, serif;
+  font-weight: 600;
+  line-height: 1;
 }
 
 .tab-line {
