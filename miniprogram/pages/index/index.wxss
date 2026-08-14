@@ -134,7 +134,10 @@ page {
 
 .book-subtitle {
   margin-top: 24rpx;
-  font-size: 28rpx;
+  padding-left: 16rpx;
+  font-family: STKaiti, KaiTi, serif;
+  font-size: 31rpx;
+  font-weight: 1000;
   line-height: 1.55;
 }
 

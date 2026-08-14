@@ -8,8 +8,8 @@ Component({
     iconPath: "/images/tabbar/home.png",
     color: "#8A5A44",
     flex: 1,
-    iconWidth: 56,
-    iconHeight: 56,
+    iconWidth: 68,
+    iconHeight: 68,
     textSize: 26,
     lineWidth: 60
   },
@@ -19,8 +19,8 @@ Component({
     iconPath: "/images/tabbar/zhi.png",
     color: "#7C36C6",
     flex: 1,
-    iconWidth: 56,
-    iconHeight: 56,
+    iconWidth: 68,
+    iconHeight: 68,
     textSize: 26,
     lineWidth: 54
   },

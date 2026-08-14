@@ -230,6 +230,7 @@ page {
   margin-top: 8rpx;
   font-size: calc(25rpx * var(--page-font-scale));
   line-height: 1.2;
+  font-weight: bold;
 }
 
 .family-actions {

@@ -25,7 +25,7 @@ const timelineEntries = [
     year: "2026",
     month: "08",
     day: "11",
-    source: "中国疾控中心儿童健康科普基地",
+    source: "北京儿童医院",
     label: "医生提示",
     content: "中小学生腹部疼痛情况比较复杂应当及时前往医院就诊并在医生指导下进行专业治疗切勿自行服用药物。"
   },

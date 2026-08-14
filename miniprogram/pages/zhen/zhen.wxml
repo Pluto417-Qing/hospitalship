@@ -21,9 +21,6 @@
       <view class="topic-row-top">
         <view class="topic-number">{{item.displayNumber}}</view>
         <view class="topic-title">{{item.title}}</view>
-      </view>
-      <view class="topic-row-bottom">
-        <view class="topic-producer" wx:if="{{item.producer}}">{{item.producer}}</view>
         <view class="topic-status {{item.unlocked ? 'unlocked' : ''}}">
           {{item.statusText}}
         </view>

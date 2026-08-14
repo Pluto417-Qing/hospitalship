@@ -88,7 +88,7 @@ page {
 
 .message-topline {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 18rpx;
 }
@@ -98,21 +98,23 @@ page {
   color: #714bb3;
   font-size: 40rpx;
   font-weight: 700;
+  line-height: 1;
 }
 
 .flag {
   margin-left: 8rpx;
   color: #d8211f;
-  font-size: 48rpx;
+  font-size: 40rpx;
+  vertical-align: middle;
 }
 
 .message-source {
-  max-width: 380rpx; /* 增加宽度，避免长机构名截断 */
+  max-width: 380rpx;
   color: #7350b5;
-  font-size: 32rpx;
-  line-height: 1.5; /* 增加行高支持换行 */
+  font-size: 36rpx;
+  line-height: 1;
   text-align: right;
-  word-wrap: break-word; /* 允许换行 */
+  word-wrap: break-word;
 }
 
 .message-content {
