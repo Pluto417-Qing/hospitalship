@@ -28,18 +28,12 @@
   <view class="comment-card">
     <view class="comment-heading">
       <view class="comment-label">我的读后感</view>
-      <text wx:if="{{!comment}}" class="comment-guidance">简体中文，文明用语，100-2000字</text>
-    </view>
-    <view class="comment-target">
-      <text class="target-title">当前篇目：{{selectedContentTitle || '请先选择正文'}}</text>
-      <text class="target-state {{selectedContentViewed ? 'is-read' : ''}}">
-        {{selectedContentViewed ? '已打开正文' : '尚未打开正文'}}
-      </text>
+      <text wx:if="{{!comment}}" class="comment-guidance">简体中文，文明用语，100至500字</text>
     </view>
     <textarea
       class="comment-input"
       value="{{comment}}"
-      maxlength="2000"
+      maxlength="500"
       bindinput="onCommentInput"
     ></textarea>
     <button
@@ -61,6 +55,6 @@
         aria-label="《中国医院船》"
       />
     </view>
-    <view class="full-book-status">读后感审核通过后，可阅读全本并下载PDF</view>
+    <view class="full-book-status">少年会员提交读后感之后可下载全本</view>
   </view>
 </view>
