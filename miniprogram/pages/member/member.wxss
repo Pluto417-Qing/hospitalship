@@ -228,7 +228,7 @@ page {
 
 .star-text {
   margin-top: 8rpx;
-  font-size: calc(30rpx * var(--page-font-scale));
+  font-size: calc(25rpx * var(--page-font-scale));
   line-height: 1.2;
 }
 
