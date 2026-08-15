@@ -32,6 +32,7 @@
       <view class="field-label">新密码</view>
       <input
         class="control"
+        type="text"
         password="true"
         maxlength="5"
         value="{{newPassword}}"
@@ -43,6 +44,7 @@
       <view class="field-label">确认新密码</view>
       <input
         class="control"
+        type="text"
         password="true"
         maxlength="5"
         value="{{confirmPassword}}"

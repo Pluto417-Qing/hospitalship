@@ -448,15 +448,27 @@ async function resetPasswordAction(openid, event) {
   const phone = String(event.phone || "").trim();
   const newPassword = String(event.newPassword || "");
 
-  if (
-    !memberId ||
-    !/^1[3-9]\d{9}$/.test(phone) ||
-    !MEMBER_PASSWORD_PATTERN.test(newPassword)
-  ) {
+  if (!memberId) {
     return {
       success: false,
       code: "RECOVERY_INFORMATION_MISMATCH",
-      message: "会员编号、手机号或新密码格式不正确"
+      message: "请输入完整会员编号"
+    };
+  }
+
+  if (!/^1[3-9]\d{9}$/.test(phone)) {
+    return {
+      success: false,
+      code: "RECOVERY_INFORMATION_MISMATCH",
+      message: "请输入11位登记的监护人手机号"
+    };
+  }
+
+  if (!MEMBER_PASSWORD_PATTERN.test(newPassword)) {
+    return {
+      success: false,
+      code: "RECOVERY_INFORMATION_MISMATCH",
+      message: "新密码应为3至5位汉字"
     };
   }
 

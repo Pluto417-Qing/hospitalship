@@ -63,11 +63,17 @@ page {
 }
 
 .submit-button {
+  width: 576rpx;
   height: 76rpx;
-  margin-top: 30rpx;
+  margin: 30rpx auto 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   color: #ffffff;
   font-size: 26rpx;
-  line-height: 76rpx;
+  line-height: normal;
   background: #2b9a7c;
   border-radius: 999rpx;
 }

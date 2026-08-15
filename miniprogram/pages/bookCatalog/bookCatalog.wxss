@@ -48,7 +48,7 @@ page {
   color: #ffffff;
   background: transparent;
   border: 2rpx solid rgba(255, 255, 255, 0.95);
-  border-radius: 999rpx;
+  border-radius: 8rpx;
   font-family: Roboto, "PingFang SC", sans-serif;
   font-size: 28rpx;
   font-weight: 600;
