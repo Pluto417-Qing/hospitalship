@@ -18,9 +18,10 @@
       data-id="{{item.id}}"
       bindtap="openTopic"
     >
-      <view class="topic-row-top">
-        <view class="topic-number">{{item.displayNumber}}</view>
-        <view class="topic-title">{{item.title}}</view>
+      <view class="topic-number">{{item.displayNumber}}</view>
+      <view class="topic-title">{{item.title}}</view>
+      <view class="topic-meta">
+        <view class="topic-producer" wx:if="{{item.producer}}">{{item.producer}}</view>
         <view class="topic-status {{item.unlocked ? 'unlocked' : ''}}">
           {{item.statusText}}
         </view>
