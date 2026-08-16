@@ -154,13 +154,6 @@ page {
   box-shadow: 0 5rpx 12rpx rgba(27, 95, 76, 0.05);
 }
 
-.panel-title {
-  color: #303836;
-  font-size: calc(25rpx * var(--page-font-scale));
-  font-weight: 600;
-  line-height: 1.4;
-}
-
 .star-panel {
   padding: 28rpx 30rpx 30rpx;
   border: 1rpx solid #2b9a7c;
@@ -168,7 +161,7 @@ page {
   box-shadow: 0 8rpx 40rpx rgba(0, 0, 0, 0.09);
 }
 
-.star-panel .panel-title {
+.panel-title {
   color: #000000;
   font-family: "PingFang SC", "Helvetica Neue", Arial, sans-serif;
   font-size: 32rpx;
@@ -270,7 +263,7 @@ page {
 }
 
 .star-label {
-  font-size: 24rpx;
+  font-size: calc(23rpx * var(--page-font-scale));
 }
 
 .star-number {
