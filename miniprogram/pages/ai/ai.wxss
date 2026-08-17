@@ -94,13 +94,30 @@ page {
   background: #fff7df;
 }
 
+.quiz-empty {
+  padding: 140rpx 40rpx;
+  text-align: center;
+  color: #8a8a8a;
+}
+
+.quiz-empty-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.quiz-empty-copy {
+  margin-top: 14rpx;
+  font-size: 26rpx;
+  line-height: 1.6;
+}
+
 .question-card {
   position: relative;
   width: 670rpx;
-  height: 420rpx;
   min-height: 420rpx;
   margin-bottom: 28rpx;
-  padding: 0;
+  padding: 150rpx 28rpx 36rpx;
   background: #ffffff;
   border: 2rpx solid #367dae;
   border-radius: 20rpx;
@@ -108,15 +125,8 @@ page {
   box-sizing: border-box;
 }
 
-.question-card.is-long {
-  height: 420rpx;
-  min-height: 420rpx;
-}
-
 .question-card.is-answer {
-  height: 420rpx;
   min-height: 420rpx;
-  padding: 0;
 }
 
 .question-header,
@@ -142,10 +152,6 @@ page {
   font-size: 32rpx;
   font-weight: 500;
   line-height: 40rpx;
-}
-
-.question-card.is-long .question-number {
-  top: 40rpx;
 }
 
 .favorite-icon,
@@ -197,17 +203,7 @@ page {
 }
 
 .question-source {
-  position: absolute;
-  top: 98rpx;
-  right: 28rpx;
-  left: 28rpx;
   margin-top: 0;
-  padding-right: 0;
-}
-
-.question-card.is-long .question-source {
-  top: 92rpx;
-  right: 116rpx;
 }
 
 .source-info {
@@ -219,12 +215,7 @@ page {
 }
 
 .question-text {
-  position: absolute;
-  top: 174rpx;
-  right: 22rpx;
-  left: 22rpx;
-  margin-top: 0;
-  padding-right: 0;
+  margin-top: 16rpx;
   color: #5a5a5a;
   font-family: "PingFang SC", sans-serif;
   font-size: 32rpx;
@@ -232,53 +223,39 @@ page {
   line-height: 40rpx;
 }
 
-.question-card.is-long .question-text {
-  top: 174rpx;
+.option-list {
+  margin-top: 28rpx;
 }
 
-.option-row {
-  position: absolute;
-  right: 28rpx;
-  bottom: 30rpx;
-  left: 22rpx;
+.option-item {
   display: flex;
-  justify-content: space-between;
+  align-items: baseline;
+  padding: 18rpx 4rpx;
+  border-bottom: 1rpx solid #edf1f5;
+  color: #333333;
+  font-size: 30rpx;
+  line-height: 1.5;
 }
 
-.question-card.is-long .option-row {
-  bottom: 30rpx;
+.option-item.is-saving {
+  opacity: 0.6;
 }
 
-.option-btn {
-  width: 238rpx;
-  min-width: 238rpx;
-  max-width: 238rpx;
-  height: 78rpx;
-  margin: 0;
-  padding: 0 10rpx;
-  color: #ffffff;
-  background: #2975a9;
-  border-radius: 20rpx;
-  flex: none;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "PingFang SC", sans-serif;
-  font-size: 28rpx;
+.option-item-label {
+  flex-shrink: 0;
+  margin-right: 18rpx;
+  color: #2975a9;
+  font-size: 26rpx;
   font-weight: 600;
-  line-height: 58rpx;
 }
 
-.option-btn.is-saving {
-  opacity: 0.65;
+.option-item-text {
+  flex: 1;
+  word-break: break-all;
 }
 
 .save-error {
-  position: absolute;
-  right: 28rpx;
-  bottom: 34rpx;
-  left: 28rpx;
+  margin-top: 24rpx;
   color: #b84a42;
   font-size: 28rpx;
   line-height: 1.45;
@@ -302,10 +279,7 @@ page {
 }
 
 .feedback {
-  position: absolute;
-  right: 28rpx;
-  bottom: 48rpx;
-  left: 28rpx;
+  margin-top: 28rpx;
   display: flex;
   align-items: center;
   justify-content: center;

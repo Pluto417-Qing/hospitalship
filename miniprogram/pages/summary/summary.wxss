@@ -47,3 +47,15 @@ page {
   line-height: 1.4;
   flex-shrink: 0;
 }
+
+.summary-empty {
+  padding: 140rpx 40rpx;
+  text-align: center;
+  color: #8a8a8a;
+}
+
+.summary-empty-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  line-height: 1.5;
+}

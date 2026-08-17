@@ -65,16 +65,16 @@
       <view class="section-copy">每道题为单选题，至少填写两个选项。选项字母由系统自动安排。</view>
 
       <view class="field-block">
-        <text class="field-label">所属主题</text>
-        <input class="text-input" maxlength="120" placeholder="例如：食管癌的故事" value="{{quizForm.topic}}" data-field="topic" bindinput="onQuizInput" />
+        <text class="field-label">题目编号</text>
+        <input class="text-input" maxlength="120" placeholder="" value="{{quizForm.topic}}" data-field="topic" bindinput="onQuizInput" />
       </view>
       <view class="field-row">
         <view class="field-half">
-          <text class="field-label">科室</text>
-          <input class="text-input" maxlength="160" placeholder="例如：胸外科" value="{{quizForm.department}}" data-field="department" bindinput="onQuizInput" />
+          <text class="field-label">医院及科室</text>
+          <input class="text-input" maxlength="160" placeholder="" value="{{quizForm.department}}" data-field="department" bindinput="onQuizInput" />
         </view>
         <view class="field-half">
-          <text class="field-label">来源说明</text>
+          <text class="field-label">医生姓名</text>
           <input class="text-input" maxlength="300" placeholder="例如：书稿第一章" value="{{quizForm.source}}" data-field="source" bindinput="onQuizInput" />
         </view>
       </view>

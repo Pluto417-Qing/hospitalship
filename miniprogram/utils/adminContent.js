@@ -579,11 +579,12 @@ function buildPatch(assetType, form, targetId) {
 
   if (assetType === "quiz-question") {
     const letters = "ABCDEFGH".split("");
+    const labels = ["一", "二", "三", "四", "五", "六", "七", "八"];
     const options = (Array.isArray(source.options) ? source.options : [])
       .slice(0, letters.length)
       .map((option, index) => ({
         key: letters[index],
-        label: `选择${letters[index]}`,
+        label: `选择${labels[index] || letters[index]}`,
         text: normalizeText(option && option.text, 1000)
       }));
     const availableKeys = options.map((option) => option.key);

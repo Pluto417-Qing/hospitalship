@@ -1,4 +1,7 @@
 <view class="summary-page">
+  <view wx:if="{{items.length === 0 && catalogLoaded}}" class="summary-empty">
+    <view class="summary-empty-title">暂无已发布内容</view>
+  </view>
   <view
     class="summary-card"
     style="background: {{item.color}};"
