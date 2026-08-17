@@ -8,6 +8,8 @@ const RETURN_ROUTES = Object.freeze({
   catalog: "pages/bookCatalog/bookCatalog"
 });
 const MEMBER_PASSWORD_PATTERN = /^[\u4e00-\u9fa5]{3,5}$/;
+const MIN_MEMBER_BIRTH_YEAR = 1949;
+const MAX_MEMBER_BIRTH_YEAR = 2049;
 
 function normalizeReturnTo(value) {
   return Object.prototype.hasOwnProperty.call(RETURN_ROUTES, value) ? value : "";
@@ -69,9 +71,12 @@ Page({
   onLoad(options = {}) {
     this.pageUnloaded = false;
     const yearOptions = [];
-    const currentYear = new Date().getFullYear();
 
-    for (let year = 1949; year <= 2049; year += 1) {
+    for (
+      let year = MIN_MEMBER_BIRTH_YEAR;
+      year <= MAX_MEMBER_BIRTH_YEAR;
+      year += 1
+    ) {
       yearOptions.push(String(year));
     }
 

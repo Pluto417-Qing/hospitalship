@@ -148,7 +148,6 @@
         <text class="password-label">请输入密码：</text>
         <input
           class="password-input"
-          password
           maxlength="6"
           value="{{notePassword}}"
           bindinput="onNotePasswordInput"

@@ -33,7 +33,6 @@
       <input
         class="control"
         type="text"
-        password="true"
         maxlength="5"
         value="{{newPassword}}"
         placeholder="设置新的3至5位汉字密码"
@@ -45,7 +44,6 @@
       <input
         class="control"
         type="text"
-        password="true"
         maxlength="5"
         value="{{confirmPassword}}"
         placeholder="再次输入新密码"

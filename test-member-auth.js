@@ -219,6 +219,34 @@ async function run() {
     first.user.userId
   );
 
+  const birthYearDatabase = new MemoryDatabase();
+  const registerBirthYear = loadFunction(
+    "register",
+    birthYearDatabase,
+    "guardian-openid-birth-year"
+  );
+  assert.strictEqual(
+    (await registerBirthYear(registrationEvent({ birthYear: 1949 }))).success,
+    true
+  );
+
+  const maximumBirthYearDatabase = new MemoryDatabase();
+  const registerMaximumBirthYear = loadFunction(
+    "register",
+    maximumBirthYearDatabase,
+    "guardian-openid-maximum-birth-year"
+  );
+  assert.strictEqual(
+    (await registerMaximumBirthYear(registrationEvent({ birthYear: 2049 }))).success,
+    true
+  );
+  assert.strictEqual(
+    (await registerMaximumBirthYear(
+      registrationEvent({ addMember: true, birthYear: 2050, nickname: "越界号" })
+    )).message,
+    "出生年份不正确"
+  );
+
   const firstProfile = await getUser();
   assert.strictEqual(firstProfile.success, true);
   assert.strictEqual(firstProfile.loggedIn, true);

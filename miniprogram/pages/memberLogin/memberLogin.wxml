@@ -47,7 +47,6 @@
         <view class="field-label">会员密码</view>
         <input
           class="password-input"
-          password="true"
           maxlength="6"
           value="{{password}}"
           placeholder="请输入3至5位汉字密码"

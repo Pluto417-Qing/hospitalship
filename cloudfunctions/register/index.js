@@ -11,6 +11,8 @@ const READER_RULES_VERSION = "reader-rules-v1";
 const MAX_MEMBERS_PER_GUARDIAN = 2;
 const SESSION_DURATION_MS = 30 * 24 * 60 * 60 * 1000;
 const MEMBER_PASSWORD_PATTERN = /^[\u4e00-\u9fa5]{3,5}$/;
+const MIN_MEMBER_BIRTH_YEAR = 1949;
+const MAX_MEMBER_BIRTH_YEAR = 2049;
 const SCRYPT_OPTIONS = Object.freeze({
   N: 16384,
   r: 8,
@@ -190,7 +192,6 @@ exports.main = async (event = {}) => {
       event.consents && typeof event.consents === "object"
         ? event.consents
         : {};
-    const currentYear = new Date().getUTCFullYear();
 
     if (!openid) {
       return {
@@ -209,8 +210,8 @@ exports.main = async (event = {}) => {
 
     if (
       !Number.isInteger(birthYear) ||
-      birthYear < 2000 ||
-      birthYear > currentYear
+      birthYear < MIN_MEMBER_BIRTH_YEAR ||
+      birthYear > MAX_MEMBER_BIRTH_YEAR
     ) {
       return {
         success: false,

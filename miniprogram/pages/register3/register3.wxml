@@ -61,7 +61,6 @@
           placeholder="3至5位汉字"
           placeholder-class="placeholder"
           maxlength="5"
-          password="true"
           value="{{password}}"
           bindinput="onPasswordInput"
         />
