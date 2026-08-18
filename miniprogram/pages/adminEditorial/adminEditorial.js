@@ -19,6 +19,7 @@ const CONTENT_TYPES = Object.freeze([
   }
 ]);
 const OPTION_KEYS = "ABCDEFGH".split("");
+const OPTION_LABELS = ["一", "二", "三", "四", "五", "六", "七", "八"];
 
 function callAdmin(action, data = {}) {
   if (!wx.cloud || typeof wx.cloud.callFunction !== "function") {
@@ -112,7 +113,7 @@ function buildQuizPayload(form) {
     .slice(0, OPTION_KEYS.length)
     .map((option, index) => ({
       key: OPTION_KEYS[index],
-      label: `选择${OPTION_KEYS[index]}`,
+      label: `选择${OPTION_LABELS[index] || OPTION_KEYS[index]}`,
       text: cleanText(option && option.text, 1000)
     }));
   return {

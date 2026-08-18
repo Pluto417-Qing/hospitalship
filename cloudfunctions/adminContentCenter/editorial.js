@@ -66,6 +66,7 @@ const QUIZ_PAYLOAD_KEYS = new Set([
   "wrongFeedback"
 ]);
 const QUIZ_OPTION_KEYS = new Set(["key", "label", "text"]);
+const QUIZ_OPTION_LABELS = ["一", "二", "三", "四", "五", "六", "七", "八"];
 const DOCUMENT_CONTEXT_KEYS = new Set([
   "createdAt",
   "publishedAt",
@@ -459,7 +460,7 @@ function normalizeQuizOption(rawOption, index) {
       rawOption.label,
       `${path}.label`,
       QUIZ_LIMITS.optionLabel,
-      { fallback: `选项${index + 1}` }
+      { fallback: `选择${QUIZ_OPTION_LABELS[index] || index + 1}` }
     ),
     text: normalizeText(
       rawOption.text,

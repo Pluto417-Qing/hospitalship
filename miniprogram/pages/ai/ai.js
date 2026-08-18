@@ -1,88 +1,13 @@
 const PENDING_QUIZ_FOCUS_KEY = "pendingQuizFocus";
 const PENDING_QUIZ_FOCUS_TTL_MS = 30 * 60 * 1000;
 
-// 测试数据
-const TEST_QUESTIONS = [
-  {
-    id: "test-001",
-    revision: "v1",
-    topic: "第0001号",
-    department: "某某某",
-    source: "北京协和医院急诊科",
-    question: "如果XXXXXXXXXXXXXXX，XXXXX。此时你应该？",
-    correctKey: "one",
-    options: [
-      { key: "one", label: "选择一", text: "立即前往医院就诊" },
-      { key: "two", label: "选择二", text: "在家观察休息" }
-    ],
-    explanation: "当出现严重症状时，应立即就医，避免延误病情。早期诊断和治疗对预后至关重要。"
-  },
-  {
-    id: "test-002",
-    revision: "v1",
-    topic: "第0002号",
-    department: "某某某",
-    source: "北京协和医院急诊科",
-    question: "关于儿童发热，以下哪种说法是正确的？",
-    correctKey: "one",
-    options: [
-      { key: "one", label: "认为对", text: "38.5度以上应及时就医" },
-      { key: "two", label: "认为错", text: "发热对身体有益无需处理" }
-    ],
-    explanation: "儿童发热超过38.5度时，应及时就医或在医生指导下使用退热药物。持续高热可能导致并发症。"
-  },
-  {
-    id: "test-003",
-    revision: "v1",
-    topic: "第0003号",
-    department: "某某某",
-    source: "首都儿科研究所",
-    question: "你是否每天坚持户外活动至少1小时？",
-    correctKey: "one",
-    options: [
-      { key: "one", label: "已完成", text: "是的，我每天都坚持" },
-      { key: "two", label: "没完成", text: "没有，很少户外活动" }
-    ],
-    explanation: "每天至少1小时的户外活动有助于预防近视、增强体质、促进维生素D合成。建议养成良好的运动习惯。"
-  },
-  {
-    id: "test-004",
-    revision: "v1",
-    topic: "第0004号",
-    department: "某某某",
-    source: "中国疾控中心",
-    question: "关于洗手，以下哪种做法是正确的？",
-    correctKey: "one",
-    options: [
-      { key: "one", label: "选择一", text: "用肥皂和流动水洗手至少20秒" },
-      { key: "two", label: "选择二", text: "用清水快速冲洗即可" }
-    ],
-    explanation: "正确洗手应使用肥皂和流动水，揉搓至少20秒，特别是在饭前便后、接触公共物品后。这是预防疾病传播的重要措施。"
-  },
-  {
-    id: "test-005",
-    revision: "v1",
-    topic: "第0005号",
-    department: "某某某",
-    source: "北京大学第三医院",
-    question: "青少年每天应该睡眠多长时间？",
-    correctKey: "one",
-    options: [
-      { key: "one", label: "认为对", text: "中学生应保证8-9小时" },
-      { key: "two", label: "认为错", text: "5-6小时就足够了" }
-    ],
-    explanation: "充足的睡眠对青少年生长发育至关重要。中学生建议睡眠时间为8-9小时，小学生需要9-10小时。"
-  }
-];
-
 function normalizeQuestion(source) {
   if (!source || typeof source !== "object") {
     return null;
   }
 
   const rawId = String(source.id || source.questionId || "").trim();
-  // 去掉 "test-" 前缀，只保留数字部分
-  const id = rawId.replace(/^test-/i, "");
+  const id = rawId;
   const revision = String(source.revision || "").trim();
   const question = String(source.question || "").trim();
   const options = Array.isArray(source.options)
@@ -309,41 +234,19 @@ Page({
         ? createQuestions(result.questions)
         : [];
 
-      // 如果云函数返回成功但没有数据，使用测试数据
-      if (result.success && Array.isArray(result.questions) && result.questions.length === 0) {
-        const testQuestions = createQuestions(TEST_QUESTIONS);
-        this.setData({
-          questions: testQuestions,
-          questionSource: "local",
-          sourceNotice: "已加载测试数据"
-        });
-      } else if (result.success && Array.isArray(result.questions)) {
-        this.setData({
-          questions,
-          questionSource: result.source || "cloud",
-          sourceNotice: questions.length === 0
-            ? "暂时没有已开放的题目。"
-            : ""
-        });
-      } else {
-        // 云函数失败，使用测试数据
-        const testQuestions = createQuestions(TEST_QUESTIONS);
-        this.setData({
-          questions: testQuestions,
-          questionSource: "local",
-          sourceNotice: "已加载测试数据"
-        });
-      }
+      this.setData({
+        questions,
+        questionSource: "cloud",
+        sourceNotice: questions.length === 0
+          ? "暂时没有已开放的题目。"
+          : ""
+      });
     } catch (error) {
       console.error("quiz question list error:", error);
-      console.log("使用本地测试数据");
-
-      // 使用本地测试数据
-      const testQuestions = createQuestions(TEST_QUESTIONS);
       this.setData({
-        questions: testQuestions,
-        questionSource: "local",
-        sourceNotice: "已加载测试数据"
+        questions: [],
+        questionSource: "cloud",
+        sourceNotice: "题目加载失败，请检查网络后重试。"
       });
     } finally {
       this.questionRequestPending = false;

@@ -269,17 +269,17 @@
 
       <block wx:elif="{{draft.assetType === 'quiz-question'}}">
         <view class="field-block">
-          <text class="field-label">所属主题</text>
-          <input class="text-input" maxlength="120" placeholder="例如：食管癌的故事" value="{{form.topic}}" disabled="{{!draft.canEdit || busyAction}}" data-field="topic" bindinput="onFieldInput" />
+          <text class="field-label">题目编号</text>
+          <input class="text-input" maxlength="120" placeholder="" value="{{form.topic}}" disabled="{{!draft.canEdit || busyAction}}" data-field="topic" bindinput="onFieldInput" />
         </view>
         <view class="field-row">
           <view class="field-half">
-            <text class="field-label">科室</text>
-            <input class="text-input" maxlength="160" placeholder="例如：胸外科" value="{{form.department}}" disabled="{{!draft.canEdit || busyAction}}" data-field="department" bindinput="onFieldInput" />
+            <text class="field-label">医院及科室</text>
+            <input class="text-input" maxlength="160" placeholder="" value="{{form.department}}" disabled="{{!draft.canEdit || busyAction}}" data-field="department" bindinput="onFieldInput" />
           </view>
           <view class="field-half">
-            <text class="field-label">来源说明</text>
-            <input class="text-input" maxlength="300" placeholder="例如：书稿第一章" value="{{form.source}}" disabled="{{!draft.canEdit || busyAction}}" data-field="source" bindinput="onFieldInput" />
+            <text class="field-label">医生姓名</text>
+            <input class="text-input" maxlength="300" placeholder="" value="{{form.source}}" disabled="{{!draft.canEdit || busyAction}}" data-field="source" bindinput="onFieldInput" />
           </view>
         </view>
         <view class="field-block">

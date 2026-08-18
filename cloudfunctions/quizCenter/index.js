@@ -9,6 +9,7 @@ const db = cloud.database();
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 50;
 const QUESTION_ID_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/;
+const OPTION_LABELS = ["一", "二", "三", "四", "五", "六", "七", "八"];
 const ATTEMPT_ID_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9:_-]{7,127}$/;
 
 function sha256(value) {
@@ -168,7 +169,8 @@ function normalizeOptions(value) {
     seen.add(key);
     options.push({
       key,
-      label: normalizeText(source.label, 40) || `选择${options.length + 1}`,
+      label: normalizeText(source.label, 40) ||
+        `选择${OPTION_LABELS[options.length] || options.length + 1}`,
       text
     });
   }

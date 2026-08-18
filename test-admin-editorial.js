@@ -198,7 +198,7 @@ function testQuizNormalization() {
   assert.deepStrictEqual(
     generatedKeys.options,
     [
-      { key: "option-1", label: "选项1", text: "答案甲" },
+      { key: "option-1", label: "选择一", text: "答案甲" },
       { key: "option-2", label: "第二项", text: "答案乙" }
     ]
   );

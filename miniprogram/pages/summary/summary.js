@@ -4,58 +4,6 @@ const SUMMARY_READ_STORAGE_KEY = "summaryReadContentIds";
 
 const palette = ["#aa99c5", "#7ebdee", "#f99f87", "#41ac8e"];
 
-const summaryItems = [
-  {
-    id: "esophageal-cancer-story",
-    bookName: "《中国医院船》",
-    dateLabel: "testarticle 待上传审定示例",
-    title: "食管癌的故事",
-    available: false
-  },
-  {
-    id: "summary-pending-01",
-    bookName: "《中国医院船》",
-    dateLabel: "发布日期待定",
-    title: "摘要内容待接入",
-    available: false
-  },
-  {
-    id: "summary-pending-02",
-    bookName: "《中国医院船》",
-    dateLabel: "发布日期待定",
-    title: "摘要内容待接入",
-    available: false
-  },
-  {
-    id: "summary-pending-03",
-    bookName: "《中国医院船》",
-    dateLabel: "发布日期待定",
-    title: "摘要内容待接入",
-    available: false
-  },
-  {
-    id: "summary-pending-04",
-    bookName: "《中国医院船》",
-    dateLabel: "发布日期待定",
-    title: "摘要内容待接入",
-    available: false
-  },
-  {
-    id: "summary-pending-05",
-    bookName: "《中国医院船》",
-    dateLabel: "发布日期待定",
-    title: "摘要内容待接入",
-    available: false
-  },
-  {
-    id: "summary-pending-06",
-    bookName: "《中国医院船》",
-    dateLabel: "发布日期待定",
-    title: "摘要内容待接入",
-    available: false
-  }
-];
-
 function readViewedIds() {
   try {
     // Older builds cached this state before the server confirmed membership.
@@ -96,7 +44,8 @@ function createDisplayItems(items, viewedIds) {
 
 Page({
   data: {
-    items: createDisplayItems(summaryItems, [])
+    items: [],
+    catalogLoaded: false
   },
 
   onShow() {
@@ -105,7 +54,8 @@ Page({
     const viewedIds = readViewedIds();
 
     this.setData({
-      items: createDisplayItems(summaryItems, viewedIds)
+      items: [],
+      catalogLoaded: false
     });
 
     this.loadCatalog(viewedIds);
@@ -156,12 +106,8 @@ Page({
         viewed: Boolean(item.viewed)
       }));
 
-    if (remoteItems.length === 0) {
-      this.remoteSummaryItems = [];
-      return;
-    }
-
     this.remoteSummaryItems = remoteItems;
+    this.setData({ catalogLoaded: true });
     this.renderCatalog(viewedIds);
   },
 
@@ -170,13 +116,8 @@ Page({
       ? this.remoteSummaryItems
       : [];
 
-    const remoteIds = new Set(remoteItems.map((item) => item.id));
-    const pendingItems = summaryItems.filter(
-      (item) => !item.available && !remoteIds.has(item.id)
-    );
-
     this.setData({
-      items: createDisplayItems(remoteItems.concat(pendingItems), viewedIds)
+      items: createDisplayItems(remoteItems, viewedIds)
     });
   },
 

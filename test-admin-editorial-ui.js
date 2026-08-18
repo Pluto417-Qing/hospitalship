@@ -162,9 +162,9 @@ async function testQuizCreationForm() {
       text: option.text
     })),
     [
-      { key: "A", label: "选择A", text: "进行性吞咽困难" },
-      { key: "B", label: "选择B", text: "长期高温饮食" },
-      { key: "C", label: "选择C", text: "保持规律作息" }
+      { key: "A", label: "选择一", text: "进行性吞咽困难" },
+      { key: "B", label: "选择二", text: "长期高温饮食" },
+      { key: "C", label: "选择三", text: "保持规律作息" }
     ]
   );
   assert.strictEqual(request.data.payload.correctKey, "C");
