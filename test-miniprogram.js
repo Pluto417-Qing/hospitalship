@@ -3084,7 +3084,9 @@ test("摘要仅在正文成功打开后记录阅读状态", async () => {
             {
               available: true,
               id: "published-summary",
-              title: "已发布摘要"
+              title: "已发布摘要",
+              displayDate: "2026-07-14",
+              publishedAt: new Date("2026-08-01")
             }
           ],
           nextOffset: null,
@@ -3097,6 +3099,7 @@ test("摘要仅在正文成功打开后记录阅读状态", async () => {
 
   page.onShow();
   await flush();
+  assert.strictEqual(page.data.items[0].dateLabel, "2026年07月14日");
   page.openSummary({
     currentTarget: { dataset: { id: "published-summary" } }
   });

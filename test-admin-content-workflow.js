@@ -455,6 +455,14 @@ class MemoryDatabase {
               ...clone(data),
               _id: documentId
             });
+          },
+          async remove() {
+            if (!database.store(name).has(documentId)) {
+              const error = new Error("document not found");
+              error.errCode = -502004;
+              throw error;
+            }
+            database.store(name).delete(documentId);
           }
         };
         return reference;
@@ -1038,7 +1046,11 @@ async function createApprovedDraft({
 
   let patch = draftPatch;
   if (current.draft.assetType === "manuscript") {
-    patch = { structureConfirmed: true, ...(patch || {}) };
+    patch = {
+      structureConfirmed: true,
+      displayDate: "2026-07-14",
+      ...(patch || {})
+    };
   } else if (
     current.draft.assetType === "full-book-pdf" &&
     current.draft.payload.structureMode === "replace"
@@ -1319,6 +1331,7 @@ async function testRolesEditingConflictsIdempotencyAndIsolation() {
       title: "A carefully edited title",
       sourceLabel: "Editorial desk",
       catalogViews: ["book", "summary"],
+      displayDate: "2026年07月14日",
       sections: [{
         kind: "story",
         heading: "Opening",
@@ -1332,6 +1345,7 @@ async function testRolesEditingConflictsIdempotencyAndIsolation() {
   assert.strictEqual(saved.success, true);
   assert.strictEqual(saved.draft.draftVersion, 2);
   assert.strictEqual(saved.draft.payload.title, "A carefully edited title");
+  assert.strictEqual(saved.draft.payload.displayDate, "2026-07-14");
 
   const saveReplay = await uploaderA(saveEvent);
   assert.strictEqual(saveReplay.success, true);
@@ -1427,6 +1441,10 @@ async function testRolesEditingConflictsIdempotencyAndIsolation() {
   assert.strictEqual(published.success, true);
   assert.strictEqual(published.draft.state, "published");
   assert.strictEqual(database.store("contents").get("article-one").contentId, "article-one");
+  assert.strictEqual(
+    database.store("contents").get("article-one").displayDate,
+    "2026-07-14"
+  );
 
   const publishReplay = await admin(publishEvent);
   assert.strictEqual(publishReplay.success, true);
@@ -3005,6 +3023,141 @@ async function testStructuredEditorialLifecycleAndReaderCompatibility() {
   );
 }
 
+async function testDeletePublishedContent() {
+  const contentId = "article-to-delete";
+  const publishedContent = {
+    _id: contentId,
+    contentId,
+    bookId: "china-hospital-ship",
+    currentRevision: "r-" + "a".repeat(32),
+    title: "待删除书稿",
+    subtitle: "",
+    sourceLabel: "管理员上传",
+    department: "胸外科",
+    catalogViews: ["book", "summary"],
+    displayDate: "2026-07-14",
+    sortOrder: 0,
+    coverFileId: "",
+    disclaimer: "",
+    sections: [{ kind: "story", heading: "", paragraphs: ["正文"] }],
+    embeddedAssets: [],
+    status: "published",
+    reviewStatus: "approved",
+    accessPolicy: { text: "member", audio: "member" },
+    audioStatus: "published",
+    audioRevision: "r-" + "b".repeat(32),
+    publishedAudioTrackCount: 1,
+    sourceDraftId: IDS.primary,
+    publishedAt: new Date(),
+    updateTime: new Date(),
+    schemaVersion: 1
+  };
+  const publishedDraft = {
+    _id: IDS.primary,
+    draftId: IDS.primary,
+    kind: "content",
+    assetType: "manuscript",
+    targetId: contentId,
+    ownerAdminId: "admin-a",
+    sourceUploadId: IDS.primary,
+    revision: "r-" + "c".repeat(32),
+    state: "published",
+    draftVersion: 3,
+    payload: {
+      contentId,
+      bookId: "china-hospital-ship",
+      title: "待删除书稿",
+      sourceLabel: "管理员上传",
+      department: "胸外科",
+      catalogViews: ["book", "summary"],
+      displayDate: "2026-07-14",
+      sortOrder: 0,
+      sections: [{ kind: "story", heading: "", paragraphs: ["正文"] }],
+      structureConfirmed: true
+    },
+    issues: [],
+    createdAt: new Date(),
+    updateTime: new Date(),
+    schemaVersion: 1
+  };
+  const database = new MemoryDatabase({
+    adminAccounts: seedAccounts(),
+    contents: [publishedContent],
+    audioTracks: [
+      {
+        _id: `${contentId}-primary`,
+        contentId,
+        contentRevision: "r-" + "b".repeat(32),
+        audioRevision: "r-" + "b".repeat(32),
+        status: "published",
+        trackNo: 1,
+        fileID: "cloud://test-environment/published/audio/a.mp3",
+        sourceDraftId: IDS.primary,
+        publishedAt: new Date(),
+        schemaVersion: 1
+      }
+    ],
+    adminContentDrafts: [publishedDraft]
+  });
+  const { uploaderA, admin } = mains(database);
+
+  const forbidden = await uploaderA({
+    action: "deletePublishedContent",
+    contentId
+  });
+  assert.strictEqual(forbidden.code, "CONTENT_DELETE_FORBIDDEN");
+
+  const invalidId = await admin({
+    action: "deletePublishedContent",
+    contentId: "Invalid Content ID!"
+  });
+  assert.strictEqual(invalidId.code, "INVALID_CONTENT_ID");
+
+  const deleted = await admin({
+    action: "deletePublishedContent",
+    contentId
+  });
+  assert.strictEqual(deleted.success, true);
+  assert.strictEqual(database.store("contents").has(contentId), false);
+  assert.strictEqual(
+    database.store("audioTracks").has(`${contentId}-primary`),
+    false
+  );
+  assert.strictEqual(
+    database.store("adminContentDrafts").has(IDS.primary),
+    true
+  );
+
+  const second = await admin({
+    action: "deletePublishedContent",
+    contentId
+  });
+  assert.strictEqual(second.code, "CONTENT_NOT_FOUND");
+
+  const referencedDatabase = new MemoryDatabase({
+    adminAccounts: seedAccounts(),
+    contents: [publishedContent],
+    bookChapters: [
+      {
+        _id: "chapter-blocked",
+        bookId: "china-hospital-ship",
+        bookRevision: "r-" + "d".repeat(32),
+        status: "published",
+        sourceContentId: contentId,
+        sortOrder: 10,
+        sections: [],
+        schemaVersion: 1
+      }
+    ]
+  });
+  const blocked = await mains(referencedDatabase).admin({
+    action: "deletePublishedContent",
+    contentId
+  });
+  assert.strictEqual(blocked.code, "CONTENT_IN_FULL_BOOK");
+  assert.strictEqual(referencedDatabase.store("contents").has(contentId), true);
+}
+
 async function main() {
   const originalBrokerUrl = process.env[BROKER_ENV_KEY];
   process.env[BROKER_ENV_KEY] = BROKER_URL;
@@ -3023,6 +3176,7 @@ async function main() {
     await testStagedTopicConflictRemainsInvisibleAndIdempotent();
     await testDirectManuscriptEmbeddedImagesSurviveDraftAndPublish();
     await testStructuredEditorialLifecycleAndReaderCompatibility();
+    await testDeletePublishedContent();
     console.log(
       "Admin content workflow tests passed: roles, draft lifecycle, conflicts, " +
       "idempotency, isolation, broker confirmation, stable overwrite, reader " +

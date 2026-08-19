@@ -6703,6 +6703,7 @@ async function publishDraft(event, admin, openid) {
           sourceLabel: payload.sourceLabel,
           department: payload.department,
           catalogViews: payload.catalogViews,
+          displayDate: payload.displayDate,
           sortOrder: payload.sortOrder,
           coverFileId: payload.coverFileID,
           disclaimer: payload.disclaimer,
@@ -6976,6 +6977,82 @@ async function publishDraft(event, admin, openid) {
   });
 
   return unwrapTransactionResult(rawResult);
+}
+
+async function deletePublishedContent(event, admin, openid) {
+  const authorization = requireRole(
+    admin,
+    PUBLISH_ROLES,
+    "CONTENT_DELETE_FORBIDDEN",
+    "当前管理员没有删除书稿权限"
+  );
+  if (!authorization.success) return authorization;
+
+  const contentId = normalizeText(event.contentId, 64).toLowerCase();
+  if (!STABLE_ID_PATTERN.test(contentId)) {
+    return {
+      success: false,
+      code: "INVALID_CONTENT_ID",
+      message: "书稿编号无效"
+    };
+  }
+
+  const target = await getDocumentOrNull(
+    db.collection("contents").doc(contentId)
+  );
+  if (!target) {
+    return {
+      success: false,
+      code: "CONTENT_NOT_FOUND",
+      message: "书稿不存在或尚未发布"
+    };
+  }
+
+  let referencedByFullBook = false;
+
+  try {
+    const references = await db
+      .collection("bookChapters")
+      .where({ sourceContentId: contentId, status: "published" })
+      .limit(1)
+      .get();
+    referencedByFullBook = Boolean(
+      references &&
+      Array.isArray(references.data) &&
+      references.data.length > 0
+    );
+  } catch (error) {
+    console.warn("整书引用检查失败，继续执行删除：", error);
+  }
+
+  if (referencedByFullBook) {
+    return {
+      success: false,
+      code: "CONTENT_IN_FULL_BOOK",
+      message: "该书稿已被整书引用，请先处理整书章节后再删除"
+    };
+  }
+
+  try {
+    await db.collection("contents").doc(contentId).remove();
+  } catch (error) {
+    if (!isDocumentNotFound(error)) {
+      throw error;
+    }
+  }
+
+  try {
+    await db.collection("audioTracks").doc(`${contentId}-primary`).remove();
+  } catch (error) {
+    if (!isDocumentNotFound(error)) {
+      console.warn("删除书稿时清理配音记录失败：", error);
+    }
+  }
+
+  return {
+    success: true,
+    contentId
+  };
 }
 
 function getHomeAssetCloudPath(asset) {
@@ -7339,6 +7416,10 @@ exports.main = async (event = {}) => {
 
     if (action === "publishDraft") {
       return await publishDraft(event, admin, openid);
+    }
+
+    if (action === "deletePublishedContent") {
+      return await deletePublishedContent(event, admin, openid);
     }
 
     return {
