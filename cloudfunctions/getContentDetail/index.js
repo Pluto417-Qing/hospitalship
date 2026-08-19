@@ -201,7 +201,7 @@ function normalizeEmbeddedAssets(value, contentId) {
   }
 
   if (!Array.isArray(value) || value.length > MAX_EMBEDDED_IMAGES) {
-    return null;
+    return { assets: [], byId: new Map() };
   }
 
   const assets = [];
@@ -250,7 +250,7 @@ function normalizeEmbeddedAssets(value, contentId) {
       seenOrders.has(order) ||
       seenFileIDs.has(fileID)
     ) {
-      return null;
+      continue;
     }
 
     const asset = {
@@ -307,7 +307,7 @@ async function createSignedFileURLMap(fileIDs) {
     return null;
   }
 
-  return signedURLs.size === uniqueFileIDs.length ? signedURLs : null;
+  return signedURLs;
 }
 
 function normalizeSections(value, embeddedAssets = { assets: [], byId: new Map() }) {
@@ -322,7 +322,6 @@ function normalizeSections(value, embeddedAssets = { assets: [], byId: new Map()
   const sections = [];
   let characterCount = 0;
   let blockCount = 0;
-  const referencedAssetIds = new Set();
 
   for (const sourceSection of value) {
     const rawParagraphs = Array.isArray(sourceSection && sourceSection.paragraphs)
@@ -389,7 +388,13 @@ function normalizeSections(value, embeddedAssets = { assets: [], byId: new Map()
           const asset = embeddedAssets.byId.get(embeddedAssetId);
 
           if (!asset) {
-            return [];
+            blocks.push({
+              type: "image",
+              embeddedAssetId,
+              caption: normalizeText(rawBlock && rawBlock.caption, 300),
+              imageUnavailable: true
+            });
+            continue;
           }
 
           blocks.push({
@@ -400,7 +405,6 @@ function normalizeSections(value, embeddedAssets = { assets: [], byId: new Map()
               normalizeText(rawBlock && rawBlock.caption, 300) ||
               asset.caption
           });
-          referencedAssetIds.add(embeddedAssetId);
         } else {
           return [];
         }
@@ -434,13 +438,6 @@ function normalizeSections(value, embeddedAssets = { assets: [], byId: new Map()
       }
       sections.push(section);
     }
-  }
-
-  if (
-    embeddedAssets.assets.length !== referencedAssetIds.size ||
-    embeddedAssets.assets.some((asset) => !referencedAssetIds.has(asset.id))
-  ) {
-    return [];
   }
 
   return sections;
@@ -544,11 +541,11 @@ function applySignedEmbeddedImageURLs(content, signedURLs) {
       }
 
       const src = signedURLs && signedURLs.get(block.fileID);
-      if (!src) {
-        return false;
+      if (src) {
+        block.src = src;
+      } else {
+        block.imageUnavailable = true;
       }
-
-      block.src = src;
       delete block.fileID;
     }
   }

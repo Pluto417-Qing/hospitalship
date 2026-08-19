@@ -399,16 +399,7 @@
 
     <view wx:if="{{draft.state === 'in_review' && !capabilities.review}}" class="card passive-card">草稿正在等待独立审核，当前不能继续编辑。</view>
     <view wx:if="{{draft.state === 'approved' && !capabilities.publish}}" class="card passive-card">草稿已经审核通过，等待具有发布权限的管理员操作。</view>
-    <view wx:if="{{draft.state === 'published'}}" class="card published-card">
-      <view>这个版本已经正式发布到读者端。</view>
-      <button
-        wx:if="{{draft.assetType === 'manuscript' && capabilities.publish}}"
-        class="danger-button"
-        disabled="{{busyAction}}"
-        loading="{{busyAction === 'deletePublishedContent'}}"
-        bindtap="deletePublishedContent"
-      >删除已发布书稿</button>
-    </view>
+    <view wx:if="{{draft.state === 'published'}}" class="card published-card">这个版本已经正式发布到读者端。</view>
     <view wx:if="{{draft.state === 'rejected'}}" class="card rejected-card">这个草稿已被终止。如需重新提交，请重新上传原件并创建新草稿。</view>
   </block>
 </view>

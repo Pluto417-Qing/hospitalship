@@ -1,7 +1,8 @@
 <view class="article-page" wx:if="{{content}}">
   <view class="heading-card">
-    <view class="heading-meta">《中国医院船》 · {{content.sourceLabel}}</view>
+    <view class="heading-meta">《中国医院船》 {{content.sourceLabel}}{{content.department ? ' · ' + content.department : ''}}</view>
     <view class="article-title">{{content.title}}</view>
+    <view wx:if="{{content.subtitle}}" class="article-subtitle">{{content.subtitle}}</view>
   </view>
 
   <view class="cover-card" wx:if="{{content.cover}}">
@@ -26,6 +27,7 @@
       class="article-section"
       wx:for="{{content.sections}}"
       wx:for-item="section"
+      wx:for-index="sectionIndex"
       wx:key="heading"
     >
       <view class="section-title">{{section.heading}}</view>
@@ -39,11 +41,19 @@
           </view>
           <view wx:elif="{{block.type === 'image'}}" class="inline-image-card">
             <image
+              wx:if="{{block.src && !block.imageFailed}}"
               class="inline-image"
               src="{{block.src}}"
               mode="widthFix"
               lazy-load
+              data-section-index="{{sectionIndex}}"
+              data-block-index="{{blockIndex}}"
+              binderror="onInlineImageError"
             />
+            <view wx:else class="inline-image-placeholder">
+              <view class="placeholder-mark">图</view>
+              <view class="placeholder-copy">{{block.imageUnavailable ? "图片暂不可用" : "图片加载失败，请重试"}}</view>
+            </view>
             <view wx:if="{{block.caption}}" class="inline-image-caption">{{block.caption}}</view>
           </view>
         </block>

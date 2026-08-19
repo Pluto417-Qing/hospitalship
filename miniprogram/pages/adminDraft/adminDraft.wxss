@@ -745,23 +745,6 @@ page {
   background: #edf8f2;
 }
 
-.danger-button {
-  width: 100%;
-  height: 72rpx;
-  margin-top: 20rpx;
-  color: #a52e29;
-  background: #ffffff;
-  border: 1rpx solid #c3544d;
-  border-radius: 36rpx;
-  font-size: 25rpx;
-  font-weight: 600;
-  line-height: 70rpx;
-}
-
-.danger-button::after {
-  border: 0;
-}
-
 .rejected-card {
   color: #a52e29;
   background: #fff0ed;

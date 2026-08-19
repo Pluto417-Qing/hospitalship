@@ -1121,6 +1121,126 @@ test("离开图片确认页保留云端任务，早期任务和明确取消仍�
   );
 });
 
+test("管理员在草稿列表删除已发布书稿并刷新列表", async () => {
+  let publishedDraft = draftFixture({ state: "published" });
+  let draftListReturned = false;
+  const harness = createWx({
+    async callFunction(request) {
+      const action = request.data.action;
+      if (action === "listDrafts") {
+        draftListReturned = true;
+        return {
+          result: {
+            success: true,
+            drafts: draftListReturned && !publishedDraft
+              ? []
+              : [publishedDraft],
+            hasMore: false,
+            nextOffset: null,
+            offset: 0,
+            limit: 20
+          }
+        };
+      }
+      if (action === "deletePublishedContent") {
+        assert.deepStrictEqual(clone(request.data), {
+          action: "deletePublishedContent",
+          contentId: "article-one"
+        });
+        publishedDraft = null;
+        return { result: { success: true, contentId: "article-one" } };
+      }
+      throw new Error(`unexpected action ${action}`);
+    }
+  });
+  const page = loadPage(
+    "miniprogram/pages/adminUploads/adminUploads.js",
+    harness.wx
+  );
+  page.onLoad();
+  page.isPageVisible = true;
+  page.setData({
+    authorized: true,
+    capabilities: roleCapabilities({ drafts: true, publish: true })
+  });
+  await page.loadDrafts();
+  await settle();
+  assert.strictEqual(page.data.drafts.length, 1);
+  assert.strictEqual(page.data.drafts[0].state, "published");
+
+  await page.deletePublishedDraft({
+    currentTarget: {
+      dataset: { draftId: DRAFT_ID, contentId: "article-one" }
+    }
+  });
+  await settle();
+
+  assert.strictEqual(actionCalls(harness, "deletePublishedContent").length, 1);
+  assert.strictEqual(
+    harness.calls.modals.at(-1).title,
+    "删除已发布书稿"
+  );
+  assert.strictEqual(page.data.drafts.length, 0);
+  assert.strictEqual(page.data.draftsError, "");
+});
+
+test("管理员在草稿列表重新打开已发布书稿进入编辑", async () => {
+  let publishedDraft = draftFixture({ state: "published" });
+  const harness = createWx({
+    async callFunction(request) {
+      const action = request.data.action;
+      if (action === "listDrafts") {
+        return {
+          result: {
+            success: true,
+            drafts: [publishedDraft],
+            hasMore: false,
+            nextOffset: null,
+            offset: 0,
+            limit: 20
+          }
+        };
+      }
+      if (action === "reopenDraftForEditing") {
+        assert.strictEqual(request.data.draftId, DRAFT_ID);
+        assertMutationId(request.data.requestId);
+        publishedDraft = draftFixture({
+          state: "editing",
+          draftVersion: 2
+        });
+        return { result: { success: true, draft: publishedDraft } };
+      }
+      throw new Error(`unexpected action ${action}`);
+    }
+  });
+  const page = loadPage(
+    "miniprogram/pages/adminUploads/adminUploads.js",
+    harness.wx
+  );
+  page.onLoad();
+  page.isPageVisible = true;
+  page.setData({
+    authorized: true,
+    capabilities: roleCapabilities({ drafts: true, publish: true })
+  });
+  await page.loadDrafts();
+  await settle();
+  assert.strictEqual(page.data.drafts.length, 1);
+  assert.strictEqual(page.data.drafts[0].state, "published");
+
+  await page.reopenPublishedDraft({
+    currentTarget: { dataset: { draftId: DRAFT_ID } }
+  });
+  await settle();
+
+  assert.strictEqual(actionCalls(harness, "reopenDraftForEditing").length, 1);
+  assert.strictEqual(
+    harness.calls.navigateTo.at(-1).url,
+    `/pages/adminDraft/adminDraft?id=${DRAFT_ID}`
+  );
+  assert.strictEqual(page.data.drafts[0].state, "editing");
+});
+
 test("管理员保存当前版本后使用服务端新版本送审", async () => {
   let currentDraft = draftFixture();
   let savedPatch = null;

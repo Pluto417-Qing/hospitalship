@@ -285,6 +285,20 @@ Page({
     });
   },
 
+  onInlineImageError(event) {
+    const sectionIndex = Number(event.currentTarget.dataset.sectionIndex);
+    const blockIndex = Number(event.currentTarget.dataset.blockIndex);
+
+    if (!Number.isInteger(sectionIndex) || !Number.isInteger(blockIndex)) {
+      return;
+    }
+
+    const update = {};
+    update[`content.sections[${sectionIndex}].blocks[${blockIndex}].imageFailed`] =
+      true;
+    this.setData(update);
+  },
+
   async submitComment() {
     const { content, comment, submitting } = this.data;
     const normalizedComment = comment.trim();

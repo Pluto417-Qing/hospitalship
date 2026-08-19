@@ -638,6 +638,119 @@ Page({
     this.loadDrafts({ append: false });
   },
 
+  async reopenPublishedDraft(event) {
+    const draftId = normalizeText(
+      event.currentTarget.dataset.draftId,
+      32
+    ).toLowerCase();
+    const draft = (Array.isArray(this.data.drafts) ? this.data.drafts : [])
+      .find((item) => item.id === draftId);
+
+    if (
+      !draft ||
+      draft.state !== "published" ||
+      !this.data.capabilities.drafts ||
+      this.reopeningDraftId
+    ) {
+      return;
+    }
+
+    this.reopeningDraftId = draftId;
+
+    try {
+      const response = await wx.cloud.callFunction({
+        name: "adminContentCenter",
+        data: {
+          action: "reopenDraftForEditing",
+          draftId,
+          requestId: adminContent.createMutationId("reopen")
+        }
+      });
+      const result = response && response.result || {};
+      if (!result.success) {
+        wx.showToast({
+          title: result.message || "重新打开编辑失败，请稍后重试。",
+          icon: "none"
+        });
+        return;
+      }
+
+      wx.showToast({ title: "已进入编辑", icon: "success" });
+      this.refreshDrafts();
+      if (typeof wx.navigateTo === "function") {
+        wx.navigateTo({ url: `/pages/adminDraft/adminDraft?id=${draftId}` });
+      }
+    } catch (error) {
+      console.error("reopen published draft error:", error);
+      wx.showToast({
+        title: getErrorMessage(error, "重新打开编辑失败，请稍后重试。"),
+        icon: "none"
+      });
+    } finally {
+      this.reopeningDraftId = null;
+    }
+  },
+
+  async deletePublishedDraft(event) {
+    const draftId = normalizeText(
+      event.currentTarget.dataset.draftId,
+      32
+    ).toLowerCase();
+    const draft = (Array.isArray(this.data.drafts) ? this.data.drafts : [])
+      .find((item) => item.id === draftId);
+    const contentId = normalizeText(draft && draft.targetId, 64).toLowerCase();
+
+    if (
+      !draft ||
+      draft.assetType !== "manuscript" ||
+      draft.state !== "published" ||
+      !contentId ||
+      !this.data.capabilities.publish ||
+      this.deletingDraftId
+    ) {
+      return;
+    }
+
+    const confirmed = await confirmModal(
+      "删除已发布书稿",
+      `删除后读者端将无法再打开《${draft.title || "这篇书稿"}》，且不可恢复。确定删除吗？`,
+      "删除"
+    );
+    if (!confirmed) return;
+
+    this.deletingDraftId = draftId;
+
+    try {
+      const response = await wx.cloud.callFunction({
+        name: "adminContentCenter",
+        data: { action: "deletePublishedContent", contentId }
+      });
+      const result = response && response.result || {};
+      if (!result.success) {
+        wx.showToast({
+          title: result.message || "删除失败，请稍后重试。",
+          icon: "none"
+        });
+        return;
+      }
+
+      wx.showToast({ title: "已删除", icon: "success" });
+      this.setData({
+        drafts: (Array.isArray(this.data.drafts) ? this.data.drafts : [])
+          .filter((item) => item.id !== draftId)
+      });
+      this.refreshDrafts();
+    } catch (error) {
+      console.error("delete published draft error:", error);
+      wx.showToast({
+        title: getErrorMessage(error, "删除失败，请稍后重试。"),
+        icon: "none"
+      });
+    } finally {
+      this.deletingDraftId = null;
+    }
+  },
+
   loadMoreDrafts() {
     if (this.data.draftsHasMore && !this.data.draftsLoading) {
       this.loadDrafts({ append: true });

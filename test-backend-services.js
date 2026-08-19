@@ -2283,11 +2283,11 @@ async function testContentDetail() {
     mode: "text"
   });
 
-  assert.strictEqual(missingSignedImage.success, false);
-  assert.strictEqual(
-    missingSignedImage.code,
-    "CONTENT_ASSET_SIGN_FAILED"
-  );
+  assert.strictEqual(missingSignedImage.success, true);
+  const missingImageBlock = missingSignedImage.content.sections[0].blocks[1];
+  assert.strictEqual(missingImageBlock.type, "image");
+  assert.strictEqual(missingImageBlock.imageUnavailable, true);
+  assert.strictEqual(missingImageBlock.src, undefined);
 
   const safeCover = "cloud://env-id/published/images/story-cover.png";
   const safeCoverHarness = createContentDetailHarness({

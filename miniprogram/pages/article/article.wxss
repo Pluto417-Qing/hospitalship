@@ -38,6 +38,13 @@ page {
   line-height: 1.45;
 }
 
+.article-subtitle {
+  margin-top: 10rpx;
+  color: #666666;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
 .cover-card {
   height: 500rpx;
   margin-top: 28rpx;
@@ -118,6 +125,37 @@ page {
   font-size: 23rpx;
   line-height: 1.6;
   text-align: center;
+}
+
+.inline-image-placeholder {
+  width: 100%;
+  min-height: 220rpx;
+  margin: 26rpx 0 30rpx;
+  padding: 30rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #8a8a8a;
+  background: #f2f2f2;
+  border-radius: 10rpx;
+  font-size: 23rpx;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+.placeholder-mark {
+  width: 72rpx;
+  height: 72rpx;
+  margin-bottom: 10rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background: #c9c9c9;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  font-weight: 600;
 }
 
 .health-disclaimer {

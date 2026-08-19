@@ -265,7 +265,21 @@
           </view>
           <view wx:if="{{item.issueSummary}}" class="draft-issue">{{item.issueSummary}}</view>
         </view>
-        <text class="item-arrow">›</text>
+        <view class="draft-actions">
+          <text
+            wx:if="{{item.state === 'published' && capabilities.drafts}}"
+            class="draft-edit"
+            catchtap="reopenPublishedDraft"
+            data-draft-id="{{item.id}}"
+          >编辑</text>
+          <text
+            wx:if="{{item.assetType === 'manuscript' && item.state === 'published' && capabilities.publish}}"
+            class="draft-delete"
+            catchtap="deletePublishedDraft"
+            data-draft-id="{{item.id}}"
+          >删除</text>
+          <text class="item-arrow">›</text>
+        </view>
       </view>
       <button wx:if="{{draftsHasMore}}" class="load-more-button" disabled="{{draftsLoading}}" bindtap="loadMoreDrafts">{{draftsLoading ? "加载中" : "加载更多草稿"}}</button>
     </view>

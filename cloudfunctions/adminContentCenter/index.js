@@ -6203,7 +6203,7 @@ async function publishPreparedSpecialTopicFast({
       return {
         success: false,
         code: "TARGET_REVISION_CONFLICT",
-        message: "目标内容已发布新版本，请重新创建草稿"
+        message: "目标内容已发布新版本，请重新打开草稿编辑后再发布"
       };
     }
 
@@ -6278,13 +6278,19 @@ async function publishPreparedSpecialTopicFast({
     });
     const uploadId =
       normalizeText(draft.sourceUploadId, 32).toLowerCase() || draftId;
-    await transaction.collection("adminUploads").doc(uploadId).update({
-      data: {
-        reviewStatus: "published",
-        publicationStatus: "published",
-        updateTime: now
-      }
-    });
+    const uploadReference = transaction
+      .collection("adminUploads")
+      .doc(uploadId);
+    const currentUpload = await getDocumentOrNull(uploadReference);
+    if (currentUpload) {
+      await uploadReference.update({
+        data: {
+          reviewStatus: "published",
+          publicationStatus: "published",
+          updateTime: now
+        }
+      });
+    }
 
     return {
       success: true,
@@ -6613,7 +6619,7 @@ async function publishDraft(event, admin, openid) {
       return {
         success: false,
         code: "TARGET_REVISION_CONFLICT",
-        message: "目标内容已发布新版本，请重新创建草稿"
+        message: "目标内容已发布新版本，请重新打开草稿编辑后再发布"
       };
     }
     if (
@@ -6623,7 +6629,7 @@ async function publishDraft(event, admin, openid) {
       return {
         success: false,
         code: "ASSET_REVISION_CONFLICT",
-        message: "目标资源已发布新版本，请重新创建草稿"
+        message: "目标资源已发布新版本，请重新打开草稿编辑后再发布"
       };
     }
     if (draft.assetType === "manuscript" && target) {
@@ -6693,6 +6699,23 @@ async function publishDraft(event, admin, openid) {
           message: "已发布文章不能在普通覆盖中变更整书归属"
         };
       }
+      const audioTrackReference = transaction
+        .collection("audioTracks")
+        .doc(`${draft.targetId}-primary`);
+      const existingAudioTrack = await getDocumentOrNull(audioTrackReference);
+      const preserveAudio = Boolean(
+        target &&
+        target.audioStatus === "published" &&
+        Number(target.publishedAudioTrackCount) > 0 &&
+        existingAudioTrack &&
+        existingAudioTrack.status === "published" &&
+        normalizeText(existingAudioTrack.contentId, 64) === draft.targetId &&
+        (
+          !normalizeText(target.audioRevision, 128) ||
+          normalizeText(existingAudioTrack.audioRevision, 128) ===
+            normalizeText(target.audioRevision, 128)
+        )
+      );
       await targetReference.set({
         data: {
           contentId: draft.targetId,
@@ -6712,9 +6735,14 @@ async function publishDraft(event, admin, openid) {
           status: "published",
           reviewStatus: "approved",
           accessPolicy: { text: "member", audio: "member" },
-          audioStatus: "draft",
-          audioRevision: "",
-          publishedAudioTrackCount: 0,
+          audioStatus: preserveAudio ? "published" : "draft",
+          audioRevision: preserveAudio
+            ? normalizeText(target.audioRevision, 128)
+            : "",
+          publishedAudioTrackCount: preserveAudio
+            ? Math.min(Number(target.publishedAudioTrackCount) || 0, 20)
+            : 0,
+          audio: preserveAudio && target.audio ? target.audio : null,
           pendingReviewCount: 0,
           sourceDraftId: draftId,
           publishedAt: now,
@@ -6722,6 +6750,14 @@ async function publishDraft(event, admin, openid) {
           schemaVersion: 1
         }
       });
+      if (preserveAudio) {
+        await audioTrackReference.update({
+          data: {
+            contentRevision: draft.revision,
+            updateTime: now
+          }
+        });
+      }
     } else if (draft.assetType === "audio") {
       if (!target || target.status !== "published" || !currentTargetRevision) {
         return {
@@ -6945,6 +6981,7 @@ async function publishDraft(event, admin, openid) {
       ...draft,
       state: "published",
       draftVersion: nextVersion,
+      basePublishedRevision: draft.revision,
       publication,
       publicationPreparation: null,
       lastMutation: createLastMutation("publishDraft", mutation.requestId, requestHash),
@@ -6954,6 +6991,7 @@ async function publishDraft(event, admin, openid) {
       data: {
         state: "published",
         draftVersion: nextVersion,
+        basePublishedRevision: draft.revision,
         publication,
         publicationPreparation: null,
         lastMutation: updated.lastMutation,
@@ -6961,13 +6999,15 @@ async function publishDraft(event, admin, openid) {
       }
     });
     if (!isStructuredEditorialAsset(draft.assetType)) {
-      await uploadReference.update({
-        data: {
-          reviewStatus: "published",
-          publicationStatus: publication.status,
-          updateTime: now
-        }
-      });
+      if (upload) {
+        await uploadReference.update({
+          data: {
+            reviewStatus: "published",
+            publicationStatus: publication.status,
+            updateTime: now
+          }
+        });
+      }
     }
     return {
       success: true,
@@ -7053,6 +7093,137 @@ async function deletePublishedContent(event, admin, openid) {
     success: true,
     contentId
   };
+}
+
+async function reopenDraftForEditing(event, admin, openid) {
+  const draftId = normalizeText(event.draftId, 32).toLowerCase();
+  if (!DRAFT_ID_PATTERN.test(draftId)) {
+    return { success: false, code: "INVALID_DRAFT_ID", message: "草稿编号无效" };
+  }
+  const mutation = validateMutationRequest(event);
+  if (!mutation.success) return mutation;
+  const requestHash = mutationHash(
+    "reopenDraftForEditing",
+    event,
+    ["draftId"]
+  );
+
+  const rawResult = await db.runTransaction(async (transaction) => {
+    const adminReference = transaction
+      .collection("adminAccounts")
+      .doc(admin.account._id);
+    const draftReference = transaction
+      .collection("adminContentDrafts")
+      .doc(draftId);
+    const uploadReference = transaction
+      .collection("adminUploads")
+      .doc(draftId);
+    const currentAdmin = await getDocumentOrNull(adminReference);
+    const draft = await getDocumentOrNull(draftReference);
+    const transactionalAdmin = {
+      account: currentAdmin,
+      roles: getRoles(currentAdmin)
+    };
+    if (
+      !isAuthorizedAccount(currentAdmin, openid) ||
+      !hasAnyRole(currentAdmin, UPLOAD_ROLES) ||
+      !canReadDraft(transactionalAdmin, draft)
+    ) {
+      return { success: false, code: "DRAFT_NOT_FOUND", message: "内容草稿不存在" };
+    }
+    const replay = replayMutation(
+      draft,
+      "reopenDraftForEditing",
+      mutation.requestId,
+      requestHash
+    );
+    if (replay) return replay;
+    if (draft.state !== "published") {
+      return {
+        success: false,
+        code: "DRAFT_STATE_CONFLICT",
+        message: "只有已发布草稿可以重新打开编辑"
+      };
+    }
+
+    const targetCollection = targetCollectionForAsset(draft.assetType);
+    const targetReference = targetCollection
+      ? transaction.collection(targetCollection).doc(draft.targetId)
+      : null;
+    const target = targetReference
+      ? await getDocumentOrNull(targetReference)
+      : null;
+    const currentTargetRevision = publishedRevisionForTarget(
+      draft.assetType,
+      target
+    );
+    const currentAssetRevision = assetRevisionForTarget(
+      draft.assetType,
+      target
+    );
+    const now = db.serverDate();
+    const nextVersion = Number(draft.draftVersion) + 1;
+    const updated = {
+      ...draft,
+      state: "editing",
+      draftVersion: nextVersion,
+      basePublishedRevision: currentTargetRevision,
+      baseAssetRevision: currentAssetRevision,
+      snapshotHash: "",
+      review: {
+        round: 0,
+        submittedDraftVersion: 0,
+        submittedSnapshotHash: "",
+        submittedBy: "",
+        submittedAt: null,
+        decision: "",
+        reviewedBy: "",
+        reviewedAt: null,
+        note: ""
+      },
+      publication: {
+        status: "editing",
+        publishedAt:
+          draft.publication && draft.publication.publishedAt || null
+      },
+      publicationPreparation: null,
+      lastMutation: createLastMutation(
+        "reopenDraftForEditing",
+        mutation.requestId,
+        requestHash
+      ),
+      updateTime: now
+    };
+    await draftReference.update({
+      data: {
+        state: "editing",
+        draftVersion: nextVersion,
+        basePublishedRevision: currentTargetRevision,
+        baseAssetRevision: currentAssetRevision,
+        snapshotHash: "",
+        review: updated.review,
+        publication: updated.publication,
+        publicationPreparation: null,
+        lastMutation: updated.lastMutation,
+        updateTime: now
+      }
+    });
+    if (!isStructuredEditorialAsset(draft.assetType)) {
+      const currentUpload = await getDocumentOrNull(uploadReference);
+      if (currentUpload) {
+        await uploadReference.update({
+          data: { reviewStatus: "editing", updateTime: now }
+        });
+      }
+    }
+    return {
+      success: true,
+      alreadyApplied: false,
+      draft: publicDraft(updated)
+    };
+  });
+
+  return unwrapTransactionResult(rawResult);
 }
 
 function getHomeAssetCloudPath(asset) {
@@ -7420,6 +7591,10 @@ exports.main = async (event = {}) => {
 
     if (action === "deletePublishedContent") {
       return await deletePublishedContent(event, admin, openid);
+    }
+
+    if (action === "reopenDraftForEditing") {
+      return await reopenDraftForEditing(event, admin, openid);
     }
 
     return {

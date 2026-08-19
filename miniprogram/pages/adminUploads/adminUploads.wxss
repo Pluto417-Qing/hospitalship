@@ -883,6 +883,32 @@ page {
   font-size: 38rpx;
 }
 
+.draft-actions {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.draft-delete {
+  margin-left: 12rpx;
+  padding: 8rpx 16rpx;
+  color: #a52e29;
+  border: 1rpx solid #c3544d;
+  border-radius: 999rpx;
+  font-size: 20rpx;
+  line-height: 1.4;
+}
+
+.draft-edit {
+  margin-left: 12rpx;
+  padding: 8rpx 16rpx;
+  color: #2975a9;
+  border: 1rpx solid #7ebdee;
+  border-radius: 999rpx;
+  font-size: 20rpx;
+  line-height: 1.4;
+}
+
 .draft-issue {
   margin-top: 11rpx;
   overflow: hidden;

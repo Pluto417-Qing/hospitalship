@@ -1442,6 +1442,10 @@ async function testRolesEditingConflictsIdempotencyAndIsolation() {
   assert.strictEqual(published.draft.state, "published");
   assert.strictEqual(database.store("contents").get("article-one").contentId, "article-one");
   assert.strictEqual(
+    database.store("adminContentDrafts").get(IDS.primary).basePublishedRevision,
+    database.store("contents").get("article-one").currentRevision
+  );
+  assert.strictEqual(
     database.store("contents").get("article-one").displayDate,
     "2026-07-14"
   );
@@ -3158,6 +3162,420 @@ async function testDeletePublishedContent() {
   assert.strictEqual(referencedDatabase.store("contents").has(contentId), true);
 }
 
+async function testReopenPublishedDraftForEditing() {
+  const draftId = IDS.primary;
+  const publishedDraft = {
+    _id: draftId,
+    draftId,
+    kind: "content",
+    assetType: "manuscript",
+    targetId: "article-reopen",
+    ownerAdminId: "uploader-a",
+    sourceUploadId: draftId,
+    revision: "r-" + "a".repeat(32),
+    state: "published",
+    draftVersion: 3,
+    snapshotHash: "1".repeat(64),
+    payload: {
+      contentId: "article-reopen",
+      bookId: "china-hospital-ship",
+      title: "待编辑书稿",
+      sourceLabel: "管理员上传",
+      department: "胸外科",
+      catalogViews: ["book", "summary"],
+      displayDate: "2026-07-14",
+      sortOrder: 0,
+      sections: [{ kind: "story", heading: "", paragraphs: ["正文"] }],
+      structureConfirmed: true
+    },
+    issues: [],
+    review: {
+      round: 1,
+      submittedDraftVersion: 2,
+      submittedSnapshotHash: "1".repeat(64),
+      decision: "approve",
+      note: "",
+      submittedAt: new Date(),
+      reviewedAt: new Date()
+    },
+    publication: {
+      status: "published",
+      publishedAt: new Date()
+    },
+    createdAt: new Date(),
+    updateTime: new Date(),
+    schemaVersion: 1
+  };
+  const database = new MemoryDatabase({
+    adminAccounts: seedAccounts(),
+    adminContentDrafts: [publishedDraft],
+    contents: [
+      {
+        _id: "article-reopen",
+        contentId: "article-reopen",
+        bookId: "china-hospital-ship",
+        currentRevision: "r-" + "a".repeat(32),
+        title: "待编辑书稿",
+        status: "published",
+        schemaVersion: 1
+      }
+    ],
+    adminUploads: [
+      {
+        _id: draftId,
+        draftId,
+        ownerAdminId: "uploader-a",
+        assetType: "manuscript",
+        relatedId: "article-reopen",
+        reviewStatus: "published",
+        updateTime: new Date(),
+        schemaVersion: 1
+      }
+    ]
+  });
+  const { uploaderA, uploaderB } = mains(database);
+  const reopenEvent = {
+    action: "reopenDraftForEditing",
+    draftId,
+    requestId: "reopen-published-0001"
+  };
+
+  const denied = await uploaderB(reopenEvent);
+  assert.strictEqual(denied.code, "DRAFT_NOT_FOUND");
+
+  const reopened = await uploaderA(reopenEvent);
+  assert.strictEqual(reopened.success, true);
+  assert.strictEqual(reopened.draft.state, "editing");
+  assert.strictEqual(reopened.draft.draftVersion, 4);
+  assert.strictEqual(
+    reopened.draft.basePublishedRevision,
+    "r-" + "a".repeat(32)
+  );
+  assert.strictEqual(reopened.draft.snapshotHash, "");
+  assert.strictEqual(reopened.draft.review.round, 0);
+  assert.strictEqual(
+    database.store("adminContentDrafts").get(draftId).state,
+    "editing"
+  );
+  assert.strictEqual(
+    database.store("adminContentDrafts").get(draftId).basePublishedRevision,
+    "r-" + "a".repeat(32)
+  );
+
+  const replay = await uploaderA(reopenEvent);
+  assert.strictEqual(replay.success, true);
+  assert.strictEqual(replay.alreadyApplied, true);
+
+  const conflict = await uploaderA({
+    ...reopenEvent,
+    requestId: "reopen-published-0002"
+  });
+  assert.strictEqual(conflict.code, "DRAFT_STATE_CONFLICT");
+
+  const saved = await uploaderA({
+    action: "saveDraft",
+    draftId,
+    expectedDraftVersion: 4,
+    patch: { title: "重新编辑后的书稿" },
+    requestId: "reopen-save-0001"
+  });
+  assert.strictEqual(saved.success, true);
+  assert.strictEqual(saved.draft.draftVersion, 5);
+  assert.strictEqual(saved.draft.state, "editing");
+  assert.strictEqual(saved.draft.payload.title, "重新编辑后的书稿");
+}
+
+async function testManuscriptOverwritePreservesPublishedAudio() {
+  const oldRevision = `r-${"3".repeat(32)}`;
+  const draftId = "a2".repeat(16);
+  const contentId = "article-audio-keep";
+  const audioFileID =
+    `cloud://test-environment/published/audio/${contentId}/assets/${draftId}/primary.mp3`;
+  const publishedContent = {
+    _id: contentId,
+    contentId,
+    bookId: "china-hospital-ship",
+    currentRevision: oldRevision,
+    audioStatus: "published",
+    audioRevision: "r-audio-keep-1",
+    publishedAudioTrackCount: 1,
+    audio: {
+      trackId: `${contentId}-primary`,
+      title: "原有配音",
+      narrator: "谢林彤",
+      durationMs: 443925
+    },
+    pendingReviewCount: 0,
+    title: "Old title",
+    sections: [{ paragraphs: ["Old body"] }],
+    status: "published",
+    reviewStatus: "approved",
+    schemaVersion: 1
+  };
+  const database = new MemoryDatabase({
+    adminAccounts: seedAccounts(),
+    adminUploads: [validatedUpload({ id: draftId, relatedId: contentId })],
+    contents: [publishedContent],
+    audioTracks: [
+      {
+        _id: `${contentId}-primary`,
+        contentId,
+        contentRevision: oldRevision,
+        audioRevision: "r-audio-keep-1",
+        title: "原有配音",
+        narrator: "谢林彤",
+        language: "zh-CN",
+        mimeType: "audio/mpeg",
+        durationSeconds: 443.925,
+        bitrate: 128000,
+        trackNo: 1,
+        fileID: audioFileID,
+        status: "published",
+        reviewStatus: "approved",
+        schemaVersion: 1
+      }
+    ]
+  });
+  const files = storageFilesFor(database);
+  const { uploaderA, reviewer, admin } = mains(database, files);
+
+  const approved = await createApprovedDraft({
+    uploader: uploaderA,
+    reviewer,
+    uploadId: draftId,
+    requestPrefix: "audio-keep",
+    expectedBasePublishedRevision: oldRevision,
+    expectedBaseAssetRevision: ""
+  });
+
+  const published = await admin({
+    action: "publishDraft",
+    draftId,
+    expectedSnapshotHash: approved.snapshotHash,
+    expectedTargetRevision: oldRevision,
+    requestId: "audio-keep-publish-0001"
+  });
+  assert.strictEqual(published.success, true);
+
+  const storedContent = database.store("contents").get(contentId);
+  assert.strictEqual(storedContent.audioStatus, "published");
+  assert.strictEqual(storedContent.audioRevision, "r-audio-keep-1");
+  assert.strictEqual(storedContent.publishedAudioTrackCount, 1);
+  assert.strictEqual(storedContent.audio.trackId, `${contentId}-primary`);
+
+  const storedTrack = database.store("audioTracks").get(`${contentId}-primary`);
+  assert.strictEqual(storedTrack.contentRevision, storedContent.currentRevision);
+  assert.strictEqual(storedTrack.audioRevision, "r-audio-keep-1");
+  assert.strictEqual(storedTrack.fileID, audioFileID);
+}
+
+async function testReopenAudioDraftForEditing() {
+  const contentId = "audio-article-reopen";
+  const draftId = "7a".repeat(16);
+  const contentRevision = `r-${"c".repeat(32)}`;
+  const audioRevision = `r-${"d".repeat(32)}`;
+  const preparedCloudPath =
+    `published/audio/${contentId}/assets/${draftId}/primary.mp3`;
+  const preparedFileID = `cloud://test-environment/${preparedCloudPath}`;
+  const upload = validatedUpload({
+    id: draftId,
+    assetType: "audio",
+    relatedId: contentId
+  });
+  upload.draftId = draftId;
+  const publishedDraft = {
+    _id: draftId,
+    draftId,
+    kind: "audio",
+    assetType: "audio",
+    targetId: contentId,
+    ownerAdminId: "uploader-a",
+    sourceUploadId: draftId,
+    sourceTransportMode: "https-broker",
+    sourceMode: "original-file",
+    originalFileUploadRequired: true,
+    rawFileValidationStatus: "validated",
+    preparedFileID,
+    preparedCloudPath,
+    extension: ".mp3",
+    mimeType: "audio/mpeg",
+    revision: `r-${draftId}`,
+    basePublishedRevision: contentRevision,
+    baseAssetRevision: audioRevision,
+    draftVersion: 5,
+    state: "published",
+    snapshotHash: "2".repeat(64),
+    payload: {
+      contentId,
+      title: "已发布配音",
+      narrator: "张三",
+      language: "zh-CN",
+      mimeType: "audio/mpeg",
+      durationSeconds: 91.5,
+      bitrate: 128000,
+      trackNo: 1
+    },
+    issues: [],
+    sourceFingerprints: [{
+      uploadId: draftId,
+      sha256: "",
+      algorithm: "none",
+      scope: "exact-path-object-exists-admin-attestation",
+      rawFileVerified: false,
+      declaredBytes: 4096
+    }],
+    inspection: {
+      schemaVersion: 1,
+      format: "mp3-admin-attested",
+      structuredContentValid: false,
+      rawFileSignatureValid: false,
+      needsManualStructure: true,
+      embeddedImageCount: 0,
+      metadata: {
+        exactReservedPath: true,
+        objectExists: true,
+        actualBytesVerified: false,
+        sha256Verified: false,
+        structureVerified: false
+      }
+    },
+    review: {
+      round: 1,
+      submittedDraftVersion: 3,
+      submittedSnapshotHash: "2".repeat(64),
+      decision: "approve",
+      note: "",
+      submittedAt: new Date(),
+      reviewedAt: new Date()
+    },
+    publication: {
+      status: "published",
+      previousRevision: contentRevision,
+      publishedRevision: `r-${draftId}`,
+      publishedAt: new Date()
+    },
+    createdAt: new Date(),
+    updateTime: new Date(),
+    schemaVersion: 1
+  };
+  const database = new MemoryDatabase({
+    adminAccounts: seedAccounts(),
+    adminUploads: [upload],
+    adminContentDrafts: [publishedDraft],
+    contents: [
+      {
+        _id: contentId,
+        contentId,
+        bookId: "china-hospital-ship",
+        currentRevision: contentRevision,
+        title: "已发布正文",
+        status: "published",
+        reviewStatus: "approved",
+        pendingReviewCount: 0,
+        audioStatus: "published",
+        audioRevision,
+        publishedAudioTrackCount: 1,
+        audio: {
+          trackId: `${contentId}-primary`,
+          title: "已发布配音",
+          narrator: "张三",
+          durationMs: 91500
+        }
+      }
+    ],
+    audioTracks: [
+      {
+        _id: `${contentId}-primary`,
+        contentId,
+        contentRevision,
+        audioRevision,
+        title: "已发布配音",
+        narrator: "张三",
+        language: "zh-CN",
+        mimeType: "audio/mpeg",
+        durationSeconds: 91.5,
+        bitrate: 128000,
+        trackNo: 1,
+        fileID: preparedFileID,
+        status: "published",
+        reviewStatus: "approved",
+        schemaVersion: 1
+      }
+    ]
+  });
+  const files = storageFilesFor(database);
+  files.add(preparedFileID);
+  const { uploaderA, reviewer, admin } = mains(database, files);
+
+  const reopened = await uploaderA({
+    action: "reopenDraftForEditing",
+    draftId,
+    requestId: "audio-reopen-0001"
+  });
+  assert.strictEqual(reopened.success, true, JSON.stringify(reopened));
+  assert.strictEqual(reopened.draft.state, "editing");
+  assert.strictEqual(
+    reopened.draft.basePublishedRevision,
+    contentRevision
+  );
+  assert.strictEqual(
+    reopened.draft.baseAssetRevision,
+    audioRevision,
+    "reopen must refresh the audio baseline so overwrite publish can proceed"
+  );
+
+  const saved = await uploaderA({
+    action: "saveDraft",
+    draftId,
+    expectedDraftVersion: reopened.draft.draftVersion,
+    patch: { narrator: "李四" },
+    requestId: "audio-reopen-save-0001"
+  });
+  assert.strictEqual(saved.success, true, JSON.stringify(saved));
+
+  const submitted = await uploaderA({
+    action: "submitDraft",
+    draftId,
+    expectedDraftVersion: saved.draft.draftVersion,
+    requestId: "audio-reopen-submit-0001"
+  });
+  assert.strictEqual(submitted.success, true, JSON.stringify(submitted));
+
+  const preview = await reviewer({
+    action: "getDraftAssetPreview",
+    draftId,
+    expectedSnapshotHash: submitted.draft.snapshotHash
+  });
+  assert.strictEqual(preview.success, true, JSON.stringify(preview));
+
+  const approved = await reviewer({
+    action: "reviewDraft",
+    draftId,
+    expectedSnapshotHash: submitted.draft.snapshotHash,
+    decision: "approve",
+    note: "",
+    requestId: "audio-reopen-review-0001"
+  });
+  assert.strictEqual(approved.success, true, JSON.stringify(approved));
+
+  const published = await admin({
+    action: "publishDraft",
+    draftId,
+    expectedSnapshotHash: submitted.draft.snapshotHash,
+    expectedTargetRevision: contentRevision,
+    requestId: "audio-reopen-publish-0001"
+  });
+  assert.strictEqual(published.success, true, JSON.stringify(published));
+  assert.strictEqual(
+    database.store("contents").get(contentId).audioRevision,
+    `r-${draftId}`
+  );
+  assert.strictEqual(
+    database.store("audioTracks").get(`${contentId}-primary`).narrator,
+    "李四"
+  );
+}
+
 async function main() {
   const originalBrokerUrl = process.env[BROKER_ENV_KEY];
   process.env[BROKER_ENV_KEY] = BROKER_URL;
@@ -3177,6 +3595,9 @@ async function main() {
     await testDirectManuscriptEmbeddedImagesSurviveDraftAndPublish();
     await testStructuredEditorialLifecycleAndReaderCompatibility();
     await testDeletePublishedContent();
+    await testReopenPublishedDraftForEditing();
+    await testManuscriptOverwritePreservesPublishedAudio();
+    await testReopenAudioDraftForEditing();
     console.log(
       "Admin content workflow tests passed: roles, draft lifecycle, conflicts, " +
       "idempotency, isolation, broker confirmation, stable overwrite, reader " +
