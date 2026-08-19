@@ -103,20 +103,32 @@
           >重试保存</button>
         </view>
 
-        <view class="option-list" wx:elif="{{!question.answered}}">
-          <view
-            class="option-item {{question.saving && question.pendingSelectedKey === option.key ? 'is-saving' : ''}}"
-            wx:for="{{question.options}}"
-            wx:for-item="option"
-            wx:key="key"
-            role="button"
-            data-question-id="{{question.id}}"
-            data-option-key="{{option.key}}"
-            aria-label="{{option.text}}"
-            bindtap="chooseAnswer"
-          >
-            <text class="option-item-label">{{option.label}}</text>
-            <text class="option-item-text">{{question.saving && question.pendingSelectedKey === option.key ? '保存中…' : option.text}}</text>
+        <view wx:elif="{{!question.answered}}">
+          <view class="option-content">
+            <view
+              class="option-content-item"
+              wx:for="{{question.options}}"
+              wx:for-item="option"
+              wx:key="key"
+            >
+              <text class="option-content-label">{{option.label}}</text>
+              <text class="option-content-text">{{option.text}}</text>
+            </view>
+          </view>
+          <view class="option-row">
+            <view
+              class="option-btn {{question.saving && question.pendingSelectedKey === option.key ? 'is-saving' : ''}}"
+              wx:for="{{question.options}}"
+              wx:for-item="option"
+              wx:key="key"
+              role="button"
+              data-question-id="{{question.id}}"
+              data-option-key="{{option.key}}"
+              aria-label="{{option.text}}"
+              bindtap="chooseAnswer"
+            >
+              {{question.saving && question.pendingSelectedKey === option.key ? '保存中…' : ('我' + option.label)}}
+            </view>
           </view>
         </view>
 

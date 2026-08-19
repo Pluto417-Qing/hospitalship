@@ -165,20 +165,30 @@ function testTransactionOperationsRemainSequential() {
     "transaction concurrency guard must detect Promise.all inside callbacks"
   );
 
-  const source = fs.readFileSync(FUNCTION_PATH, "utf8");
-  const violations = findTransactionPromiseAllViolations(source);
-  assert.strictEqual(
-    violations.length,
-    0,
-    "CloudBase transaction operations must stay sequential; Promise.all inside " +
-      "db.runTransaction can fail with TransactionBusy. Violations: " +
-      violations
-        .map(
-          ({ transactionLine, promiseAllLine }) =>
-            `transaction line ${transactionLine}, Promise.all line ${promiseAllLine}`
-        )
-        .join("; ")
-  );
+  const functionRoot = path.join(__dirname, "cloudfunctions");
+  const functionFiles = fs
+    .readdirSync(functionRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => path.join(functionRoot, entry.name, "index.js"))
+    .filter((filename) => fs.existsSync(filename));
+
+  for (const filename of functionFiles) {
+    const source = fs.readFileSync(filename, "utf8");
+    const violations = findTransactionPromiseAllViolations(source);
+    assert.strictEqual(
+      violations.length,
+      0,
+      `CloudBase transaction operations must stay sequential; Promise.all inside ` +
+        `db.runTransaction can fail with TransactionBusy (${path.relative(__dirname, filename)}). ` +
+        `Violations: ` +
+        violations
+          .map(
+            ({ transactionLine, promiseAllLine }) =>
+              `transaction line ${transactionLine}, Promise.all line ${promiseAllLine}`
+          )
+          .join("; ")
+    );
+  }
 }
 
 function clone(value) {

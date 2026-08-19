@@ -399,35 +399,23 @@ exports.main = async (event = {}) => {
             .collection("rewardLedger")
             .doc(legacyEarnedState.reward._id)
         : null;
-      const reads = [
-        getDocumentOrNull(sessionDocument),
-        getDocumentOrNull(userDocument),
-        getDocumentOrNull(contentDocument),
-        getDocumentOrNull(stateDocument),
-        getDocumentOrNull(recordDocument),
-        getDocumentOrNull(rewardDocument),
-        entitlementDocument
-          ? getDocumentOrNull(entitlementDocument)
-          : Promise.resolve(null),
-        legacyRecordDocument
-          ? getDocumentOrNull(legacyRecordDocument)
-          : Promise.resolve(null),
-        legacyRewardDocument
-          ? getDocumentOrNull(legacyRewardDocument)
-          : Promise.resolve(null)
-      ];
-
-      const [
-        transactionSession,
-        transactionUser,
-        transactionContentDocument,
-        readingState,
-        existingRecord,
-        existingReward,
-        existingEntitlement,
-        transactionLegacyRecord,
-        transactionLegacyReward
-      ] = await Promise.all(reads);
+      const transactionSession = await getDocumentOrNull(sessionDocument);
+      const transactionUser = await getDocumentOrNull(userDocument);
+      const transactionContentDocument = await getDocumentOrNull(
+        contentDocument
+      );
+      const readingState = await getDocumentOrNull(stateDocument);
+      const existingRecord = await getDocumentOrNull(recordDocument);
+      const existingReward = await getDocumentOrNull(rewardDocument);
+      const existingEntitlement = entitlementDocument
+        ? await getDocumentOrNull(entitlementDocument)
+        : null;
+      const transactionLegacyRecord = legacyRecordDocument
+        ? await getDocumentOrNull(legacyRecordDocument)
+        : null;
+      const transactionLegacyReward = legacyRewardDocument
+        ? await getDocumentOrNull(legacyRewardDocument)
+        : null;
       const sessionValidation = validateSession(
         transactionSession,
         member.userId

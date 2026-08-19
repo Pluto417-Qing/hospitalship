@@ -909,13 +909,10 @@ async function openTopic(openid, event) {
     const unlockReference = transaction
       .collection("specialTopicUnlocks")
       .doc(unlockId);
-    const [session, user, currentTopicDocument, existingUnlock] =
-      await Promise.all([
-        readTransactionDocument(sessionReference),
-        readTransactionDocument(userReference),
-        readTransactionDocument(topicReference),
-        readTransactionDocument(unlockReference)
-      ]);
+    const session = await readTransactionDocument(sessionReference);
+    const user = await readTransactionDocument(userReference);
+    const currentTopicDocument = await readTransactionDocument(topicReference);
+    const existingUnlock = await readTransactionDocument(unlockReference);
 
     if (
       !isActiveSession(session, openid) ||

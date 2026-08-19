@@ -223,11 +223,11 @@ page {
   line-height: 40rpx;
 }
 
-.option-list {
+.option-content {
   margin-top: 28rpx;
 }
 
-.option-item {
+.option-content-item {
   display: flex;
   align-items: baseline;
   padding: 18rpx 4rpx;
@@ -237,11 +237,7 @@ page {
   line-height: 1.5;
 }
 
-.option-item.is-saving {
-  opacity: 0.6;
-}
-
-.option-item-label {
+.option-content-label {
   flex-shrink: 0;
   margin-right: 18rpx;
   color: #2975a9;
@@ -249,9 +245,42 @@ page {
   font-weight: 600;
 }
 
-.option-item-text {
+.option-content-text {
   flex: 1;
   word-break: break-all;
+}
+
+.option-row {
+  margin-top: 28rpx;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  row-gap: 18rpx;
+}
+
+.option-btn {
+  width: 238rpx;
+  min-width: 238rpx;
+  max-width: 238rpx;
+  height: 78rpx;
+  margin: 0;
+  padding: 0 10rpx;
+  color: #ffffff;
+  background: #2975a9;
+  border-radius: 20rpx;
+  flex: none;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "PingFang SC", sans-serif;
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 58rpx;
+}
+
+.option-btn.is-saving {
+  opacity: 0.65;
 }
 
 .save-error {
