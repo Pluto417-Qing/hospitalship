@@ -406,6 +406,7 @@ function normalizeContent(document, requestedView) {
     title,
     subtitle: normalizeText(document.subtitle, 240),
     sourceLabel: normalizeText(document.sourceLabel, 120),
+    displayDate: normalizeText(document.displayDate, 32),
     status: "published",
     accessPolicy: {
       text: "member",

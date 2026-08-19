@@ -368,6 +368,7 @@ function payloadToForm(draft) {
     const views = Array.isArray(payload.catalogViews) ? payload.catalogViews : [];
     form.catalogBook = views.includes("book");
     form.catalogSummary = views.includes("summary");
+    form.displayDate = normalizeText(payload.displayDate, 32);
     form.sections = ensureSections(payload.sections);
   } else if (assetType === "special-topic") {
     form.entries = ensureTopicEntries(payload.entries);
@@ -453,6 +454,7 @@ function buildPatch(assetType, form, targetId) {
       sourceLabel: normalizeText(source.sourceLabel, 120),
       department: normalizeText(source.department, 80),
       catalogViews,
+      displayDate: normalizeText(source.displayDate, 32),
       sortOrder: Math.trunc(toFiniteNumber(source.sortOrder, 0)),
       coverFileID: normalizeText(source.coverFileID, 2048),
       disclaimer: normalizeText(source.disclaimer, 1000),
@@ -570,7 +572,7 @@ function buildPatch(assetType, form, targetId) {
 
   if (assetType === "zhi-entry") {
     return {
-      eventAt: normalizeText(source.eventAt, 10),
+      eventAt: normalizeText(source.eventAt, 32),
       source: normalizeText(source.source, 120),
       label: normalizeText(source.label, 80),
       content: normalizeText(source.content, 2000)

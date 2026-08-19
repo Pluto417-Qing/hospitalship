@@ -158,10 +158,8 @@ exports.main = async (event = {}) => {
       const userId = normalizeText(session.userId, 128);
       const userDocument = transaction.collection("users").doc(userId);
       const contentDocument = transaction.collection("contents").doc(contentId);
-      const [user, content] = await Promise.all([
-        getDocumentOrNull(userDocument),
-        getDocumentOrNull(contentDocument)
-      ]);
+      const user = await getDocumentOrNull(userDocument);
+      const content = await getDocumentOrNull(contentDocument);
 
       if (
         !user ||

@@ -342,12 +342,15 @@ exports.main = async (event = {}) => {
       const existingGuardianDocuments = guardianUsers.map((user) =>
         transaction.collection("users").doc(user._id)
       );
-      const [existingUser, existingPhoneClaim, ...transactionGuardianUsers] =
-        await Promise.all([
-          getDocumentOrNull(userDocument),
-          getDocumentOrNull(phoneClaimDocument),
-          ...existingGuardianDocuments.map(getDocumentOrNull)
-        ]);
+      const existingUser = await getDocumentOrNull(userDocument);
+      const existingPhoneClaim = await getDocumentOrNull(phoneClaimDocument);
+      const transactionGuardianUsers = [];
+
+      for (const guardianDocument of existingGuardianDocuments) {
+        transactionGuardianUsers.push(
+          await getDocumentOrNull(guardianDocument)
+        );
+      }
 
       if (existingUser) {
         return guardianSlot === 0

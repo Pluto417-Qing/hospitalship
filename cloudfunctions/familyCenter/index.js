@@ -142,14 +142,12 @@ async function resolveActiveMember(openid) {
 }
 
 async function revalidateActiveMember(transaction, authentication) {
-  const [session, user] = await Promise.all([
-    readDocument(
-      transaction.collection("memberSessions").doc(authentication.sessionId)
-    ),
-    readDocument(
-      transaction.collection("users").doc(authentication.userId)
-    )
-  ]);
+  const session = await readDocument(
+    transaction.collection("memberSessions").doc(authentication.sessionId)
+  );
+  const user = await readDocument(
+    transaction.collection("users").doc(authentication.userId)
+  );
 
   if (
     !isUsableSession(session, authentication.openid) ||
@@ -474,10 +472,11 @@ async function acceptInvite(authentication, rawToken) {
     const inviteDocument = transaction
       .collection("familyInvites")
       .doc(tokenHash);
-    const [invite, acceptingUser] = await Promise.all([
-      readDocument(inviteDocument),
-      revalidateActiveMember(transaction, authentication)
-    ]);
+    const invite = await readDocument(inviteDocument);
+    const acceptingUser = await revalidateActiveMember(
+      transaction,
+      authentication
+    );
 
     if (!acceptingUser) {
       return loginRequiredResult();
@@ -608,10 +607,8 @@ async function acceptInvite(authentication, rawToken) {
     const acceptingCounterDocument = transaction
       .collection("familyRelationCounters")
       .doc(acceptingCounterId);
-    const [inviterCounter, acceptingCounter] = await Promise.all([
-      readDocument(inviterCounterDocument),
-      readDocument(acceptingCounterDocument)
-    ]);
+    const inviterCounter = await readDocument(inviterCounterDocument);
+    const acceptingCounter = await readDocument(acceptingCounterDocument);
     const inviterCount = Math.max(
       Number(inviterCounter && inviterCounter.activeCount) || 0,
       inviterRelationCount

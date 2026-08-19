@@ -250,7 +250,7 @@ Page({
         assetLabel: "少年志消息",
         title: cleanText(payload.label, 80) || "少年志消息",
         zhiEntry: {
-          eventAt: cleanText(payload.eventAt, 10),
+          eventAt: cleanText(payload.eventAt, 32),
           source: cleanText(payload.source, 120),
           label: cleanText(payload.label, 80),
           content: cleanText(payload.content, 2000)

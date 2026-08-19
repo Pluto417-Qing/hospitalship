@@ -33,6 +33,25 @@ function formatPublishedAt(value, fallback) {
   return `${date.getFullYear()}年${month}月${day}日`;
 }
 
+function formatDisplayDate(value) {
+  const text = String(value || "").trim();
+  const isoMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text);
+  if (isoMatch) {
+    return `${isoMatch[1]}年${isoMatch[2]}月${isoMatch[3]}日`;
+  }
+  if (/^(\d{4})年(\d{2})月(\d{2})日$/.test(text)) {
+    return text;
+  }
+  return "";
+}
+
+function formatSummaryDate(item) {
+  return (
+    formatDisplayDate(item && item.displayDate) ||
+    formatPublishedAt(item && item.publishedAt, item && item.sourceLabel)
+  );
+}
+
 function createDisplayItems(items, viewedIds) {
   return items.map((item, index) =>
     Object.assign({}, item, {
@@ -100,7 +119,7 @@ Page({
       .map((item) => ({
         id: item.id,
         bookName: "《中国医院船》",
-        dateLabel: formatPublishedAt(item.publishedAt, item.sourceLabel),
+        dateLabel: formatSummaryDate(item),
         title: item.title,
         available: true,
         viewed: Boolean(item.viewed)
@@ -165,7 +184,7 @@ Page({
       .map((item) => ({
         id: item.id,
         bookName: "《中国医院船》",
-        dateLabel: formatPublishedAt(item.publishedAt, item.sourceLabel),
+        dateLabel: formatSummaryDate(item),
         title: item.title,
         available: true,
         viewed: Boolean(item.viewed)

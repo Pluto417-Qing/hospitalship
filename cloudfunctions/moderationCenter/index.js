@@ -375,21 +375,14 @@ async function reviewRecord(event, admin, openid) {
           .collection("rewardLedger")
           .doc(legacyEarnedState.reward._id)
       : null;
-    const [
-      transactionAdmin,
-      record,
-      transactionLegacyRecord,
-      transactionLegacyReward
-    ] = await Promise.all([
-      getDocumentOrNull(adminDocument),
-      getDocumentOrNull(recordDocument),
-      legacyRecordDocument
-        ? getDocumentOrNull(legacyRecordDocument)
-        : Promise.resolve(null),
-      legacyRewardDocument
-        ? getDocumentOrNull(legacyRewardDocument)
-        : Promise.resolve(null)
-    ]);
+    const transactionAdmin = await getDocumentOrNull(adminDocument);
+    const record = await getDocumentOrNull(recordDocument);
+    const transactionLegacyRecord = legacyRecordDocument
+      ? await getDocumentOrNull(legacyRecordDocument)
+      : null;
+    const transactionLegacyReward = legacyRewardDocument
+      ? await getDocumentOrNull(legacyRewardDocument)
+      : null;
 
     if (!isAuthorizedAccount(transactionAdmin, openid)) {
       return {
@@ -611,12 +604,10 @@ async function reviewRecord(event, admin, openid) {
     const entitlementDocument = entitlementId
       ? transaction.collection("bookEntitlements").doc(entitlementId)
       : null;
-    const [existingReward, existingEntitlement] = await Promise.all([
-      getDocumentOrNull(rewardDocument),
-      entitlementDocument
-        ? getDocumentOrNull(entitlementDocument)
-        : Promise.resolve(null)
-    ]);
+    const existingReward = await getDocumentOrNull(rewardDocument);
+    const existingEntitlement = entitlementDocument
+      ? await getDocumentOrNull(entitlementDocument)
+      : null;
 
     validateExistingReward(existingReward, userId, contentId, recordId);
     validateExistingEntitlement(existingEntitlement, userId, bookId);

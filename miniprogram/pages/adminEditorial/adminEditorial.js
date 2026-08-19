@@ -101,7 +101,7 @@ function validateQuiz(form) {
 
 function buildZhiPayload(form) {
   return {
-    eventAt: cleanText(form.eventAt, 10),
+    eventAt: cleanText(form.eventAt, 32),
     source: cleanText(form.source, 120),
     label: cleanText(form.label, 80),
     content: cleanText(form.content, 2000)

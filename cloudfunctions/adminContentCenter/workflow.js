@@ -512,6 +512,14 @@ function normalizePayload(assetType, rawPayload, context = {}) {
           .map((item) => normalizeText(item, 20).toLowerCase())
           .filter((item) => CATALOG_VIEWS.has(item))))
       : [];
+    const rawDisplayDate = normalizeText(source.displayDate, 32);
+    const displayDate =
+      /^\d{4}-\d{2}-\d{2}$/.test(rawDisplayDate)
+        ? rawDisplayDate
+        : /^(\d{4})年(\d{2})月(\d{2})日$/.test(rawDisplayDate)
+          ? rawDisplayDate
+              .replace(/^(\d{4})年(\d{2})月(\d{2})日$/, "$1-$2-$3")
+          : "";
     const bookId = normalizeText(source.bookId, 64).toLowerCase();
 
     const embeddedAssets = normalizeEmbeddedAssets(
@@ -530,6 +538,7 @@ function normalizePayload(assetType, rawPayload, context = {}) {
       sourceLabel: normalizeText(source.sourceLabel, 120),
       department: normalizeText(source.department, 80),
       catalogViews,
+      displayDate,
       sortOrder: normalizeInteger(source.sortOrder, 0, -1000000, 1000000),
       coverFileID: normalizeCloudFileID(source.coverFileID, "published/images/"),
       disclaimer: normalizeText(source.disclaimer, 1000),
@@ -629,6 +638,7 @@ function payloadIssues(assetType, payload) {
     if (payload.catalogViews.includes("book") && !payload.bookId) {
       issues.push("书稿栏目必须关联稳定的整书编号");
     }
+    if (!payload.displayDate) issues.push("请填写展示日期");
     if (payload.sections.length === 0) issues.push("请补充可发布的正文结构");
     issues.push(...embeddedReferenceIssues(assetType, payload));
     if (!payload.structureConfirmed) issues.push("请确认正文不是截断预览并完成结构校对");
@@ -692,6 +702,7 @@ function defaultPayloadFromUpload(upload, target = {}) {
         "china-hospital-ship",
       sourceLabel: "管理员上传",
       catalogViews: ["book"],
+      displayDate: "",
       sections: previewParagraphs.length > 0
         ? [{ kind: "story", heading: "", paragraphs: previewParagraphs }]
         : [],

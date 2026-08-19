@@ -355,22 +355,14 @@ async function submitAttempt(openid, event) {
     const attemptReference = transaction
       .collection("quizAttempts")
       .doc(attemptDocumentId);
-    const reads = [
-      readTransactionDocument(sessionReference),
-      readTransactionDocument(userReference),
-      readTransactionDocument(attemptReference)
-    ];
-
-    if (source === "cloud") {
-      reads.push(
-        readTransactionDocument(
+    const session = await readTransactionDocument(sessionReference);
+    const user = await readTransactionDocument(userReference);
+    const existingAttempt = await readTransactionDocument(attemptReference);
+    const transactionQuestionDocument = source === "cloud"
+      ? await readTransactionDocument(
           transaction.collection("quizQuestions").doc(questionId)
         )
-      );
-    }
-
-    const [session, user, existingAttempt, transactionQuestionDocument] =
-      await Promise.all(reads);
+      : null;
 
     if (
       !isActiveSession(session, openid) ||
@@ -503,7 +495,8 @@ exports.main = async (event = {}) => {
     return {
       success: false,
       code: "QUIZ_SERVICE_UNAVAILABLE",
-      message: "答题服务暂不可用"
+      message: "答题服务暂不可用",
+      cause: String(error && (error.errMsg || error.message || error.code) || error || "unknown").slice(0, 300)
     };
   }
 };

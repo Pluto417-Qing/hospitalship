@@ -1976,6 +1976,7 @@ test("buildPatch 为五类素材生成后端所需的最低结构", () => {
       department: "胸外科",
       catalogBook: true,
       catalogSummary: true,
+      displayDate: " 2026-07-14 ",
       sortOrder: "20",
       coverFileID: "",
       disclaimer: "声明",
@@ -1993,6 +1994,7 @@ test("buildPatch 为五类素材生成后端所需的最低结构", () => {
   assert.strictEqual(manuscript.bookId, "hospital-ship");
   assert.strictEqual(manuscript.title, "文章标题");
   assert.deepStrictEqual(manuscript.catalogViews, ["book", "summary"]);
+  assert.strictEqual(manuscript.displayDate, "2026-07-14");
   assert.deepStrictEqual(manuscript.sections, [
     { kind: "story", heading: "正文", paragraphs: ["第一段"] }
   ]);
